@@ -8,53 +8,77 @@ datasource db {
 }
 
 model Project {
-  id          String   @id @default(cuid())
-  title       String
-  category    String
-  description String
-  imageUrl    String   @default("")
-  metrics     String   @default("[]")
-  tags        String   @default("[]")
-  color       String   @default("from-emerald-500/20 to-teal-500/20")
-  featured    Boolean  @default(false)
-  order       Int      @default(0)
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id              String   @id @default(cuid())
+  title           String   @default("")
+  title_en        String   @default("")
+  title_ar        String   @default("")
+  category        String   @default("")
+  category_en     String   @default("")
+  category_ar     String   @default("")
+  description     String   @default("")
+  description_en  String   @default("")
+  description_ar  String   @default("")
+  imageUrl        String   @default("")
+  metrics         String   @default("[]")
+  tags            String   @default("[]")
+  tags_en         String   @default("[]")
+  tags_ar         String   @default("[]")
+  color           String   @default("from-emerald-500/20 to-teal-500/20")
+  featured        Boolean  @default(false)
+  order           Int      @default(0)
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model Testimonial {
-  id        String   @id @default(cuid())
-  name      String
-  role      String
-  content   String
-  rating    Int      @default(5)
-  active    Boolean  @default(true)
-  order     Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Service {
   id          String   @id @default(cuid())
-  iconName    String   @default("Code2")
-  title       String
-  description String
-  features    String   @default("[]")
-  order       Int      @default(0)
+  name        String   @default("")
+  name_en     String   @default("")
+  name_ar     String   @default("")
+  role        String   @default("")
+  role_en     String   @default("")
+  role_ar     String   @default("")
+  content     String   @default("")
+  content_en  String   @default("")
+  content_ar  String   @default("")
+  rating      Int      @default(5)
   active      Boolean  @default(true)
+  order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
+model Service {
+  id              String   @id @default(cuid())
+  iconName        String   @default("Code2")
+  title           String   @default("")
+  title_en        String   @default("")
+  title_ar        String   @default("")
+  description     String   @default("")
+  description_en  String   @default("")
+  description_ar  String   @default("")
+  features        String   @default("[]")
+  features_en     String   @default("[]")
+  features_ar     String   @default("[]")
+  order           Int      @default(0)
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
 model FAQ {
-  id        String   @id @default(cuid())
-  question  String
-  answer    String
-  order     Int      @default(0)
-  active    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  question    String   @default("")
+  question_en String   @default("")
+  question_ar String   @default("")
+  answer      String   @default("")
+  answer_en   String   @default("")
+  answer_ar   String   @default("")
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model SiteSetting {

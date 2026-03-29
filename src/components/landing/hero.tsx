@@ -11,7 +11,7 @@ import { useLocale } from '@/lib/i18n';
 export function Hero() {
   const heroRef = useRef<HTMLElement>(null);
   const { data } = useSiteData();
-  const { t, isRTL } = useLocale();
+  const { t, isRTL, locale } = useLocale();
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -27,9 +27,11 @@ export function Hero() {
     return () => { if (el) el.removeEventListener('mousemove', handleMouseMove); };
   }, []);
 
+  // The API already returns localized content via useSiteData's lang parameter
   const heroTitle = data?.settings?.hero_title || t('hero_title_fallback');
   const heroSubtitle = data?.settings?.hero_subtitle || t('hero_subtitle_fallback');
 
+  // Stats labels use i18n translations (UI chrome), values come from settings
   const stats = [
     { value: data?.settings?.hero_stat_1_value || '50+', label: t('stat_projects') },
     { value: data?.settings?.hero_stat_2_value || '98%', label: t('stat_satisfaction') },

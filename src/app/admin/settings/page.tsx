@@ -9,53 +9,52 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useLocale } from '@/lib/i18n';
+import { LanguageTabs } from '@/components/admin/language-tabs';
 
-interface SiteSettings {
-  site_name: string;
-  site_tagline: string;
-  hero_title: string;
-  hero_subtitle: string;
-  contact_email: string;
-  hero_stat_1_value: string;
-  hero_stat_1_label: string;
-  hero_stat_2_value: string;
-  hero_stat_2_label: string;
-  hero_stat_3_value: string;
-  hero_stat_3_label: string;
-  hero_stat_4_value: string;
-  hero_stat_4_label: string;
-  admin_password: string;
-}
+type SiteSettings = Record<string, string>;
 
-const defaultSettings: SiteSettings = {
-  site_name: '',
-  site_tagline: '',
-  hero_title: '',
-  hero_subtitle: '',
-  contact_email: '',
-  hero_stat_1_value: '',
-  hero_stat_1_label: '',
-  hero_stat_2_value: '',
-  hero_stat_2_label: '',
-  hero_stat_3_value: '',
-  hero_stat_3_label: '',
-  hero_stat_4_value: '',
-  hero_stat_4_label: '',
-  admin_password: '',
-};
+const settingKeys = [
+  'site_name',
+  'site_tagline',
+  'hero_title',
+  'hero_subtitle',
+  'contact_email',
+  'hero_stat_1_value',
+  'hero_stat_1_label',
+  'hero_stat_2_value',
+  'hero_stat_2_label',
+  'hero_stat_3_value',
+  'hero_stat_3_label',
+  'hero_stat_4_value',
+  'hero_stat_4_label',
+  'hero_title_en',
+  'hero_title_ar',
+  'hero_subtitle_en',
+  'hero_subtitle_ar',
+  'hero_stat_1_label_en',
+  'hero_stat_1_label_ar',
+  'hero_stat_2_label_en',
+  'hero_stat_2_label_ar',
+  'hero_stat_3_label_en',
+  'hero_stat_3_label_ar',
+  'hero_stat_4_label_en',
+  'hero_stat_4_label_ar',
+];
 
 export default function AdminSettingsPage() {
   const { t } = useLocale();
-  const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
+  const [settings, setSettings] = useState<SiteSettings>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [heroTab, setHeroTab] = useState<'en' | 'ar'>('en');
+  const [statsTab, setStatsTab] = useState<'en' | 'ar'>('en');
 
   const fetchSettings = useCallback(async () => {
     try {
       const res = await fetch('/api/admin/settings');
       if (res.ok) {
         const data = await res.json();
-        setSettings({ ...defaultSettings, ...data });
+        setSettings(data || {});
       }
     } catch {
       toast({ title: t('admin_error_generic'), description: t('admin_error_fetch'), variant: 'destructive' });
@@ -90,7 +89,7 @@ export default function AdminSettingsPage() {
     }
   };
 
-  const updateSetting = (key: keyof SiteSettings, value: string) => {
+  const updateSetting = (key: string, value: string) => {
     setSettings((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -144,7 +143,7 @@ export default function AdminSettingsPage() {
               <Label htmlFor="site_name">{t('admin_site_name')}</Label>
               <Input
                 id="site_name"
-                value={settings.site_name}
+                value={settings.site_name || ''}
                 onChange={(e) => updateSetting('site_name', e.target.value)}
                 placeholder="asra3"
               />
@@ -153,7 +152,7 @@ export default function AdminSettingsPage() {
               <Label htmlFor="site_tagline">{t('admin_site_tagline')}</Label>
               <Input
                 id="site_tagline"
-                value={settings.site_tagline}
+                value={settings.site_tagline || ''}
                 onChange={(e) => updateSetting('site_tagline', e.target.value)}
                 placeholder="SaaS & Automation Solutions"
               />
@@ -164,7 +163,7 @@ export default function AdminSettingsPage() {
             <Input
               id="contact_email"
               type="email"
-              value={settings.contact_email}
+              value={settings.contact_email || ''}
               onChange={(e) => updateSetting('contact_email', e.target.value)}
               placeholder="hello@example.com"
             />
@@ -175,42 +174,77 @@ export default function AdminSettingsPage() {
       {/* Hero Section */}
       <Card>
         <CardHeader>
-          <div className="flex items-center gap-2">
-            <Globe className="size-4 text-primary" />
-            <CardTitle className="text-base">{t('admin_hero_section')}</CardTitle>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Globe className="size-4 text-primary" />
+              <CardTitle className="text-base">{t('admin_hero_section')}</CardTitle>
+            </div>
+            <LanguageTabs activeTab={heroTab} onTabChange={setHeroTab} />
           </div>
           <CardDescription>
             {t('admin_hero_section_desc')}
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="hero_title">{t('admin_hero_title')}</Label>
-            <Input
-              id="hero_title"
-              value={settings.hero_title}
-              onChange={(e) => updateSetting('hero_title', e.target.value)}
-              placeholder="Build Smarter. Ship Faster. Scale Better."
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="hero_subtitle">{t('admin_hero_subtitle')}</Label>
-            <Input
-              id="hero_subtitle"
-              value={settings.hero_subtitle}
-              onChange={(e) => updateSetting('hero_subtitle', e.target.value)}
-              placeholder="I transform your ideas into powerful SaaS products..."
-            />
-          </div>
+          {heroTab === 'en' ? (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="hero_title_en">{t('admin_hero_title')} (English)</Label>
+                <Input
+                  id="hero_title_en"
+                  value={settings.hero_title_en || settings.hero_title || ''}
+                  onChange={(e) => updateSetting('hero_title_en', e.target.value)}
+                  placeholder="Build Smarter. Ship Faster. Scale Better."
+                  dir="ltr"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="hero_subtitle_en">{t('admin_hero_subtitle')} (English)</Label>
+                <Input
+                  id="hero_subtitle_en"
+                  value={settings.hero_subtitle_en || settings.hero_subtitle || ''}
+                  onChange={(e) => updateSetting('hero_subtitle_en', e.target.value)}
+                  placeholder="I transform your ideas into powerful SaaS products..."
+                  dir="ltr"
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="hero_title_ar">{t('admin_hero_title')} (العربية)</Label>
+                <Input
+                  id="hero_title_ar"
+                  value={settings.hero_title_ar || ''}
+                  onChange={(e) => updateSetting('hero_title_ar', e.target.value)}
+                  placeholder="ابنِ بذكاء. شحّن أسرع. وسع نطاقك."
+                  dir="rtl"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="hero_subtitle_ar">{t('admin_hero_subtitle')} (العربية)</Label>
+                <Input
+                  id="hero_subtitle_ar"
+                  value={settings.hero_subtitle_ar || ''}
+                  onChange={(e) => updateSetting('hero_subtitle_ar', e.target.value)}
+                  placeholder="أحوّل أفكارك إلى منتجات SaaS قوية..."
+                  dir="rtl"
+                />
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
 
       {/* Stats */}
       <Card>
         <CardHeader>
-          <div className="flex items-center gap-2">
-            <BarChart3 className="size-4 text-primary" />
-            <CardTitle className="text-base">{t('admin_hero_stats')}</CardTitle>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <BarChart3 className="size-4 text-primary" />
+              <CardTitle className="text-base">{t('admin_hero_stats')}</CardTitle>
+            </div>
+            <LanguageTabs activeTab={statsTab} onTabChange={setStatsTab} />
           </div>
           <CardDescription>
             {t('admin_hero_stats_desc')}
@@ -224,23 +258,38 @@ export default function AdminSettingsPage() {
                   <Label htmlFor={`hero_stat_${i}_value`}>{t('admin_stat_value')} {i}</Label>
                   <Input
                     id={`hero_stat_${i}_value`}
-                    value={(settings as Record<string, string>)[`hero_stat_${i}_value`] || ''}
+                    value={settings[`hero_stat_${i}_value`] || ''}
                     onChange={(e) =>
-                      updateSetting(`hero_stat_${i}_value` as keyof SiteSettings, e.target.value)
+                      updateSetting(`hero_stat_${i}_value`, e.target.value)
                     }
                     placeholder="50+"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor={`hero_stat_${i}_label`}>{t('admin_stat_label')} {i}</Label>
-                  <Input
-                    id={`hero_stat_${i}_label`}
-                    value={(settings as Record<string, string>)[`hero_stat_${i}_label`] || ''}
-                    onChange={(e) =>
-                      updateSetting(`hero_stat_${i}_label` as keyof SiteSettings, e.target.value)
-                    }
-                    placeholder="Projects Delivered"
-                  />
+                  <Label htmlFor={`hero_stat_${i}_label_${statsTab}`}>
+                    {t('admin_stat_label')} {i} ({statsTab === 'en' ? 'English' : 'العربية'})
+                  </Label>
+                  {statsTab === 'en' ? (
+                    <Input
+                      id={`hero_stat_${i}_label_en`}
+                      value={settings[`hero_stat_${i}_label_en`] || settings[`hero_stat_${i}_label`] || ''}
+                      onChange={(e) =>
+                        updateSetting(`hero_stat_${i}_label_en`, e.target.value)
+                      }
+                      placeholder="Projects Delivered"
+                      dir="ltr"
+                    />
+                  ) : (
+                    <Input
+                      id={`hero_stat_${i}_label_ar`}
+                      value={settings[`hero_stat_${i}_label_ar`] || ''}
+                      onChange={(e) =>
+                        updateSetting(`hero_stat_${i}_label_ar`, e.target.value)
+                      }
+                      placeholder="مشاريع منجزة"
+                      dir="rtl"
+                    />
+                  )}
                 </div>
               </div>
               {i < 4 && <Separator className="mt-6" />}
@@ -266,7 +315,7 @@ export default function AdminSettingsPage() {
             <Input
               id="admin_password"
               type="password"
-              value={settings.admin_password}
+              value={settings.admin_password || ''}
               onChange={(e) => updateSetting('admin_password', e.target.value)}
               placeholder="Leave blank to keep current password"
             />

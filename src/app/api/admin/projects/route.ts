@@ -28,16 +28,30 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { title, category, description, imageUrl, metrics, tags, color, featured, order, active } = body;
+    const {
+      title, title_en, title_ar,
+      category, category_en, category_ar,
+      description, description_en, description_ar,
+      tags, tags_en, tags_ar,
+      imageUrl, metrics, color, featured, order, active,
+    } = body;
 
     const project = await db.project.create({
       data: {
-        title,
-        category,
-        description,
+        title: title || title_en || '',
+        title_en: title_en || '',
+        title_ar: title_ar || '',
+        category: category || category_en || '',
+        category_en: category_en || '',
+        category_ar: category_ar || '',
+        description: description || description_en || '',
+        description_en: description_en || '',
+        description_ar: description_ar || '',
         imageUrl: imageUrl || '',
         metrics: typeof metrics === 'string' ? metrics : JSON.stringify(metrics || []),
-        tags: typeof tags === 'string' ? tags : JSON.stringify(tags || []),
+        tags: tags || tags_en ? (typeof tags === 'string' ? tags : JSON.stringify(tags || [])) : (typeof tags_en === 'string' ? tags_en : JSON.stringify(tags_en || [])),
+        tags_en: tags_en || (typeof tags === 'string' ? tags : JSON.stringify(tags || [])),
+        tags_ar: tags_ar || '[]',
         color: color || 'from-emerald-500/20 to-teal-500/20',
         featured: featured ?? false,
         order: order ?? 0,

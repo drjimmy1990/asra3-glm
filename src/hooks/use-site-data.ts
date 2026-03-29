@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useLocale } from '@/lib/i18n';
 
 export interface SiteSettings {
   site_name: string;
@@ -78,11 +79,12 @@ export interface SiteData {
 export function useSiteData() {
   const [data, setData] = useState<SiteData | null>(null);
   const [loading, setLoading] = useState(true);
+  const { locale } = useLocale();
 
   useEffect(() => {
     async function fetchContent() {
       try {
-        const res = await fetch('/api/content');
+        const res = await fetch(`/api/content?lang=${locale}`);
         if (res.ok) {
           const json = await res.json();
           setData(json);
@@ -94,7 +96,7 @@ export function useSiteData() {
       }
     }
     fetchContent();
-  }, []);
+  }, [locale]);
 
   return { data, loading };
 }

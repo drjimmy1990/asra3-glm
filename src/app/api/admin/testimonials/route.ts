@@ -24,9 +24,15 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const item = await db.testimonial.create({
       data: {
-        name: body.name,
-        role: body.role,
-        content: body.content,
+        name: body.name || body.name_en || '',
+        name_en: body.name_en || '',
+        name_ar: body.name_ar || '',
+        role: body.role || body.role_en || '',
+        role_en: body.role_en || '',
+        role_ar: body.role_ar || '',
+        content: body.content || body.content_en || '',
+        content_en: body.content_en || '',
+        content_ar: body.content_ar || '',
         rating: body.rating ?? 5,
         order: body.order ?? 0,
         active: body.active ?? true,

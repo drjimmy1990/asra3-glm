@@ -44,12 +44,19 @@ import {
 } from '@/components/ui/table';
 import { Separator } from '@/components/ui/separator';
 import { useLocale } from '@/lib/i18n';
+import { LanguageTabs } from '@/components/admin/language-tabs';
 
 interface Testimonial {
   id: string;
   name: string;
+  name_en: string;
+  name_ar: string;
   role: string;
+  role_en: string;
+  role_ar: string;
   content: string;
+  content_en: string;
+  content_ar: string;
   rating: number;
   active: boolean;
   order: number;
@@ -59,15 +66,21 @@ interface Testimonial {
 
 const emptyForm = {
   name: '',
+  name_en: '',
+  name_ar: '',
   role: '',
+  role_en: '',
+  role_ar: '',
   content: '',
+  content_en: '',
+  content_ar: '',
   rating: 5,
   order: 0,
   active: true,
 };
 
 export default function AdminTestimonialsPage() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [items, setItems] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -76,6 +89,7 @@ export default function AdminTestimonialsPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState(emptyForm);
+  const [formTab, setFormTab] = useState<'en' | 'ar'>('en');
 
   const fetchItems = useCallback(async () => {
     try {
@@ -98,6 +112,7 @@ export default function AdminTestimonialsPage() {
   const openCreate = () => {
     setEditingId(null);
     setForm(emptyForm);
+    setFormTab('en');
     setDialogOpen(true);
   };
 
@@ -105,12 +120,19 @@ export default function AdminTestimonialsPage() {
     setEditingId(item.id);
     setForm({
       name: item.name,
+      name_en: item.name_en,
+      name_ar: item.name_ar,
       role: item.role,
+      role_en: item.role_en,
+      role_ar: item.role_ar,
       content: item.content,
+      content_en: item.content_en,
+      content_ar: item.content_ar,
       rating: item.rating,
       order: item.order,
       active: item.active,
     });
+    setFormTab('en');
     setDialogOpen(true);
   };
 
@@ -184,6 +206,21 @@ export default function AdminTestimonialsPage() {
     </div>
   );
 
+  const getDisplayName = (item: Testimonial) => {
+    if (locale === 'ar') return item.name_ar || item.name || item.name_en;
+    return item.name_en || item.name || item.name_ar;
+  };
+
+  const getDisplayRole = (item: Testimonial) => {
+    if (locale === 'ar') return item.role_ar || item.role || item.role_en;
+    return item.role_en || item.role || item.role_ar;
+  };
+
+  const getDisplayContent = (item: Testimonial) => {
+    if (locale === 'ar') return item.content_ar || item.content || item.content_en;
+    return item.content_en || item.content || item.content_ar;
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -230,10 +267,10 @@ export default function AdminTestimonialsPage() {
             <TableBody>
               {items.map((item) => (
                 <TableRow key={item.id}>
-                  <TableCell className="font-medium">{item.name}</TableCell>
-                  <TableCell className="text-muted-foreground">{item.role}</TableCell>
+                  <TableCell className="font-medium">{getDisplayName(item)}</TableCell>
+                  <TableCell className="text-muted-foreground">{getDisplayRole(item)}</TableCell>
                   <TableCell className="max-w-[250px] truncate text-muted-foreground text-xs">
-                    {item.content}
+                    {getDisplayContent(item)}
                   </TableCell>
                   <TableCell>{renderStars(item.rating)}</TableCell>
                   <TableCell className="text-center">
@@ -277,9 +314,12 @@ export default function AdminTestimonialsPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>
-              {editingId ? t('admin_edit_testimonial') : t('admin_add_testimonial')}
-            </DialogTitle>
+            <div className="flex items-center justify-between">
+              <DialogTitle>
+                {editingId ? t('admin_edit_testimonial') : t('admin_add_testimonial')}
+              </DialogTitle>
+              <LanguageTabs activeTab={formTab} onTabChange={setFormTab} />
+            </div>
             <DialogDescription>
               {editingId
                 ? t('admin_update_testimonial_desc')
@@ -288,37 +328,81 @@ export default function AdminTestimonialsPage() {
           </DialogHeader>
 
           <div className="grid gap-4 py-2">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="name">{t('admin_name')} *</Label>
-                <Input
-                  id="name"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  placeholder="Client name"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="role">{t('admin_role')} *</Label>
-                <Input
-                  id="role"
-                  value={form.role}
-                  onChange={(e) => setForm({ ...form, role: e.target.value })}
-                  placeholder="e.g. CEO, Acme Inc."
-                />
-              </div>
-            </div>
+            {formTab === 'en' ? (
+              <>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="name_en">{t('admin_name')} (English) *</Label>
+                    <Input
+                      id="name_en"
+                      value={form.name_en}
+                      onChange={(e) => setForm({ ...form, name_en: e.target.value })}
+                      placeholder="Client name"
+                      dir="ltr"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="role_en">{t('admin_role')} (English) *</Label>
+                    <Input
+                      id="role_en"
+                      value={form.role_en}
+                      onChange={(e) => setForm({ ...form, role_en: e.target.value })}
+                      placeholder="e.g. CEO, Acme Inc."
+                      dir="ltr"
+                    />
+                  </div>
+                </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="content">{t('admin_content')} *</Label>
-              <Textarea
-                id="content"
-                value={form.content}
-                onChange={(e) => setForm({ ...form, content: e.target.value })}
-                placeholder="What the client said about your work..."
-                rows={4}
-              />
-            </div>
+                <div className="space-y-2">
+                  <Label htmlFor="content_en">{t('admin_content')} (English) *</Label>
+                  <Textarea
+                    id="content_en"
+                    value={form.content_en}
+                    onChange={(e) => setForm({ ...form, content_en: e.target.value })}
+                    placeholder="What the client said about your work..."
+                    rows={4}
+                    dir="ltr"
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="name_ar">{t('admin_name')} (العربية) *</Label>
+                    <Input
+                      id="name_ar"
+                      value={form.name_ar}
+                      onChange={(e) => setForm({ ...form, name_ar: e.target.value })}
+                      placeholder="اسم العميل"
+                      dir="rtl"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="role_ar">{t('admin_role')} (العربية) *</Label>
+                    <Input
+                      id="role_ar"
+                      value={form.role_ar}
+                      onChange={(e) => setForm({ ...form, role_ar: e.target.value })}
+                      placeholder="مثال: المدير التنفيذي، شركة إكس"
+                      dir="rtl"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="content_ar">{t('admin_content')} (العربية) *</Label>
+                  <Textarea
+                    id="content_ar"
+                    value={form.content_ar}
+                    onChange={(e) => setForm({ ...form, content_ar: e.target.value })}
+                    placeholder="ما قاله العميل عن عملك..."
+                    rows={4}
+                    dir="rtl"
+                  />
+                </div>
+              </>
+            )}
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
@@ -370,7 +454,7 @@ export default function AdminTestimonialsPage() {
             </Button>
             <Button
               onClick={handleSave}
-              disabled={saving || !form.name || !form.content}
+              disabled={saving || !form.name_en || !form.content_en}
             >
               {saving ? (
                 <>

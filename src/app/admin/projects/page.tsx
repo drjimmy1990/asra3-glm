@@ -44,15 +44,24 @@ import {
 } from '@/components/ui/table';
 import { Separator } from '@/components/ui/separator';
 import { useLocale } from '@/lib/i18n';
+import { LanguageTabs } from '@/components/admin/language-tabs';
 
 interface Project {
   id: string;
   title: string;
+  title_en: string;
+  title_ar: string;
   category: string;
+  category_en: string;
+  category_ar: string;
   description: string;
+  description_en: string;
+  description_ar: string;
   imageUrl: string;
   metrics: string;
   tags: string;
+  tags_en: string;
+  tags_ar: string;
   color: string;
   featured: boolean;
   order: number;
@@ -63,11 +72,19 @@ interface Project {
 
 const emptyForm = {
   title: '',
+  title_en: '',
+  title_ar: '',
   category: '',
+  category_en: '',
+  category_ar: '',
   description: '',
+  description_en: '',
+  description_ar: '',
   imageUrl: '',
   metrics: '[]',
   tags: '[]',
+  tags_en: '[]',
+  tags_ar: '[]',
   color: 'from-emerald-500/20 to-teal-500/20',
   featured: false,
   order: 0,
@@ -75,7 +92,7 @@ const emptyForm = {
 };
 
 export default function AdminProjectsPage() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -84,6 +101,7 @@ export default function AdminProjectsPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState(emptyForm);
+  const [formTab, setFormTab] = useState<'en' | 'ar'>('en');
 
   const fetchProjects = useCallback(async () => {
     try {
@@ -106,6 +124,7 @@ export default function AdminProjectsPage() {
   const openCreate = () => {
     setEditingId(null);
     setForm(emptyForm);
+    setFormTab('en');
     setDialogOpen(true);
   };
 
@@ -113,16 +132,25 @@ export default function AdminProjectsPage() {
     setEditingId(project.id);
     setForm({
       title: project.title,
+      title_en: project.title_en,
+      title_ar: project.title_ar,
       category: project.category,
+      category_en: project.category_en,
+      category_ar: project.category_ar,
       description: project.description,
+      description_en: project.description_en,
+      description_ar: project.description_ar,
       imageUrl: project.imageUrl,
       metrics: project.metrics,
       tags: project.tags,
+      tags_en: project.tags_en,
+      tags_ar: project.tags_ar,
       color: project.color,
       featured: project.featured,
       order: project.order,
       active: project.active,
     });
+    setFormTab('en');
     setDialogOpen(true);
   };
 
@@ -181,6 +209,16 @@ export default function AdminProjectsPage() {
     }
   };
 
+  const getDisplayTitle = (project: Project) => {
+    if (locale === 'ar') return project.title_ar || project.title || project.title_en;
+    return project.title_en || project.title || project.title_ar;
+  };
+
+  const getDisplayCategory = (project: Project) => {
+    if (locale === 'ar') return project.category_ar || project.category || project.category_en;
+    return project.category_en || project.category || project.category_ar;
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -226,9 +264,9 @@ export default function AdminProjectsPage() {
             <TableBody>
               {projects.map((project) => (
                 <TableRow key={project.id}>
-                  <TableCell className="font-medium">{project.title}</TableCell>
+                  <TableCell className="font-medium">{getDisplayTitle(project)}</TableCell>
                   <TableCell>
-                    <Badge variant="secondary">{project.category}</Badge>
+                    <Badge variant="secondary">{getDisplayCategory(project)}</Badge>
                   </TableCell>
                   <TableCell className="text-center">
                     {project.featured && (
@@ -276,9 +314,12 @@ export default function AdminProjectsPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>
-              {editingId ? t('admin_edit_project') : t('admin_add_project')}
-            </DialogTitle>
+            <div className="flex items-center justify-between">
+              <DialogTitle>
+                {editingId ? t('admin_edit_project') : t('admin_add_project')}
+              </DialogTitle>
+              <LanguageTabs activeTab={formTab} onTabChange={setFormTab} />
+            </div>
             <DialogDescription>
               {editingId
                 ? t('admin_update_project_desc')
@@ -287,37 +328,107 @@ export default function AdminProjectsPage() {
           </DialogHeader>
 
           <div className="grid gap-4 py-2">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="title">{t('admin_title')} *</Label>
-                <Input
-                  id="title"
-                  value={form.title}
-                  onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  placeholder="Project title"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="category">{t('admin_category')} *</Label>
-                <Input
-                  id="category"
-                  value={form.category}
-                  onChange={(e) => setForm({ ...form, category: e.target.value })}
-                  placeholder="e.g. SaaS, Web App"
-                />
-              </div>
-            </div>
+            {formTab === 'en' ? (
+              <>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="title_en">{t('admin_title')} (English) *</Label>
+                    <Input
+                      id="title_en"
+                      value={form.title_en}
+                      onChange={(e) => setForm({ ...form, title_en: e.target.value })}
+                      placeholder="Project title"
+                      dir="ltr"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="category_en">{t('admin_category')} (English) *</Label>
+                    <Input
+                      id="category_en"
+                      value={form.category_en}
+                      onChange={(e) => setForm({ ...form, category_en: e.target.value })}
+                      placeholder="e.g. SaaS, Web App"
+                      dir="ltr"
+                    />
+                  </div>
+                </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="description">{t('admin_description')} *</Label>
-              <Textarea
-                id="description"
-                value={form.description}
-                onChange={(e) => setForm({ ...form, description: e.target.value })}
-                placeholder="Project description"
-                rows={3}
-              />
-            </div>
+                <div className="space-y-2">
+                  <Label htmlFor="description_en">{t('admin_description')} (English) *</Label>
+                  <Textarea
+                    id="description_en"
+                    value={form.description_en}
+                    onChange={(e) => setForm({ ...form, description_en: e.target.value })}
+                    placeholder="Project description"
+                    rows={3}
+                    dir="ltr"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="tags_en">{t('admin_tags')} (English)</Label>
+                  <Textarea
+                    id="tags_en"
+                    value={form.tags_en}
+                    onChange={(e) => setForm({ ...form, tags_en: e.target.value })}
+                    placeholder='["Next.js", "TypeScript", "Prisma"]'
+                    rows={2}
+                    className="font-mono text-xs"
+                    dir="ltr"
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="title_ar">{t('admin_title')} (العربية) *</Label>
+                    <Input
+                      id="title_ar"
+                      value={form.title_ar}
+                      onChange={(e) => setForm({ ...form, title_ar: e.target.value })}
+                      placeholder="عنوان المشروع"
+                      dir="rtl"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="category_ar">{t('admin_category')} (العربية) *</Label>
+                    <Input
+                      id="category_ar"
+                      value={form.category_ar}
+                      onChange={(e) => setForm({ ...form, category_ar: e.target.value })}
+                      placeholder="مثال: تطبيق ويب، SaaS"
+                      dir="rtl"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="description_ar">{t('admin_description')} (العربية) *</Label>
+                  <Textarea
+                    id="description_ar"
+                    value={form.description_ar}
+                    onChange={(e) => setForm({ ...form, description_ar: e.target.value })}
+                    placeholder="وصف المشروع"
+                    rows={3}
+                    dir="rtl"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="tags_ar">{t('admin_tags')} (العربية)</Label>
+                  <Textarea
+                    id="tags_ar"
+                    value={form.tags_ar}
+                    onChange={(e) => setForm({ ...form, tags_ar: e.target.value })}
+                    placeholder='["Next.js", "TypeScript", "Prisma"]'
+                    rows={2}
+                    className="font-mono text-xs"
+                    dir="rtl"
+                  />
+                </div>
+              </>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="imageUrl">{t('admin_image_url')}</Label>
@@ -336,18 +447,6 @@ export default function AdminProjectsPage() {
                 value={form.metrics}
                 onChange={(e) => setForm({ ...form, metrics: e.target.value })}
                 placeholder='["100+ Users", "99.9% Uptime"]'
-                rows={2}
-                className="font-mono text-xs"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="tags">{t('admin_tags')}</Label>
-              <Textarea
-                id="tags"
-                value={form.tags}
-                onChange={(e) => setForm({ ...form, tags: e.target.value })}
-                placeholder='["Next.js", "TypeScript", "Prisma"]'
                 rows={2}
                 className="font-mono text-xs"
               />
@@ -407,7 +506,7 @@ export default function AdminProjectsPage() {
             <Button variant="outline" onClick={() => setDialogOpen(false)}>
               {t('admin_cancel')}
             </Button>
-            <Button onClick={handleSave} disabled={saving || !form.title || !form.category}>
+            <Button onClick={handleSave} disabled={saving || !form.title_en || !form.category_en}>
               {saving ? (
                 <>
                   <Loader2 className="size-4 animate-spin me-2" />

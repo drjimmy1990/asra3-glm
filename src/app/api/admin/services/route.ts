@@ -24,9 +24,15 @@ export async function POST(request: NextRequest) {
     const item = await db.service.create({
       data: {
         iconName: body.iconName || 'Code2',
-        title: body.title,
-        description: body.description,
-        features: typeof body.features === 'string' ? body.features : JSON.stringify(body.features || []),
+        title: body.title || body.title_en || '',
+        title_en: body.title_en || '',
+        title_ar: body.title_ar || '',
+        description: body.description || body.description_en || '',
+        description_en: body.description_en || '',
+        description_ar: body.description_ar || '',
+        features: body.features || body.features_en ? (typeof body.features === 'string' ? body.features : JSON.stringify(body.features || [])) : (typeof body.features_en === 'string' ? body.features_en : JSON.stringify(body.features_en || [])),
+        features_en: body.features_en || (typeof body.features === 'string' ? body.features : JSON.stringify(body.features || [])),
+        features_ar: body.features_ar || '[]',
         order: body.order ?? 0,
         active: body.active ?? true,
       },

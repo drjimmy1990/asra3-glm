@@ -58,13 +58,20 @@ import {
 } from '@/components/ui/table';
 import { Separator } from '@/components/ui/separator';
 import { useLocale } from '@/lib/i18n';
+import { LanguageTabs } from '@/components/admin/language-tabs';
 
 interface Service {
   id: string;
   iconName: string;
   title: string;
+  title_en: string;
+  title_ar: string;
   description: string;
+  description_en: string;
+  description_ar: string;
   features: string;
+  features_en: string;
+  features_ar: string;
   order: number;
   active: boolean;
   createdAt: string;
@@ -85,14 +92,20 @@ const iconOptions = [
 const emptyForm = {
   iconName: 'Code2',
   title: '',
+  title_en: '',
+  title_ar: '',
   description: '',
+  description_en: '',
+  description_ar: '',
   features: '[]',
+  features_en: '[]',
+  features_ar: '[]',
   order: 0,
   active: true,
 };
 
 export default function AdminServicesPage() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [items, setItems] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -101,6 +114,7 @@ export default function AdminServicesPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState(emptyForm);
+  const [formTab, setFormTab] = useState<'en' | 'ar'>('en');
 
   const fetchItems = useCallback(async () => {
     try {
@@ -123,6 +137,7 @@ export default function AdminServicesPage() {
   const openCreate = () => {
     setEditingId(null);
     setForm(emptyForm);
+    setFormTab('en');
     setDialogOpen(true);
   };
 
@@ -131,11 +146,18 @@ export default function AdminServicesPage() {
     setForm({
       iconName: item.iconName,
       title: item.title,
+      title_en: item.title_en,
+      title_ar: item.title_ar,
       description: item.description,
+      description_en: item.description_en,
+      description_ar: item.description_ar,
       features: item.features,
+      features_en: item.features_en,
+      features_ar: item.features_ar,
       order: item.order,
       active: item.active,
     });
+    setFormTab('en');
     setDialogOpen(true);
   };
 
@@ -203,6 +225,16 @@ export default function AdminServicesPage() {
     return <Cog className="size-4" />;
   };
 
+  const getDisplayTitle = (item: Service) => {
+    if (locale === 'ar') return item.title_ar || item.title || item.title_en;
+    return item.title_en || item.title || item.title_ar;
+  };
+
+  const getDisplayDescription = (item: Service) => {
+    if (locale === 'ar') return item.description_ar || item.description || item.description_en;
+    return item.description_en || item.description || item.description_ar;
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -248,7 +280,7 @@ export default function AdminServicesPage() {
             <TableBody>
               {items.map((item) => (
                 <TableRow key={item.id}>
-                  <TableCell className="font-medium">{item.title}</TableCell>
+                  <TableCell className="font-medium">{getDisplayTitle(item)}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       {getIconComponent(item.iconName)}
@@ -256,7 +288,7 @@ export default function AdminServicesPage() {
                     </div>
                   </TableCell>
                   <TableCell className="max-w-[250px] truncate text-muted-foreground text-xs">
-                    {item.description}
+                    {getDisplayDescription(item)}
                   </TableCell>
                   <TableCell className="text-center">
                     <Badge variant={item.active ? 'default' : 'outline'}>
@@ -299,9 +331,12 @@ export default function AdminServicesPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>
-              {editingId ? t('admin_edit_service') : t('admin_add_service')}
-            </DialogTitle>
+            <div className="flex items-center justify-between">
+              <DialogTitle>
+                {editingId ? t('admin_edit_service') : t('admin_add_service')}
+              </DialogTitle>
+              <LanguageTabs activeTab={formTab} onTabChange={setFormTab} />
+            </div>
             <DialogDescription>
               {editingId
                 ? t('admin_update_service_desc')
@@ -343,38 +378,83 @@ export default function AdminServicesPage() {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="title">{t('admin_title')} *</Label>
-              <Input
-                id="title"
-                value={form.title}
-                onChange={(e) => setForm({ ...form, title: e.target.value })}
-                placeholder="Service title"
-              />
-            </div>
+            {formTab === 'en' ? (
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="title_en">{t('admin_title')} (English) *</Label>
+                  <Input
+                    id="title_en"
+                    value={form.title_en}
+                    onChange={(e) => setForm({ ...form, title_en: e.target.value })}
+                    placeholder="Service title"
+                    dir="ltr"
+                  />
+                </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="description">{t('admin_description')} *</Label>
-              <Textarea
-                id="description"
-                value={form.description}
-                onChange={(e) => setForm({ ...form, description: e.target.value })}
-                placeholder="Service description"
-                rows={3}
-              />
-            </div>
+                <div className="space-y-2">
+                  <Label htmlFor="description_en">{t('admin_description')} (English) *</Label>
+                  <Textarea
+                    id="description_en"
+                    value={form.description_en}
+                    onChange={(e) => setForm({ ...form, description_en: e.target.value })}
+                    placeholder="Service description"
+                    rows={3}
+                    dir="ltr"
+                  />
+                </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="features">{t('admin_features')}</Label>
-              <Textarea
-                id="features"
-                value={form.features}
-                onChange={(e) => setForm({ ...form, features: e.target.value })}
-                placeholder='["Custom SaaS Development", "API Integration"]'
-                rows={3}
-                className="font-mono text-xs"
-              />
-            </div>
+                <div className="space-y-2">
+                  <Label htmlFor="features_en">{t('admin_features')} (English)</Label>
+                  <Textarea
+                    id="features_en"
+                    value={form.features_en}
+                    onChange={(e) => setForm({ ...form, features_en: e.target.value })}
+                    placeholder='["Custom SaaS Development", "API Integration"]'
+                    rows={3}
+                    className="font-mono text-xs"
+                    dir="ltr"
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="title_ar">{t('admin_title')} (العربية) *</Label>
+                  <Input
+                    id="title_ar"
+                    value={form.title_ar}
+                    onChange={(e) => setForm({ ...form, title_ar: e.target.value })}
+                    placeholder="عنوان الخدمة"
+                    dir="rtl"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="description_ar">{t('admin_description')} (العربية) *</Label>
+                  <Textarea
+                    id="description_ar"
+                    value={form.description_ar}
+                    onChange={(e) => setForm({ ...form, description_ar: e.target.value })}
+                    placeholder="وصف الخدمة"
+                    rows={3}
+                    dir="rtl"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="features_ar">{t('admin_features')} (العربية)</Label>
+                  <Textarea
+                    id="features_ar"
+                    value={form.features_ar}
+                    onChange={(e) => setForm({ ...form, features_ar: e.target.value })}
+                    placeholder='["تطوير SaaS مخصص", "تكامل API"]'
+                    rows={3}
+                    className="font-mono text-xs"
+                    dir="rtl"
+                  />
+                </div>
+              </>
+            )}
 
             <Separator />
 
@@ -398,7 +478,7 @@ export default function AdminServicesPage() {
             </Button>
             <Button
               onClick={handleSave}
-              disabled={saving || !form.title || !form.description}
+              disabled={saving || !form.title_en || !form.description_en}
             >
               {saving ? (
                 <>

@@ -12,7 +12,11 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       where: { id },
       data: {
         ...(body.question !== undefined && { question: body.question }),
+        ...(body.question_en !== undefined && { question_en: body.question_en }),
+        ...(body.question_ar !== undefined && { question_ar: body.question_ar }),
         ...(body.answer !== undefined && { answer: body.answer }),
+        ...(body.answer_en !== undefined && { answer_en: body.answer_en }),
+        ...(body.answer_ar !== undefined && { answer_ar: body.answer_ar }),
         ...(body.order !== undefined && { order: body.order }),
         ...(body.active !== undefined && { active: body.active }),
       },

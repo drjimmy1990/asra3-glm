@@ -43,11 +43,16 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { useLocale } from '@/lib/i18n';
+import { LanguageTabs } from '@/components/admin/language-tabs';
 
 interface FAQ {
   id: string;
   question: string;
+  question_en: string;
+  question_ar: string;
   answer: string;
+  answer_en: string;
+  answer_ar: string;
   order: number;
   active: boolean;
   createdAt: string;
@@ -56,13 +61,17 @@ interface FAQ {
 
 const emptyForm = {
   question: '',
+  question_en: '',
+  question_ar: '',
   answer: '',
+  answer_en: '',
+  answer_ar: '',
   order: 0,
   active: true,
 };
 
 export default function AdminFaqsPage() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [items, setItems] = useState<FAQ[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -71,6 +80,7 @@ export default function AdminFaqsPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState(emptyForm);
+  const [formTab, setFormTab] = useState<'en' | 'ar'>('en');
 
   const fetchItems = useCallback(async () => {
     try {
@@ -93,6 +103,7 @@ export default function AdminFaqsPage() {
   const openCreate = () => {
     setEditingId(null);
     setForm(emptyForm);
+    setFormTab('en');
     setDialogOpen(true);
   };
 
@@ -100,10 +111,15 @@ export default function AdminFaqsPage() {
     setEditingId(item.id);
     setForm({
       question: item.question,
+      question_en: item.question_en,
+      question_ar: item.question_ar,
       answer: item.answer,
+      answer_en: item.answer_en,
+      answer_ar: item.answer_ar,
       order: item.order,
       active: item.active,
     });
+    setFormTab('en');
     setDialogOpen(true);
   };
 
@@ -162,6 +178,16 @@ export default function AdminFaqsPage() {
     }
   };
 
+  const getDisplayQuestion = (item: FAQ) => {
+    if (locale === 'ar') return item.question_ar || item.question || item.question_en;
+    return item.question_en || item.question || item.question_ar;
+  };
+
+  const getDisplayAnswer = (item: FAQ) => {
+    if (locale === 'ar') return item.answer_ar || item.answer || item.answer_en;
+    return item.answer_en || item.answer || item.answer_ar;
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -206,9 +232,9 @@ export default function AdminFaqsPage() {
             <TableBody>
               {items.map((item) => (
                 <TableRow key={item.id}>
-                  <TableCell className="font-medium">{item.question}</TableCell>
+                  <TableCell className="font-medium">{getDisplayQuestion(item)}</TableCell>
                   <TableCell className="max-w-[300px] truncate text-muted-foreground text-xs">
-                    {item.answer}
+                    {getDisplayAnswer(item)}
                   </TableCell>
                   <TableCell className="text-center">
                     <Badge variant={item.active ? 'default' : 'outline'}>
@@ -251,9 +277,12 @@ export default function AdminFaqsPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>
-              {editingId ? t('admin_edit_faq') : t('admin_add_faq')}
-            </DialogTitle>
+            <div className="flex items-center justify-between">
+              <DialogTitle>
+                {editingId ? t('admin_edit_faq') : t('admin_add_faq')}
+              </DialogTitle>
+              <LanguageTabs activeTab={formTab} onTabChange={setFormTab} />
+            </div>
             <DialogDescription>
               {editingId
                 ? t('admin_update_faq_desc')
@@ -262,27 +291,59 @@ export default function AdminFaqsPage() {
           </DialogHeader>
 
           <div className="grid gap-4 py-2">
-            <div className="space-y-2">
-              <Label htmlFor="question">{t('admin_question')} *</Label>
-              <Textarea
-                id="question"
-                value={form.question}
-                onChange={(e) => setForm({ ...form, question: e.target.value })}
-                placeholder="The question your visitors might ask"
-                rows={3}
-              />
-            </div>
+            {formTab === 'en' ? (
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="question_en">{t('admin_question')} (English) *</Label>
+                  <Textarea
+                    id="question_en"
+                    value={form.question_en}
+                    onChange={(e) => setForm({ ...form, question_en: e.target.value })}
+                    placeholder="The question your visitors might ask"
+                    rows={3}
+                    dir="ltr"
+                  />
+                </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="answer">{t('admin_answer')} *</Label>
-              <Textarea
-                id="answer"
-                value={form.answer}
-                onChange={(e) => setForm({ ...form, answer: e.target.value })}
-                placeholder="The answer to the question"
-                rows={5}
-              />
-            </div>
+                <div className="space-y-2">
+                  <Label htmlFor="answer_en">{t('admin_answer')} (English) *</Label>
+                  <Textarea
+                    id="answer_en"
+                    value={form.answer_en}
+                    onChange={(e) => setForm({ ...form, answer_en: e.target.value })}
+                    placeholder="The answer to the question"
+                    rows={5}
+                    dir="ltr"
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="question_ar">{t('admin_question')} (العربية) *</Label>
+                  <Textarea
+                    id="question_ar"
+                    value={form.question_ar}
+                    onChange={(e) => setForm({ ...form, question_ar: e.target.value })}
+                    placeholder="السؤال الذي قد يسأله الزوار"
+                    rows={3}
+                    dir="rtl"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="answer_ar">{t('admin_answer')} (العربية) *</Label>
+                  <Textarea
+                    id="answer_ar"
+                    value={form.answer_ar}
+                    onChange={(e) => setForm({ ...form, answer_ar: e.target.value })}
+                    placeholder="إجابة السؤال"
+                    rows={5}
+                    dir="rtl"
+                  />
+                </div>
+              </>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="order">{t('admin_order')}</Label>
@@ -317,7 +378,7 @@ export default function AdminFaqsPage() {
             </Button>
             <Button
               onClick={handleSave}
-              disabled={saving || !form.question || !form.answer}
+              disabled={saving || !form.question_en || !form.answer_en}
             >
               {saving ? (
                 <>

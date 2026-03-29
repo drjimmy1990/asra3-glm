@@ -20,8 +20,12 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const item = await db.fAQ.create({
       data: {
-        question: body.question,
-        answer: body.answer,
+        question: body.question || body.question_en || '',
+        question_en: body.question_en || '',
+        question_ar: body.question_ar || '',
+        answer: body.answer || body.answer_en || '',
+        answer_en: body.answer_en || '',
+        answer_ar: body.answer_ar || '',
         order: body.order ?? 0,
         active: body.active ?? true,
       },
