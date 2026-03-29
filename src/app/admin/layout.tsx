@@ -132,18 +132,23 @@ export default function AdminLayout({
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // Redirect logic handled via effect, not during render
   useEffect(() => {
-    // Check auth by calling settings endpoint
+    if (isAuthenticated === true && pathname === '/admin') {
+      router.replace('/admin/dashboard');
+      return;
+    }
+    if (isAuthenticated === false && pathname !== '/admin') {
+      router.replace('/admin');
+    }
+  }, [isAuthenticated, pathname, router]);
+
+  useEffect(() => {
     const checkAuth = async () => {
       try {
         const res = await fetch('/api/admin/settings');
         if (res.ok) {
           setIsAuthenticated(true);
-        } else if (res.status === 401) {
-          setIsAuthenticated(false);
-          if (pathname !== '/admin') {
-            router.replace('/admin');
-          }
         } else {
           setIsAuthenticated(false);
         }
@@ -152,12 +157,11 @@ export default function AdminLayout({
       }
     };
     checkAuth();
-  }, [pathname, router]);
+  }, [pathname]);
 
-  // If we're on the login page and not authenticated, show login
+  // If we're on the login page
   if (pathname === '/admin') {
     if (isAuthenticated === true) {
-      router.replace('/admin/dashboard');
       return <LoadingScreen />;
     }
     if (isAuthenticated === false) {
@@ -172,7 +176,6 @@ export default function AdminLayout({
   }
 
   if (isAuthenticated === false) {
-    router.replace('/admin');
     return <LoadingScreen />;
   }
 
