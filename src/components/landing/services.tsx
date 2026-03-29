@@ -1,9 +1,10 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Code2, Workflow, Puzzle, Rocket, ArrowRight } from 'lucide-react';
+import { Code2, Workflow, Puzzle, Rocket, ArrowRight, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSiteData, parseJSON, type Service } from '@/hooks/use-site-data';
+import { useLocale } from '@/lib/i18n';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Code2, Workflow, Puzzle, Rocket, Database: Code2, Globe: Workflow, Shield: Puzzle, Layers: Rocket,
@@ -11,22 +12,22 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 
 export function Services() {
   const { data } = useSiteData();
+  const { t, isRTL } = useLocale();
   const services: Service[] = data?.services || [];
 
   const container = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.1 } } };
   const card = { hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
+  const Arrow = isRTL ? ArrowLeft : ArrowRight;
 
   return (
     <section id="services" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center max-w-3xl mx-auto mb-16">
-          <p className="text-sm font-semibold text-primary tracking-wider uppercase mb-3">What I Do</p>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
-            End-to-End Solutions for <span className="text-gradient">Modern Businesses</span>
+          <p className="text-sm font-semibold text-primary tracking-wider uppercase mb-3">{t('services_sub')}</p>
+          <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
+            {t('services_heading')} <span className="text-gradient">{t('services_heading_highlight')}</span>
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
-            Whether you need a complete SaaS platform, process automation, or a custom integration — I deliver production-grade solutions that work reliably at scale.
-          </p>
+          <p className="mt-4 text-lg text-muted-foreground leading-relaxed">{t('services_desc')}</p>
         </motion.div>
 
         <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-50px' }} className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
@@ -56,7 +57,7 @@ export function Services() {
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }} className="mt-12 text-center">
           <a href="#contact">
             <Button variant="outline" size="lg" className="border-border/60 hover:border-primary/50 hover:bg-primary/5">
-              Discuss Your Project <ArrowRight className="ml-2 h-4 w-4" />
+              {t('services_cta')} <Arrow className="ms-2 h-4 w-4" />
             </Button>
           </a>
         </motion.div>

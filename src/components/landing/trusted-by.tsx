@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useLocale } from '@/lib/i18n';
 
 const tools = [
   { name: 'Next.js', icon: '⚡' },
@@ -17,25 +18,17 @@ const tools = [
   { name: 'Supabase', icon: '🔥' },
 ];
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.05 },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 10 },
-  show: { opacity: 1, y: 0 },
-};
+const container = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.05 } } };
+const item = { hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } };
 
 export function TrustedBy() {
+  const { t } = useLocale();
+
   return (
     <section className="relative py-16 border-y border-border/40">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <p className="text-center text-sm font-medium text-muted-foreground mb-8 tracking-wider uppercase">
-          Technologies I Work With
+          {t('trusted_heading')}
         </p>
         <motion.div
           variants={container}

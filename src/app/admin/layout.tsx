@@ -12,6 +12,7 @@ import {
   HelpCircle,
   LogOut,
   ArrowLeft,
+  ArrowRight,
   Menu,
   Loader2,
   Mail,
@@ -25,19 +26,26 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
+import { useLocale } from '@/lib/i18n';
 
-const navItems = [
-  { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/projects', label: 'Projects', icon: FolderKanban },
-  { href: '/admin/testimonials', label: 'Testimonials', icon: MessageSquareQuote },
-  { href: '/admin/services', label: 'Services', icon: Settings },
-  { href: '/admin/faqs', label: 'FAQs', icon: HelpCircle },
-  { href: '/admin/contacts', label: 'Messages', icon: Mail },
-  { href: '/admin/settings', label: 'Settings', icon: Settings },
-];
+function useNavItems() {
+  const { t } = useLocale();
+  return [
+    { href: '/admin/dashboard', label: t('admin_dashboard'), icon: LayoutDashboard },
+    { href: '/admin/projects', label: t('admin_projects'), icon: FolderKanban },
+    { href: '/admin/testimonials', label: t('admin_testimonials'), icon: MessageSquareQuote },
+    { href: '/admin/services', label: t('admin_services'), icon: Settings },
+    { href: '/admin/faqs', label: t('admin_faqs'), icon: HelpCircle },
+    { href: '/admin/contacts', label: t('admin_messages'), icon: Mail },
+    { href: '/admin/settings', label: t('admin_settings'), icon: Settings },
+  ];
+}
 
 function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
   const router = useRouter();
+  const { t, isRTL } = useLocale();
+  const navItems = useNavItems();
+  const BackArrow = isRTL ? ArrowRight : ArrowLeft;
 
   const handleLogout = async () => {
     try {
@@ -99,15 +107,15 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
           href="/"
           className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
         >
-          <ArrowLeft className="size-4" />
-          Back to Site
+          <BackArrow className="size-4" />
+          {t('admin_back_to_site')}
         </Link>
         <button
           onClick={handleLogout}
           className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
         >
           <LogOut className="size-4" />
-          Logout
+          {t('admin_logout')}
         </button>
       </div>
     </div>
@@ -129,6 +137,7 @@ export default function AdminLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { isRTL } = useLocale();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -182,12 +191,15 @@ export default function AdminLayout({
   return (
     <div className="flex h-screen overflow-hidden bg-muted/30">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 border-r bg-background z-30">
+      <aside className={cn(
+        'hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 border-e bg-background z-30',
+        isRTL ? 'lg:right-0' : 'lg:left-0'
+      )}>
         <SidebarContent pathname={pathname} />
       </aside>
 
       {/* Mobile Sidebar */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 flex h-14 items-center gap-3 border-b bg-background px-4">
+      <div className="lg:hidden fixed top-0 start-0 end-0 z-40 flex h-14 items-center gap-3 border-b bg-background px-4">
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="size-9">
@@ -195,7 +207,7 @@ export default function AdminLayout({
               <span className="sr-only">Toggle menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="p-0 w-64">
+          <SheetContent side={isRTL ? 'right' : 'left'} className="p-0 w-64">
             <SheetTitle className="sr-only">Navigation</SheetTitle>
             <SidebarContent pathname={pathname} onNavigate={() => setMobileOpen(false)} />
           </SheetContent>
@@ -211,7 +223,10 @@ export default function AdminLayout({
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 lg:ml-64 overflow-y-auto">
+      <main className={cn(
+        'flex-1 overflow-y-auto',
+        isRTL ? 'lg:mr-64' : 'lg:ml-64'
+      )}>
         <div className="pt-14 lg:pt-0">
           <div className="p-4 sm:p-6 lg:p-8">
             {children}

@@ -3,30 +3,21 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
-import { Menu, Zap, Sun, Moon } from 'lucide-react';
+import { Menu, Zap, Sun, Moon, Globe } from 'lucide-react';
 import { useTheme } from 'next-themes';
-
-const navLinks = [
-  { label: 'Services', href: '#services' },
-  { label: 'Process', href: '#process' },
-  { label: 'Results', href: '#results' },
-  { label: 'Testimonials', href: '#testimonials' },
-  { label: 'Pricing', href: '#pricing' },
-  { label: 'FAQ', href: '#faq' },
-];
+import { useLocale } from '@/lib/i18n';
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
+  const { locale, setLocale, t, isRTL } = useLocale();
 
   const handleScroll = () => setScrolled(window.scrollY > 20);
 
   useEffect(() => {
-    // Subscribe to scroll events
     window.addEventListener('scroll', handleScroll);
-    // Mark as mounted after subscription is set up
     const timer = requestAnimationFrame(() => setMounted(true));
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -34,12 +25,21 @@ export function Navbar() {
     };
   }, []);
 
+  const navLinks = [
+    { label: t('nav_services'), href: '#services' },
+    { label: t('nav_process'), href: '#process' },
+    { label: t('nav_results'), href: '#results' },
+    { label: t('nav_testimonials'), href: '#testimonials' },
+    { label: t('nav_pricing'), href: '#pricing' },
+    { label: t('nav_faq'), href: '#faq' },
+  ];
+
+  const toggleLocale = () => setLocale(locale === 'en' ? 'ar' : 'en');
+
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'glass shadow-lg shadow-primary/5'
-          : 'bg-transparent'
+      className={`fixed top-0 start-0 end-0 z-50 transition-all duration-300 ${
+        scrolled ? 'glass shadow-lg shadow-primary/5' : 'bg-transparent'
       }`}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
@@ -47,7 +47,7 @@ export function Navbar() {
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-transform group-hover:scale-110">
             <Zap className="h-5 w-5" />
           </div>
-          <span className="text-xl font-bold tracking-tight">
+          <span className="text-xl font-bold">
             asra3<span className="text-primary">.com</span>
           </span>
         </a>
@@ -67,19 +67,31 @@ export function Navbar() {
 
         <div className="hidden md:flex items-center gap-2">
           {mounted && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="size-9 text-muted-foreground hover:text-foreground"
-              aria-label="Toggle theme"
-            >
-              {theme === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}
-            </Button>
+            <>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleLocale}
+                className="size-9 text-muted-foreground hover:text-foreground"
+                aria-label="Toggle language"
+              >
+                <Globe className="size-4" />
+                <span className="text-[10px] font-bold ms-1">{locale === 'ar' ? 'EN' : 'ع'}</span>
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className="size-9 text-muted-foreground hover:text-foreground"
+                aria-label="Toggle theme"
+              >
+                {theme === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}
+              </Button>
+            </>
           )}
           <a href="#contact">
             <Button className="btn-glow bg-primary text-primary-foreground hover:bg-primary/90 px-6">
-              Let&apos;s Talk
+              {t('nav_cta')}
             </Button>
           </a>
         </div>
@@ -91,7 +103,7 @@ export function Navbar() {
               <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-72">
+          <SheetContent side={isRTL ? 'left' : 'right'} className="w-72">
             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
             <div className="flex flex-col gap-4 mt-8">
               {navLinks.map((link) => (
@@ -104,9 +116,18 @@ export function Navbar() {
                   {link.label}
                 </a>
               ))}
+              <div className="flex items-center gap-2 mt-4">
+                <Button variant="ghost" size="sm" onClick={toggleLocale} className="text-muted-foreground hover:text-foreground">
+                  <Globe className="size-4 me-1" />
+                  {locale === 'ar' ? 'English' : 'العربية'}
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="text-muted-foreground hover:text-foreground">
+                  {theme === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}
+                </Button>
+              </div>
               <a href="#contact" onClick={() => setMobileOpen(false)} className="mt-4">
                 <Button className="btn-glow bg-primary text-primary-foreground hover:bg-primary/90 w-full">
-                  Let&apos;s Talk
+                  {t('nav_cta')}
                 </Button>
               </a>
             </div>

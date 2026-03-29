@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { useLocale } from '@/lib/i18n';
 
 interface DashboardStats {
   projects: number;
@@ -22,57 +23,8 @@ interface DashboardStats {
   contacts: number;
 }
 
-const statCards: {
-  key: keyof DashboardStats;
-  label: string;
-  icon: React.ElementType;
-  href: string;
-  color: string;
-  bgColor: string;
-}[] = [
-  {
-    key: 'projects',
-    label: 'Total Projects',
-    icon: FolderKanban,
-    href: '/admin/projects',
-    color: 'text-emerald-600',
-    bgColor: 'bg-emerald-50',
-  },
-  {
-    key: 'testimonials',
-    label: 'Active Testimonials',
-    icon: MessageSquareQuote,
-    href: '/admin/testimonials',
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-50',
-  },
-  {
-    key: 'services',
-    label: 'Services',
-    icon: Settings,
-    href: '/admin/services',
-    color: 'text-violet-600',
-    bgColor: 'bg-violet-50',
-  },
-  {
-    key: 'faqs',
-    label: 'FAQs',
-    icon: HelpCircle,
-    href: '/admin/faqs',
-    color: 'text-amber-600',
-    bgColor: 'bg-amber-50',
-  },
-  {
-    key: 'contacts',
-    label: 'Messages',
-    icon: Mail,
-    href: '/admin/contacts',
-    color: 'text-rose-600',
-    bgColor: 'bg-rose-50',
-  },
-];
-
 export default function AdminDashboardPage() {
+  const { t } = useLocale();
   const [stats, setStats] = useState<DashboardStats>({
     projects: 0,
     testimonials: 0,
@@ -81,6 +33,56 @@ export default function AdminDashboardPage() {
     contacts: 0,
   });
   const [loading, setLoading] = useState(true);
+
+  const statCards: {
+    key: keyof DashboardStats;
+    labelKey: string;
+    icon: React.ElementType;
+    href: string;
+    color: string;
+    bgColor: string;
+  }[] = [
+    {
+      key: 'projects',
+      labelKey: 'admin_total_projects',
+      icon: FolderKanban,
+      href: '/admin/projects',
+      color: 'text-emerald-600',
+      bgColor: 'bg-emerald-50 dark:bg-emerald-950/50',
+    },
+    {
+      key: 'testimonials',
+      labelKey: 'admin_active_testimonials',
+      icon: MessageSquareQuote,
+      href: '/admin/testimonials',
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-50 dark:bg-blue-950/50',
+    },
+    {
+      key: 'services',
+      labelKey: 'admin_services',
+      icon: Settings,
+      href: '/admin/services',
+      color: 'text-violet-600',
+      bgColor: 'bg-violet-50 dark:bg-violet-950/50',
+    },
+    {
+      key: 'faqs',
+      labelKey: 'admin_faqs',
+      icon: HelpCircle,
+      href: '/admin/faqs',
+      color: 'text-amber-600',
+      bgColor: 'bg-amber-50 dark:bg-amber-950/50',
+    },
+    {
+      key: 'contacts',
+      labelKey: 'admin_messages',
+      icon: Mail,
+      href: '/admin/contacts',
+      color: 'text-rose-600',
+      bgColor: 'bg-rose-50 dark:bg-rose-950/50',
+    },
+  ];
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -124,10 +126,10 @@ export default function AdminDashboardPage() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
           <TrendingUp className="size-6 text-primary" />
-          Dashboard
+          {t('admin_dashboard')}
         </h1>
         <p className="text-muted-foreground mt-1">
-          Overview of your site content
+          {t('admin_dashboard_desc')}
         </p>
       </div>
 
@@ -143,7 +145,7 @@ export default function AdminDashboardPage() {
               <Card className="hover:shadow-md transition-shadow cursor-pointer group h-full">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-sm font-medium text-muted-foreground">
-                    {card.label}
+                    {t(card.labelKey as any)}
                   </CardTitle>
                   <div className={cn('rounded-lg p-2', card.bgColor)}>
                     <card.icon className={cn('size-4', card.color)} />
@@ -162,13 +164,13 @@ export default function AdminDashboardPage() {
 
       {/* Quick Actions */}
       <div>
-        <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
+        <h2 className="text-lg font-semibold mb-4">{t('admin_quick_actions')}</h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {statCards.map((card) => (
             <Link key={`action-${card.key}`} href={card.href}>
               <div className="flex items-center gap-3 rounded-lg border p-3 hover:bg-muted/50 transition-colors cursor-pointer">
                 <card.icon className="size-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Manage {card.label}</span>
+                <span className="text-sm font-medium">{t('admin_manage')} {t(card.labelKey as any)}</span>
               </div>
             </Link>
           ))}

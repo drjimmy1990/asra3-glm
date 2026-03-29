@@ -43,6 +43,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Separator } from '@/components/ui/separator';
+import { useLocale } from '@/lib/i18n';
 
 interface Testimonial {
   id: string;
@@ -66,6 +67,7 @@ const emptyForm = {
 };
 
 export default function AdminTestimonialsPage() {
+  const { t } = useLocale();
   const [items, setItems] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -83,11 +85,11 @@ export default function AdminTestimonialsPage() {
         setItems(Array.isArray(data) ? data : []);
       }
     } catch {
-      toast({ title: 'Error', description: 'Failed to fetch testimonials', variant: 'destructive' });
+      toast({ title: t('admin_error_generic'), description: t('admin_error_fetch'), variant: 'destructive' });
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     fetchItems();
@@ -131,15 +133,15 @@ export default function AdminTestimonialsPage() {
       });
 
       if (res.ok) {
-        toast({ title: editingId ? 'Testimonial updated' : 'Testimonial created', description: 'Changes have been saved successfully.' });
+        toast({ title: t('admin_testimonials') + ' ' + (editingId ? t('admin_update').toLowerCase() : t('admin_create').toLowerCase()), description: t('admin_saved') });
         setDialogOpen(false);
         fetchItems();
       } else {
         const data = await res.json();
-        toast({ title: 'Error', description: data.error || 'Operation failed', variant: 'destructive' });
+        toast({ title: t('admin_error_generic'), description: data.error || t('admin_error_save'), variant: 'destructive' });
       }
     } catch {
-      toast({ title: 'Error', description: 'Something went wrong', variant: 'destructive' });
+      toast({ title: t('admin_error_generic'), description: t('admin_error_generic'), variant: 'destructive' });
     } finally {
       setSaving(false);
     }
@@ -153,15 +155,15 @@ export default function AdminTestimonialsPage() {
         method: 'DELETE',
       });
       if (res.ok) {
-        toast({ title: 'Testimonial deleted', description: 'The testimonial has been removed.' });
+        toast({ title: t('admin_testimonials') + ' ' + t('admin_removed') });
         setDeleteDialogOpen(false);
         setDeletingId(null);
         fetchItems();
       } else {
-        toast({ title: 'Error', description: 'Failed to delete testimonial', variant: 'destructive' });
+        toast({ title: t('admin_error_generic'), description: t('admin_error_delete'), variant: 'destructive' });
       }
     } catch {
-      toast({ title: 'Error', description: 'Something went wrong', variant: 'destructive' });
+      toast({ title: t('admin_error_generic'), description: t('admin_error_generic'), variant: 'destructive' });
     } finally {
       setSaving(false);
     }
@@ -189,15 +191,15 @@ export default function AdminTestimonialsPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <MessageSquareQuote className="size-6 text-primary" />
-            Testimonials
+            {t('admin_testimonials')}
           </h1>
           <p className="text-muted-foreground mt-1">
-            Manage client testimonials and reviews
+            {t('admin_testimonials_desc')}
           </p>
         </div>
         <Button onClick={openCreate} className="shrink-0">
-          <Plus className="size-4 mr-2" />
-          Add Testimonial
+          <Plus className="size-4 me-2" />
+          {t('admin_add_testimonial')}
         </Button>
       </div>
 
@@ -210,19 +212,19 @@ export default function AdminTestimonialsPage() {
         ) : items.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
             <MessageSquareQuote className="size-12 mx-auto mb-3 opacity-20" />
-            <p className="text-sm">No testimonials yet. Click &ldquo;Add Testimonial&rdquo; to get started.</p>
+            <p className="text-sm">{t('admin_no_testimonials')}</p>
           </div>
         ) : (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="min-w-[160px]">Name</TableHead>
-                <TableHead className="min-w-[140px]">Role</TableHead>
-                <TableHead className="min-w-[200px]">Content</TableHead>
-                <TableHead className="text-center">Rating</TableHead>
-                <TableHead className="text-center">Active</TableHead>
-                <TableHead className="text-center">Order</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="min-w-[160px]">{t('admin_name')}</TableHead>
+                <TableHead className="min-w-[140px]">{t('admin_role')}</TableHead>
+                <TableHead className="min-w-[200px]">{t('admin_content')}</TableHead>
+                <TableHead className="text-center">{t('admin_rating')}</TableHead>
+                <TableHead className="text-center">{t('admin_active')}</TableHead>
+                <TableHead className="text-center">{t('admin_order')}</TableHead>
+                <TableHead className="text-end">{t('admin_actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -236,13 +238,13 @@ export default function AdminTestimonialsPage() {
                   <TableCell>{renderStars(item.rating)}</TableCell>
                   <TableCell className="text-center">
                     <Badge variant={item.active ? 'default' : 'outline'}>
-                      {item.active ? 'Active' : 'Inactive'}
+                      {item.active ? t('admin_active') : t('admin_inactive')}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-center text-muted-foreground">
                     {item.order}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-end">
                     <div className="flex items-center justify-end gap-1">
                       <Button
                         variant="ghost"
@@ -251,7 +253,7 @@ export default function AdminTestimonialsPage() {
                         onClick={() => openEdit(item)}
                       >
                         <Pencil className="size-3.5" />
-                        <span className="sr-only">Edit</span>
+                        <span className="sr-only">{t('admin_edit')}</span>
                       </Button>
                       <Button
                         variant="ghost"
@@ -260,7 +262,7 @@ export default function AdminTestimonialsPage() {
                         onClick={() => openDelete(item.id)}
                       >
                         <Trash2 className="size-3.5" />
-                        <span className="sr-only">Delete</span>
+                        <span className="sr-only">{t('admin_delete')}</span>
                       </Button>
                     </div>
                   </TableCell>
@@ -276,19 +278,19 @@ export default function AdminTestimonialsPage() {
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {editingId ? 'Edit Testimonial' : 'Add Testimonial'}
+              {editingId ? t('admin_edit_testimonial') : t('admin_add_testimonial')}
             </DialogTitle>
             <DialogDescription>
               {editingId
-                ? 'Update the testimonial details below.'
-                : 'Fill in the details to create a new testimonial.'}
+                ? t('admin_update_testimonial_desc')
+                : t('admin_create_testimonial_desc')}
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-2">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="name">Name *</Label>
+                <Label htmlFor="name">{t('admin_name')} *</Label>
                 <Input
                   id="name"
                   value={form.name}
@@ -297,7 +299,7 @@ export default function AdminTestimonialsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="role">Role *</Label>
+                <Label htmlFor="role">{t('admin_role')} *</Label>
                 <Input
                   id="role"
                   value={form.role}
@@ -308,7 +310,7 @@ export default function AdminTestimonialsPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="content">Content *</Label>
+              <Label htmlFor="content">{t('admin_content')} *</Label>
               <Textarea
                 id="content"
                 value={form.content}
@@ -320,7 +322,7 @@ export default function AdminTestimonialsPage() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="rating">Rating (1-5)</Label>
+                <Label htmlFor="rating">{t('admin_rating')}</Label>
                 <Input
                   id="rating"
                   type="number"
@@ -336,7 +338,7 @@ export default function AdminTestimonialsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="order">Order</Label>
+                <Label htmlFor="order">{t('admin_order')}</Label>
                 <Input
                   id="order"
                   type="number"
@@ -350,9 +352,9 @@ export default function AdminTestimonialsPage() {
 
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label>Active</Label>
+                <Label>{t('admin_active')}</Label>
                 <p className="text-xs text-muted-foreground">
-                  Show this testimonial on the public site
+                  {t('admin_show_public')}
                 </p>
               </div>
               <Switch
@@ -364,7 +366,7 @@ export default function AdminTestimonialsPage() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>
-              Cancel
+              {t('admin_cancel')}
             </Button>
             <Button
               onClick={handleSave}
@@ -372,13 +374,13 @@ export default function AdminTestimonialsPage() {
             >
               {saving ? (
                 <>
-                  <Loader2 className="size-4 animate-spin mr-2" />
-                  Saving...
+                  <Loader2 className="size-4 animate-spin me-2" />
+                  {t('admin_saving')}
                 </>
               ) : editingId ? (
-                'Update'
+                t('admin_update')
               ) : (
-                'Create'
+                t('admin_create')
               )}
             </Button>
           </DialogFooter>
@@ -389,14 +391,13 @@ export default function AdminTestimonialsPage() {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Testimonial</AlertDialogTitle>
+            <AlertDialogTitle>{t('admin_delete_testimonial')}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this testimonial? This action cannot
-              be undone.
+              {t('admin_delete_confirm')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('admin_cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={saving}
@@ -404,11 +405,11 @@ export default function AdminTestimonialsPage() {
             >
               {saving ? (
                 <>
-                  <Loader2 className="size-4 animate-spin mr-2" />
-                  Deleting...
+                  <Loader2 className="size-4 animate-spin me-2" />
+                  {t('admin_deleting')}
                 </>
               ) : (
-                'Delete'
+                t('admin_delete')
               )}
             </AlertDialogAction>
           </AlertDialogFooter>

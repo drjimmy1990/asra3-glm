@@ -57,6 +57,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Separator } from '@/components/ui/separator';
+import { useLocale } from '@/lib/i18n';
 
 interface Service {
   id: string;
@@ -91,6 +92,7 @@ const emptyForm = {
 };
 
 export default function AdminServicesPage() {
+  const { t } = useLocale();
   const [items, setItems] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -108,11 +110,11 @@ export default function AdminServicesPage() {
         setItems(Array.isArray(data) ? data : []);
       }
     } catch {
-      toast({ title: 'Error', description: 'Failed to fetch services', variant: 'destructive' });
+      toast({ title: t('admin_error_generic'), description: t('admin_error_fetch'), variant: 'destructive' });
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     fetchItems();
@@ -156,15 +158,15 @@ export default function AdminServicesPage() {
       });
 
       if (res.ok) {
-        toast({ title: editingId ? 'Service updated' : 'Service created', description: 'Changes have been saved successfully.' });
+        toast({ title: t('admin_services') + ' ' + (editingId ? t('admin_update').toLowerCase() : t('admin_create').toLowerCase()), description: t('admin_saved') });
         setDialogOpen(false);
         fetchItems();
       } else {
         const data = await res.json();
-        toast({ title: 'Error', description: data.error || 'Operation failed', variant: 'destructive' });
+        toast({ title: t('admin_error_generic'), description: data.error || t('admin_error_save'), variant: 'destructive' });
       }
     } catch {
-      toast({ title: 'Error', description: 'Something went wrong', variant: 'destructive' });
+      toast({ title: t('admin_error_generic'), description: t('admin_error_generic'), variant: 'destructive' });
     } finally {
       setSaving(false);
     }
@@ -178,15 +180,15 @@ export default function AdminServicesPage() {
         method: 'DELETE',
       });
       if (res.ok) {
-        toast({ title: 'Service deleted', description: 'The service has been removed.' });
+        toast({ title: t('admin_services') + ' ' + t('admin_removed') });
         setDeleteDialogOpen(false);
         setDeletingId(null);
         fetchItems();
       } else {
-        toast({ title: 'Error', description: 'Failed to delete service', variant: 'destructive' });
+        toast({ title: t('admin_error_generic'), description: t('admin_error_delete'), variant: 'destructive' });
       }
     } catch {
-      toast({ title: 'Error', description: 'Something went wrong', variant: 'destructive' });
+      toast({ title: t('admin_error_generic'), description: t('admin_error_generic'), variant: 'destructive' });
     } finally {
       setSaving(false);
     }
@@ -208,15 +210,15 @@ export default function AdminServicesPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <Cog className="size-6 text-primary" />
-            Services
+            {t('admin_services')}
           </h1>
           <p className="text-muted-foreground mt-1">
-            Manage the services you offer
+            {t('admin_services_desc')}
           </p>
         </div>
         <Button onClick={openCreate} className="shrink-0">
-          <Plus className="size-4 mr-2" />
-          Add Service
+          <Plus className="size-4 me-2" />
+          {t('admin_add_service')}
         </Button>
       </div>
 
@@ -229,18 +231,18 @@ export default function AdminServicesPage() {
         ) : items.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
             <Cog className="size-12 mx-auto mb-3 opacity-20" />
-            <p className="text-sm">No services yet. Click &ldquo;Add Service&rdquo; to get started.</p>
+            <p className="text-sm">{t('admin_no_services')}</p>
           </div>
         ) : (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="min-w-[180px]">Title</TableHead>
-                <TableHead>Icon</TableHead>
-                <TableHead className="min-w-[200px]">Description</TableHead>
-                <TableHead className="text-center">Active</TableHead>
-                <TableHead className="text-center">Order</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="min-w-[180px]">{t('admin_title')}</TableHead>
+                <TableHead>{t('admin_icon')}</TableHead>
+                <TableHead className="min-w-[200px]">{t('admin_description')}</TableHead>
+                <TableHead className="text-center">{t('admin_active')}</TableHead>
+                <TableHead className="text-center">{t('admin_order')}</TableHead>
+                <TableHead className="text-end">{t('admin_actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -258,13 +260,13 @@ export default function AdminServicesPage() {
                   </TableCell>
                   <TableCell className="text-center">
                     <Badge variant={item.active ? 'default' : 'outline'}>
-                      {item.active ? 'Active' : 'Inactive'}
+                      {item.active ? t('admin_active') : t('admin_inactive')}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-center text-muted-foreground">
                     {item.order}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-end">
                     <div className="flex items-center justify-end gap-1">
                       <Button
                         variant="ghost"
@@ -273,7 +275,7 @@ export default function AdminServicesPage() {
                         onClick={() => openEdit(item)}
                       >
                         <Pencil className="size-3.5" />
-                        <span className="sr-only">Edit</span>
+                        <span className="sr-only">{t('admin_edit')}</span>
                       </Button>
                       <Button
                         variant="ghost"
@@ -282,7 +284,7 @@ export default function AdminServicesPage() {
                         onClick={() => openDelete(item.id)}
                       >
                         <Trash2 className="size-3.5" />
-                        <span className="sr-only">Delete</span>
+                        <span className="sr-only">{t('admin_delete')}</span>
                       </Button>
                     </div>
                   </TableCell>
@@ -298,19 +300,19 @@ export default function AdminServicesPage() {
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {editingId ? 'Edit Service' : 'Add Service'}
+              {editingId ? t('admin_edit_service') : t('admin_add_service')}
             </DialogTitle>
             <DialogDescription>
               {editingId
-                ? 'Update the service details below.'
-                : 'Fill in the details to create a new service.'}
+                ? t('admin_update_service_desc')
+                : t('admin_create_service_desc')}
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-2">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="iconName">Icon</Label>
+                <Label htmlFor="iconName">{t('admin_icon')}</Label>
                 <Select
                   value={form.iconName}
                   onValueChange={(value) => setForm({ ...form, iconName: value })}
@@ -331,7 +333,7 @@ export default function AdminServicesPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="order">Order</Label>
+                <Label htmlFor="order">{t('admin_order')}</Label>
                 <Input
                   id="order"
                   type="number"
@@ -342,7 +344,7 @@ export default function AdminServicesPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="title">Title *</Label>
+              <Label htmlFor="title">{t('admin_title')} *</Label>
               <Input
                 id="title"
                 value={form.title}
@@ -352,7 +354,7 @@ export default function AdminServicesPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Description *</Label>
+              <Label htmlFor="description">{t('admin_description')} *</Label>
               <Textarea
                 id="description"
                 value={form.description}
@@ -363,7 +365,7 @@ export default function AdminServicesPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="features">Features (JSON array of strings)</Label>
+              <Label htmlFor="features">{t('admin_features')}</Label>
               <Textarea
                 id="features"
                 value={form.features}
@@ -378,9 +380,9 @@ export default function AdminServicesPage() {
 
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label>Active</Label>
+                <Label>{t('admin_active')}</Label>
                 <p className="text-xs text-muted-foreground">
-                  Show this service on the public site
+                  {t('admin_show_public')}
                 </p>
               </div>
               <Switch
@@ -392,7 +394,7 @@ export default function AdminServicesPage() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>
-              Cancel
+              {t('admin_cancel')}
             </Button>
             <Button
               onClick={handleSave}
@@ -400,13 +402,13 @@ export default function AdminServicesPage() {
             >
               {saving ? (
                 <>
-                  <Loader2 className="size-4 animate-spin mr-2" />
-                  Saving...
+                  <Loader2 className="size-4 animate-spin me-2" />
+                  {t('admin_saving')}
                 </>
               ) : editingId ? (
-                'Update'
+                t('admin_update')
               ) : (
-                'Create'
+                t('admin_create')
               )}
             </Button>
           </DialogFooter>
@@ -417,14 +419,13 @@ export default function AdminServicesPage() {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Service</AlertDialogTitle>
+            <AlertDialogTitle>{t('admin_delete_service')}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this service? This action cannot be
-              undone.
+              {t('admin_delete_confirm')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('admin_cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={saving}
@@ -432,11 +433,11 @@ export default function AdminServicesPage() {
             >
               {saving ? (
                 <>
-                  <Loader2 className="size-4 animate-spin mr-2" />
-                  Deleting...
+                  <Loader2 className="size-4 animate-spin me-2" />
+                  {t('admin_deleting')}
                 </>
               ) : (
-                'Delete'
+                t('admin_delete')
               )}
             </AlertDialogAction>
           </AlertDialogFooter>

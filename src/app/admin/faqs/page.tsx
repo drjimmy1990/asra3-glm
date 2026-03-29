@@ -42,6 +42,7 @@ import {
 } from '@/components/ui/table';
 import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
+import { useLocale } from '@/lib/i18n';
 
 interface FAQ {
   id: string;
@@ -61,6 +62,7 @@ const emptyForm = {
 };
 
 export default function AdminFaqsPage() {
+  const { t } = useLocale();
   const [items, setItems] = useState<FAQ[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -78,11 +80,11 @@ export default function AdminFaqsPage() {
         setItems(Array.isArray(data) ? data : []);
       }
     } catch {
-      toast({ title: 'Error', description: 'Failed to fetch FAQs', variant: 'destructive' });
+      toast({ title: t('admin_error_generic'), description: t('admin_error_fetch'), variant: 'destructive' });
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     fetchItems();
@@ -124,15 +126,15 @@ export default function AdminFaqsPage() {
       });
 
       if (res.ok) {
-        toast({ title: editingId ? 'FAQ updated' : 'FAQ created', description: 'Changes have been saved successfully.' });
+        toast({ title: t('admin_faqs') + ' ' + (editingId ? t('admin_update').toLowerCase() : t('admin_create').toLowerCase()), description: t('admin_saved') });
         setDialogOpen(false);
         fetchItems();
       } else {
         const data = await res.json();
-        toast({ title: 'Error', description: data.error || 'Operation failed', variant: 'destructive' });
+        toast({ title: t('admin_error_generic'), description: data.error || t('admin_error_save'), variant: 'destructive' });
       }
     } catch {
-      toast({ title: 'Error', description: 'Something went wrong', variant: 'destructive' });
+      toast({ title: t('admin_error_generic'), description: t('admin_error_generic'), variant: 'destructive' });
     } finally {
       setSaving(false);
     }
@@ -146,15 +148,15 @@ export default function AdminFaqsPage() {
         method: 'DELETE',
       });
       if (res.ok) {
-        toast({ title: 'FAQ deleted', description: 'The FAQ has been removed.' });
+        toast({ title: t('admin_faqs') + ' ' + t('admin_removed') });
         setDeleteDialogOpen(false);
         setDeletingId(null);
         fetchItems();
       } else {
-        toast({ title: 'Error', description: 'Failed to delete FAQ', variant: 'destructive' });
+        toast({ title: t('admin_error_generic'), description: t('admin_error_delete'), variant: 'destructive' });
       }
     } catch {
-      toast({ title: 'Error', description: 'Something went wrong', variant: 'destructive' });
+      toast({ title: t('admin_error_generic'), description: t('admin_error_generic'), variant: 'destructive' });
     } finally {
       setSaving(false);
     }
@@ -167,15 +169,15 @@ export default function AdminFaqsPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <HelpCircle className="size-6 text-primary" />
-            FAQs
+            {t('admin_faqs')}
           </h1>
           <p className="text-muted-foreground mt-1">
-            Manage frequently asked questions
+            {t('admin_faqs_desc')}
           </p>
         </div>
         <Button onClick={openCreate} className="shrink-0">
-          <Plus className="size-4 mr-2" />
-          Add FAQ
+          <Plus className="size-4 me-2" />
+          {t('admin_add_faq')}
         </Button>
       </div>
 
@@ -188,17 +190,17 @@ export default function AdminFaqsPage() {
         ) : items.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
             <HelpCircle className="size-12 mx-auto mb-3 opacity-20" />
-            <p className="text-sm">No FAQs yet. Click &ldquo;Add FAQ&rdquo; to get started.</p>
+            <p className="text-sm">{t('admin_no_faqs')}</p>
           </div>
         ) : (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="min-w-[200px]">Question</TableHead>
-                <TableHead className="min-w-[200px]">Answer</TableHead>
-                <TableHead className="text-center">Active</TableHead>
-                <TableHead className="text-center">Order</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="min-w-[200px]">{t('admin_question')}</TableHead>
+                <TableHead className="min-w-[200px]">{t('admin_answer')}</TableHead>
+                <TableHead className="text-center">{t('admin_active')}</TableHead>
+                <TableHead className="text-center">{t('admin_order')}</TableHead>
+                <TableHead className="text-end">{t('admin_actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -210,13 +212,13 @@ export default function AdminFaqsPage() {
                   </TableCell>
                   <TableCell className="text-center">
                     <Badge variant={item.active ? 'default' : 'outline'}>
-                      {item.active ? 'Active' : 'Inactive'}
+                      {item.active ? t('admin_active') : t('admin_inactive')}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-center text-muted-foreground">
                     {item.order}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-end">
                     <div className="flex items-center justify-end gap-1">
                       <Button
                         variant="ghost"
@@ -225,7 +227,7 @@ export default function AdminFaqsPage() {
                         onClick={() => openEdit(item)}
                       >
                         <Pencil className="size-3.5" />
-                        <span className="sr-only">Edit</span>
+                        <span className="sr-only">{t('admin_edit')}</span>
                       </Button>
                       <Button
                         variant="ghost"
@@ -234,7 +236,7 @@ export default function AdminFaqsPage() {
                         onClick={() => openDelete(item.id)}
                       >
                         <Trash2 className="size-3.5" />
-                        <span className="sr-only">Delete</span>
+                        <span className="sr-only">{t('admin_delete')}</span>
                       </Button>
                     </div>
                   </TableCell>
@@ -250,18 +252,18 @@ export default function AdminFaqsPage() {
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {editingId ? 'Edit FAQ' : 'Add FAQ'}
+              {editingId ? t('admin_edit_faq') : t('admin_add_faq')}
             </DialogTitle>
             <DialogDescription>
               {editingId
-                ? 'Update the FAQ details below.'
-                : 'Fill in the question and answer to create a new FAQ.'}
+                ? t('admin_update_faq_desc')
+                : t('admin_create_faq_desc')}
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-2">
             <div className="space-y-2">
-              <Label htmlFor="question">Question *</Label>
+              <Label htmlFor="question">{t('admin_question')} *</Label>
               <Textarea
                 id="question"
                 value={form.question}
@@ -272,7 +274,7 @@ export default function AdminFaqsPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="answer">Answer *</Label>
+              <Label htmlFor="answer">{t('admin_answer')} *</Label>
               <Textarea
                 id="answer"
                 value={form.answer}
@@ -283,7 +285,7 @@ export default function AdminFaqsPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="order">Order</Label>
+              <Label htmlFor="order">{t('admin_order')}</Label>
               <Input
                 id="order"
                 type="number"
@@ -297,9 +299,9 @@ export default function AdminFaqsPage() {
 
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label>Active</Label>
+                <Label>{t('admin_active')}</Label>
                 <p className="text-xs text-muted-foreground">
-                  Show this FAQ on the public site
+                  {t('admin_show_public')}
                 </p>
               </div>
               <Switch
@@ -311,7 +313,7 @@ export default function AdminFaqsPage() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>
-              Cancel
+              {t('admin_cancel')}
             </Button>
             <Button
               onClick={handleSave}
@@ -319,13 +321,13 @@ export default function AdminFaqsPage() {
             >
               {saving ? (
                 <>
-                  <Loader2 className="size-4 animate-spin mr-2" />
-                  Saving...
+                  <Loader2 className="size-4 animate-spin me-2" />
+                  {t('admin_saving')}
                 </>
               ) : editingId ? (
-                'Update'
+                t('admin_update')
               ) : (
-                'Create'
+                t('admin_create')
               )}
             </Button>
           </DialogFooter>
@@ -336,14 +338,13 @@ export default function AdminFaqsPage() {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete FAQ</AlertDialogTitle>
+            <AlertDialogTitle>{t('admin_delete_faq')}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this FAQ? This action cannot be
-              undone.
+              {t('admin_delete_confirm')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('admin_cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={saving}
@@ -351,11 +352,11 @@ export default function AdminFaqsPage() {
             >
               {saving ? (
                 <>
-                  <Loader2 className="size-4 animate-spin mr-2" />
-                  Deleting...
+                  <Loader2 className="size-4 animate-spin me-2" />
+                  {t('admin_deleting')}
                 </>
               ) : (
-                'Delete'
+                t('admin_delete')
               )}
             </AlertDialogAction>
           </AlertDialogFooter>

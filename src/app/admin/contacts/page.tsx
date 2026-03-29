@@ -19,6 +19,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
+import { useLocale } from '@/lib/i18n';
 
 interface ContactSubmission {
   id: string;
@@ -32,6 +33,7 @@ interface ContactSubmission {
 }
 
 export default function AdminContactsPage() {
+  const { t, locale } = useLocale();
   const [contacts, setContacts] = useState<ContactSubmission[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -64,9 +66,9 @@ export default function AdminContactsPage() {
       setContacts((prev) =>
         prev.map((c) => (c.id === id ? { ...c, read: true } : c))
       );
-      toast({ title: 'Marked as read' });
+      toast({ title: t('admin_marked_as_read') });
     } catch {
-      toast({ title: 'Failed to update', variant: 'destructive' });
+      toast({ title: t('admin_error_generic'), variant: 'destructive' });
     }
   };
 
@@ -75,9 +77,9 @@ export default function AdminContactsPage() {
     try {
       await fetch(`/api/admin/contacts/${deleteId}`, { method: 'DELETE' });
       setContacts((prev) => prev.filter((c) => c.id !== deleteId));
-      toast({ title: 'Contact deleted' });
+      toast({ title: t('admin_contacts') + ' ' + t('admin_removed') });
     } catch {
-      toast({ title: 'Failed to delete', variant: 'destructive' });
+      toast({ title: t('admin_error_delete'), variant: 'destructive' });
     } finally {
       setDeleteId(null);
     }
@@ -85,7 +87,7 @@ export default function AdminContactsPage() {
 
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr);
-    return d.toLocaleDateString('en-US', {
+    return d.toLocaleDateString(locale === 'ar' ? 'ar-SA' : 'en-US', {
       month: 'short', day: 'numeric', year: 'numeric',
       hour: '2-digit', minute: '2-digit',
     });
@@ -108,13 +110,13 @@ export default function AdminContactsPage() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
           <Mail className="size-6 text-primary" />
-          Contact Submissions
+          {t('admin_contacts')}
         </h1>
         <p className="text-muted-foreground mt-1">
-          {contacts.length} total messages
+          {contacts.length} {t('admin_total_messages')}
           {unreadCount > 0 && (
-            <Badge variant="secondary" className="ml-2 bg-primary/10 text-primary">
-              {unreadCount} unread
+            <Badge variant="secondary" className="ms-2 bg-primary/10 text-primary">
+              {unreadCount} {t('admin_unread')}
             </Badge>
           )}
         </p>
@@ -125,9 +127,9 @@ export default function AdminContactsPage() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-16">
             <Mail className="size-12 text-muted-foreground/40 mb-4" />
-            <p className="text-muted-foreground text-lg font-medium">No messages yet</p>
+            <p className="text-muted-foreground text-lg font-medium">{t('admin_no_messages')}</p>
             <p className="text-muted-foreground/60 text-sm mt-1">
-              Contact form submissions will appear here
+              {t('admin_no_messages_desc')}
             </p>
           </CardContent>
         </Card>
@@ -150,7 +152,7 @@ export default function AdminContactsPage() {
                     ) : (
                       <div className="relative">
                         <Mail className="size-5 text-primary" />
-                        <div className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-primary" />
+                        <div className="absolute -top-0.5 -end-0.5 h-2.5 w-2.5 rounded-full bg-primary" />
                       </div>
                     )}
                   </div>
@@ -197,7 +199,7 @@ export default function AdminContactsPage() {
                           e.stopPropagation();
                           markAsRead(contact.id);
                         }}
-                        title="Mark as read"
+                        title={t('admin_mark_as_read')}
                       >
                         <Eye className="size-4" />
                       </Button>
@@ -210,7 +212,7 @@ export default function AdminContactsPage() {
                         e.stopPropagation();
                         setDeleteId(contact.id);
                       }}
-                      title="Delete"
+                      title={t('admin_delete')}
                     >
                       <Trash2 className="size-4" />
                     </Button>
@@ -229,13 +231,13 @@ export default function AdminContactsPage() {
             <AlertDialogHeader>
               <AlertDialogTitle className="flex items-center gap-2">
                 <Mail className="size-5 text-primary" />
-                Message from {selectedContact.name}
+                {t('admin_message_from')} {selectedContact.name}
               </AlertDialogTitle>
               <AlertDialogDescription asChild>
                 <div className="space-y-4 mt-3">
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
-                      <span className="text-muted-foreground">Email</span>
+                      <span className="text-muted-foreground">{t('admin_email')}</span>
                       <p className="font-medium flex items-center gap-1 mt-0.5">
                         <ExternalLink className="size-3" />
                         {selectedContact.email}
@@ -243,23 +245,23 @@ export default function AdminContactsPage() {
                     </div>
                     {selectedContact.projectType && (
                       <div>
-                        <span className="text-muted-foreground">Project Type</span>
+                        <span className="text-muted-foreground">{t('admin_project_type')}</span>
                         <p className="font-medium mt-0.5">{selectedContact.projectType}</p>
                       </div>
                     )}
                     {selectedContact.budget && (
                       <div>
-                        <span className="text-muted-foreground">Budget</span>
+                        <span className="text-muted-foreground">{t('admin_budget')}</span>
                         <p className="font-medium mt-0.5">{selectedContact.budget}</p>
                       </div>
                     )}
                     <div>
-                      <span className="text-muted-foreground">Received</span>
+                      <span className="text-muted-foreground">{t('admin_received')}</span>
                       <p className="font-medium mt-0.5">{formatDate(selectedContact.createdAt)}</p>
                     </div>
                   </div>
                   <div className="rounded-lg bg-muted/50 p-4">
-                    <span className="text-sm text-muted-foreground">Message</span>
+                    <span className="text-sm text-muted-foreground">{t('admin_message')}</span>
                     <p className="text-sm mt-1 whitespace-pre-wrap leading-relaxed">
                       {selectedContact.message}
                     </p>
@@ -276,11 +278,11 @@ export default function AdminContactsPage() {
                     setSelectedId(null);
                   }}
                 >
-                  <Eye className="size-4 mr-1" />
-                  Mark as Read
+                  <Eye className="size-4 me-1" />
+                  {t('admin_mark_as_read')}
                 </Button>
               )}
-              <AlertDialogCancel>Close</AlertDialogCancel>
+              <AlertDialogCancel>{t('admin_close')}</AlertDialogCancel>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
@@ -290,15 +292,15 @@ export default function AdminContactsPage() {
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Message</AlertDialogTitle>
+            <AlertDialogTitle>{t('admin_delete_message')}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this message? This action cannot be undone.
+              {t('admin_delete_confirm')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('admin_cancel')}</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete} className="bg-destructive text-white hover:bg-destructive/90">
-              Delete
+              {t('admin_delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

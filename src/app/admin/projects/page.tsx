@@ -43,6 +43,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Separator } from '@/components/ui/separator';
+import { useLocale } from '@/lib/i18n';
 
 interface Project {
   id: string;
@@ -74,6 +75,7 @@ const emptyForm = {
 };
 
 export default function AdminProjectsPage() {
+  const { t } = useLocale();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -91,11 +93,11 @@ export default function AdminProjectsPage() {
         setProjects(Array.isArray(data) ? data : []);
       }
     } catch {
-      toast({ title: 'Error', description: 'Failed to fetch projects', variant: 'destructive' });
+      toast({ title: t('admin_error_generic'), description: t('admin_error_fetch'), variant: 'destructive' });
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     fetchProjects();
@@ -143,15 +145,15 @@ export default function AdminProjectsPage() {
       });
 
       if (res.ok) {
-        toast({ title: editingId ? 'Project updated' : 'Project created', description: 'Changes have been saved successfully.' });
+        toast({ title: t('admin_projects') + ' ' + (editingId ? t('admin_update').toLowerCase() : t('admin_create').toLowerCase()), description: t('admin_saved') });
         setDialogOpen(false);
         fetchProjects();
       } else {
         const data = await res.json();
-        toast({ title: 'Error', description: data.error || 'Operation failed', variant: 'destructive' });
+        toast({ title: t('admin_error_generic'), description: data.error || t('admin_error_save'), variant: 'destructive' });
       }
     } catch {
-      toast({ title: 'Error', description: 'Something went wrong', variant: 'destructive' });
+      toast({ title: t('admin_error_generic'), description: t('admin_error_generic'), variant: 'destructive' });
     } finally {
       setSaving(false);
     }
@@ -165,15 +167,15 @@ export default function AdminProjectsPage() {
         method: 'DELETE',
       });
       if (res.ok) {
-        toast({ title: 'Project deleted', description: 'The project has been removed.' });
+        toast({ title: t('admin_projects') + ' ' + t('admin_removed') });
         setDeleteDialogOpen(false);
         setDeletingId(null);
         fetchProjects();
       } else {
-        toast({ title: 'Error', description: 'Failed to delete project', variant: 'destructive' });
+        toast({ title: t('admin_error_generic'), description: t('admin_error_delete'), variant: 'destructive' });
       }
     } catch {
-      toast({ title: 'Error', description: 'Something went wrong', variant: 'destructive' });
+      toast({ title: t('admin_error_generic'), description: t('admin_error_generic'), variant: 'destructive' });
     } finally {
       setSaving(false);
     }
@@ -186,15 +188,15 @@ export default function AdminProjectsPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <FolderKanban className="size-6 text-primary" />
-            Projects
+            {t('admin_projects')}
           </h1>
           <p className="text-muted-foreground mt-1">
-            Manage your portfolio projects
+            {t('admin_projects_desc')}
           </p>
         </div>
         <Button onClick={openCreate} className="shrink-0">
-          <Plus className="size-4 mr-2" />
-          Add Project
+          <Plus className="size-4 me-2" />
+          {t('admin_add_project')}
         </Button>
       </div>
 
@@ -207,18 +209,18 @@ export default function AdminProjectsPage() {
         ) : projects.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
             <FolderKanban className="size-12 mx-auto mb-3 opacity-20" />
-            <p className="text-sm">No projects yet. Click &ldquo;Add Project&rdquo; to get started.</p>
+            <p className="text-sm">{t('admin_no_projects')}</p>
           </div>
         ) : (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="min-w-[180px]">Title</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead className="text-center">Featured</TableHead>
-                <TableHead className="text-center">Active</TableHead>
-                <TableHead className="text-center">Order</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="min-w-[180px]">{t('admin_title')}</TableHead>
+                <TableHead>{t('admin_category')}</TableHead>
+                <TableHead className="text-center">{t('admin_featured')}</TableHead>
+                <TableHead className="text-center">{t('admin_active')}</TableHead>
+                <TableHead className="text-center">{t('admin_order')}</TableHead>
+                <TableHead className="text-end">{t('admin_actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -235,13 +237,13 @@ export default function AdminProjectsPage() {
                   </TableCell>
                   <TableCell className="text-center">
                     <Badge variant={project.active ? 'default' : 'outline'}>
-                      {project.active ? 'Active' : 'Inactive'}
+                      {project.active ? t('admin_active') : t('admin_inactive')}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-center text-muted-foreground">
                     {project.order}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-end">
                     <div className="flex items-center justify-end gap-1">
                       <Button
                         variant="ghost"
@@ -250,7 +252,7 @@ export default function AdminProjectsPage() {
                         onClick={() => openEdit(project)}
                       >
                         <Pencil className="size-3.5" />
-                        <span className="sr-only">Edit</span>
+                        <span className="sr-only">{t('admin_edit')}</span>
                       </Button>
                       <Button
                         variant="ghost"
@@ -259,7 +261,7 @@ export default function AdminProjectsPage() {
                         onClick={() => openDelete(project.id)}
                       >
                         <Trash2 className="size-3.5" />
-                        <span className="sr-only">Delete</span>
+                        <span className="sr-only">{t('admin_delete')}</span>
                       </Button>
                     </div>
                   </TableCell>
@@ -275,19 +277,19 @@ export default function AdminProjectsPage() {
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {editingId ? 'Edit Project' : 'Add Project'}
+              {editingId ? t('admin_edit_project') : t('admin_add_project')}
             </DialogTitle>
             <DialogDescription>
               {editingId
-                ? 'Update the project details below.'
-                : 'Fill in the details to create a new project.'}
+                ? t('admin_update_project_desc')
+                : t('admin_create_project_desc')}
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-2">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="title">Title *</Label>
+                <Label htmlFor="title">{t('admin_title')} *</Label>
                 <Input
                   id="title"
                   value={form.title}
@@ -296,7 +298,7 @@ export default function AdminProjectsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="category">Category *</Label>
+                <Label htmlFor="category">{t('admin_category')} *</Label>
                 <Input
                   id="category"
                   value={form.category}
@@ -307,7 +309,7 @@ export default function AdminProjectsPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Description *</Label>
+              <Label htmlFor="description">{t('admin_description')} *</Label>
               <Textarea
                 id="description"
                 value={form.description}
@@ -318,7 +320,7 @@ export default function AdminProjectsPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="imageUrl">Image URL</Label>
+              <Label htmlFor="imageUrl">{t('admin_image_url')}</Label>
               <Input
                 id="imageUrl"
                 value={form.imageUrl}
@@ -328,7 +330,7 @@ export default function AdminProjectsPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="metrics">Metrics (JSON array)</Label>
+              <Label htmlFor="metrics">{t('admin_metrics')}</Label>
               <Textarea
                 id="metrics"
                 value={form.metrics}
@@ -340,7 +342,7 @@ export default function AdminProjectsPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="tags">Tags (JSON array)</Label>
+              <Label htmlFor="tags">{t('admin_tags')}</Label>
               <Textarea
                 id="tags"
                 value={form.tags}
@@ -353,7 +355,7 @@ export default function AdminProjectsPage() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="color">Color (Tailwind gradient)</Label>
+                <Label htmlFor="color">{t('admin_color')}</Label>
                 <Input
                   id="color"
                   value={form.color}
@@ -362,7 +364,7 @@ export default function AdminProjectsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="order">Order</Label>
+                <Label htmlFor="order">{t('admin_order')}</Label>
                 <Input
                   id="order"
                   type="number"
@@ -376,9 +378,9 @@ export default function AdminProjectsPage() {
 
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label>Featured</Label>
+                <Label>{t('admin_featured')}</Label>
                 <p className="text-xs text-muted-foreground">
-                  Highlight this project on the homepage
+                  {t('admin_featured_desc')}
                 </p>
               </div>
               <Switch
@@ -389,9 +391,9 @@ export default function AdminProjectsPage() {
 
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label>Active</Label>
+                <Label>{t('admin_active')}</Label>
                 <p className="text-xs text-muted-foreground">
-                  Show this project on the public site
+                  {t('admin_show_public')}
                 </p>
               </div>
               <Switch
@@ -403,18 +405,18 @@ export default function AdminProjectsPage() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>
-              Cancel
+              {t('admin_cancel')}
             </Button>
             <Button onClick={handleSave} disabled={saving || !form.title || !form.category}>
               {saving ? (
                 <>
-                  <Loader2 className="size-4 animate-spin mr-2" />
-                  Saving...
+                  <Loader2 className="size-4 animate-spin me-2" />
+                  {t('admin_saving')}
                 </>
               ) : editingId ? (
-                'Update'
+                t('admin_update')
               ) : (
-                'Create'
+                t('admin_create')
               )}
             </Button>
           </DialogFooter>
@@ -425,14 +427,13 @@ export default function AdminProjectsPage() {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Project</AlertDialogTitle>
+            <AlertDialogTitle>{t('admin_delete_project')}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this project? This action cannot be
-              undone.
+              {t('admin_delete_confirm')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('admin_cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={saving}
@@ -440,11 +441,11 @@ export default function AdminProjectsPage() {
             >
               {saving ? (
                 <>
-                  <Loader2 className="size-4 animate-spin mr-2" />
-                  Deleting...
+                  <Loader2 className="size-4 animate-spin me-2" />
+                  {t('admin_deleting')}
                 </>
               ) : (
-                'Delete'
+                t('admin_delete')
               )}
             </AlertDialogAction>
           </AlertDialogFooter>

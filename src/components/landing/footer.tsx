@@ -2,93 +2,76 @@
 
 import { Separator } from '@/components/ui/separator';
 import { Zap } from 'lucide-react';
-
-const footerLinks = {
-  services: [
-    { label: 'SaaS Development', href: '#services' },
-    { label: 'Workflow Automation', href: '#services' },
-    { label: 'API Integrations', href: '#services' },
-    { label: 'MVP & Product Launch', href: '#services' },
-  ],
-  company: [
-    { label: 'Process', href: '#process' },
-    { label: 'Portfolio', href: '#results' },
-    { label: 'Testimonials', href: '#testimonials' },
-    { label: 'Pricing', href: '#pricing' },
-  ],
-  resources: [
-    { label: 'FAQ', href: '#faq' },
-    { label: 'Contact', href: '#contact' },
-  ],
-};
+import { useLocale } from '@/lib/i18n';
 
 export function Footer() {
+  const { t } = useLocale();
+
+  const footerLinks = {
+    services: [
+      { label: t('footer_saas'), href: '#services' },
+      { label: t('footer_automation'), href: '#services' },
+      { label: t('footer_integrations'), href: '#services' },
+      { label: t('footer_mvp'), href: '#services' },
+    ],
+    company: [
+      { label: t('footer_process'), href: '#process' },
+      { label: t('footer_portfolio'), href: '#results' },
+      { label: t('footer_testimonials'), href: '#testimonials' },
+      { label: t('footer_pricing'), href: '#pricing' },
+    ],
+    resources: [
+      { label: t('footer_faq'), href: '#faq' },
+      { label: t('footer_contact'), href: '#contact' },
+    ],
+  };
+
   return (
     <footer className="border-t border-border/40 bg-muted/20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-8 py-12 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Brand */}
           <div className="space-y-4">
             <a href="#" className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                 <Zap className="h-4 w-4" />
               </div>
-              <span className="text-lg font-bold tracking-tight">
+              <span className="text-lg font-bold">
                 asra3<span className="text-primary">.com</span>
               </span>
             </a>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-              Building high-performance SaaS products and intelligent automation solutions
-              for startups and businesses worldwide.
+              {t('footer_brand_desc')}
             </p>
           </div>
 
-          {/* Services */}
           <div>
-            <h4 className="text-sm font-semibold mb-4">Services</h4>
+            <h4 className="text-sm font-semibold mb-4">{t('footer_services')}</h4>
             <ul className="space-y-2.5">
               {footerLinks.services.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {link.label}
-                  </a>
+                  <a href={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">{link.label}</a>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Company */}
           <div>
-            <h4 className="text-sm font-semibold mb-4">Company</h4>
+            <h4 className="text-sm font-semibold mb-4">{t('footer_company')}</h4>
             <ul className="space-y-2.5">
               {footerLinks.company.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {link.label}
-                  </a>
+                  <a href={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">{link.label}</a>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Resources */}
           <div>
-            <h4 className="text-sm font-semibold mb-4">Resources</h4>
+            <h4 className="text-sm font-semibold mb-4">{t('footer_resources')}</h4>
             <ul className="space-y-2.5">
               {footerLinks.resources.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {link.label}
-                  </a>
+                  <a href={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">{link.label}</a>
                 </li>
               ))}
             </ul>
@@ -99,15 +82,11 @@ export function Footer() {
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-6">
           <p className="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} asra3.com. All rights reserved.
+            &copy; {new Date().getFullYear()} {t('footer_copyright')}
           </p>
           <div className="flex items-center gap-4">
-            <a href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-              Privacy Policy
-            </a>
-            <a href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-              Terms of Service
-            </a>
+            <a href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">{t('footer_privacy')}</a>
+            <a href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">{t('footer_terms')}</a>
           </div>
         </div>
       </div>

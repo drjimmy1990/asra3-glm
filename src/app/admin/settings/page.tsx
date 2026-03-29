@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { useLocale } from '@/lib/i18n';
 
 interface SiteSettings {
   site_name: string;
@@ -44,6 +45,7 @@ const defaultSettings: SiteSettings = {
 };
 
 export default function AdminSettingsPage() {
+  const { t } = useLocale();
   const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -56,11 +58,11 @@ export default function AdminSettingsPage() {
         setSettings({ ...defaultSettings, ...data });
       }
     } catch {
-      toast({ title: 'Error', description: 'Failed to fetch settings', variant: 'destructive' });
+      toast({ title: t('admin_error_generic'), description: t('admin_error_fetch'), variant: 'destructive' });
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     fetchSettings();
@@ -76,13 +78,13 @@ export default function AdminSettingsPage() {
       });
 
       if (res.ok) {
-        toast({ title: 'Settings saved', description: 'Your changes have been saved successfully.' });
+        toast({ title: t('admin_settings') + ' ' + t('admin_saved').toLowerCase(), description: t('admin_saved') });
       } else {
         const data = await res.json();
-        toast({ title: 'Error', description: data.error || 'Failed to save settings', variant: 'destructive' });
+        toast({ title: t('admin_error_generic'), description: data.error || t('admin_error_save'), variant: 'destructive' });
       }
     } catch {
-      toast({ title: 'Error', description: 'Something went wrong', variant: 'destructive' });
+      toast({ title: t('admin_error_generic'), description: t('admin_error_generic'), variant: 'destructive' });
     } finally {
       setSaving(false);
     }
@@ -107,20 +109,20 @@ export default function AdminSettingsPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <Settings className="size-6 text-primary" />
-            Settings
+            {t('admin_settings')}
           </h1>
           <p className="text-muted-foreground mt-1">
-            Configure your site settings and preferences
+            {t('admin_settings_desc')}
           </p>
         </div>
         <Button onClick={handleSave} disabled={saving} className="shrink-0">
           {saving ? (
             <>
-              <Loader2 className="size-4 animate-spin mr-2" />
-              Saving...
+              <Loader2 className="size-4 animate-spin me-2" />
+              {t('admin_saving')}
             </>
           ) : (
-            'Save Changes'
+            t('admin_save')
           )}
         </Button>
       </div>
@@ -130,16 +132,16 @@ export default function AdminSettingsPage() {
         <CardHeader>
           <div className="flex items-center gap-2">
             <Globe className="size-4 text-primary" />
-            <CardTitle className="text-base">General</CardTitle>
+            <CardTitle className="text-base">{t('admin_general')}</CardTitle>
           </div>
           <CardDescription>
-            Basic site information displayed across all pages
+            {t('admin_general_desc')}
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="site_name">Site Name</Label>
+              <Label htmlFor="site_name">{t('admin_site_name')}</Label>
               <Input
                 id="site_name"
                 value={settings.site_name}
@@ -148,7 +150,7 @@ export default function AdminSettingsPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="site_tagline">Site Tagline</Label>
+              <Label htmlFor="site_tagline">{t('admin_site_tagline')}</Label>
               <Input
                 id="site_tagline"
                 value={settings.site_tagline}
@@ -158,7 +160,7 @@ export default function AdminSettingsPage() {
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="contact_email">Contact Email</Label>
+            <Label htmlFor="contact_email">{t('admin_contact_email')}</Label>
             <Input
               id="contact_email"
               type="email"
@@ -175,15 +177,15 @@ export default function AdminSettingsPage() {
         <CardHeader>
           <div className="flex items-center gap-2">
             <Globe className="size-4 text-primary" />
-            <CardTitle className="text-base">Hero Section</CardTitle>
+            <CardTitle className="text-base">{t('admin_hero_section')}</CardTitle>
           </div>
           <CardDescription>
-            Main headline and subtitle shown on the homepage hero
+            {t('admin_hero_section_desc')}
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="space-y-2">
-            <Label htmlFor="hero_title">Hero Title</Label>
+            <Label htmlFor="hero_title">{t('admin_hero_title')}</Label>
             <Input
               id="hero_title"
               value={settings.hero_title}
@@ -192,7 +194,7 @@ export default function AdminSettingsPage() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="hero_subtitle">Hero Subtitle</Label>
+            <Label htmlFor="hero_subtitle">{t('admin_hero_subtitle')}</Label>
             <Input
               id="hero_subtitle"
               value={settings.hero_subtitle}
@@ -208,10 +210,10 @@ export default function AdminSettingsPage() {
         <CardHeader>
           <div className="flex items-center gap-2">
             <BarChart3 className="size-4 text-primary" />
-            <CardTitle className="text-base">Hero Stats</CardTitle>
+            <CardTitle className="text-base">{t('admin_hero_stats')}</CardTitle>
           </div>
           <CardDescription>
-            Statistics displayed in the hero section bar
+            {t('admin_hero_stats_desc')}
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-6">
@@ -219,7 +221,7 @@ export default function AdminSettingsPage() {
             <div key={i}>
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor={`hero_stat_${i}_value`}>Stat {i} Value</Label>
+                  <Label htmlFor={`hero_stat_${i}_value`}>{t('admin_stat_value')} {i}</Label>
                   <Input
                     id={`hero_stat_${i}_value`}
                     value={(settings as Record<string, string>)[`hero_stat_${i}_value`] || ''}
@@ -230,7 +232,7 @@ export default function AdminSettingsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor={`hero_stat_${i}_label`}>Stat {i} Label</Label>
+                  <Label htmlFor={`hero_stat_${i}_label`}>{t('admin_stat_label')} {i}</Label>
                   <Input
                     id={`hero_stat_${i}_label`}
                     value={(settings as Record<string, string>)[`hero_stat_${i}_label`] || ''}
@@ -252,15 +254,15 @@ export default function AdminSettingsPage() {
         <CardHeader>
           <div className="flex items-center gap-2">
             <Mail className="size-4 text-primary" />
-            <CardTitle className="text-base">Security</CardTitle>
+            <CardTitle className="text-base">{t('admin_security')}</CardTitle>
           </div>
           <CardDescription>
-            Change your admin password
+            {t('admin_security_desc')}
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="space-y-2 max-w-md">
-            <Label htmlFor="admin_password">Admin Password</Label>
+            <Label htmlFor="admin_password">{t('admin_password')}</Label>
             <Input
               id="admin_password"
               type="password"
@@ -269,7 +271,7 @@ export default function AdminSettingsPage() {
               placeholder="Leave blank to keep current password"
             />
             <p className="text-xs text-muted-foreground">
-              Enter a new password to change it. Leave blank to keep the current one.
+              {t('admin_password_hint')}
             </p>
           </div>
         </CardContent>
@@ -280,11 +282,11 @@ export default function AdminSettingsPage() {
         <Button onClick={handleSave} disabled={saving} size="lg">
           {saving ? (
             <>
-              <Loader2 className="size-4 animate-spin mr-2" />
-              Saving...
+              <Loader2 className="size-4 animate-spin me-2" />
+              {t('admin_saving')}
             </>
           ) : (
-            'Save All Settings'
+            t('admin_save_all')
           )}
         </Button>
       </div>

@@ -7,9 +7,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { useLocale } from '@/lib/i18n';
 
 export default function AdminLoginPage() {
   const router = useRouter();
+  const { t } = useLocale();
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -32,10 +34,10 @@ export default function AdminLoginPage() {
         router.refresh();
       } else {
         const data = await res.json();
-        setError(data.error || 'Invalid password');
+        setError(data.error || t('admin_error_invalid_password'));
       }
     } catch {
-      setError('Something went wrong. Please try again.');
+      setError(t('admin_error_generic'));
     } finally {
       setLoading(false);
     }
@@ -44,8 +46,8 @@ export default function AdminLoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/30 p-4">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute -top-40 -end-40 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute -bottom-40 -start-40 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
       </div>
 
       <Card className="relative w-full max-w-md border-0 shadow-xl">
@@ -57,10 +59,10 @@ export default function AdminLoginPage() {
           </div>
           <div>
             <CardTitle className="text-2xl font-bold tracking-tight">
-              Welcome back
+              {t('admin_login_welcome')}
             </CardTitle>
             <CardDescription className="mt-1.5">
-              Sign in to the asra3 admin panel
+              {t('admin_login_subtitle')}
             </CardDescription>
           </div>
         </CardHeader>
@@ -68,21 +70,21 @@ export default function AdminLoginPage() {
         <CardContent className="pt-4">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t('admin_login_password')}</Label>
               <div className="relative">
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Enter admin password"
+                  placeholder={t('admin_login_placeholder')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoFocus
-                  className="pr-10 h-11"
+                  className="pe-10 h-11"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                 </button>
@@ -102,11 +104,11 @@ export default function AdminLoginPage() {
             >
               {loading ? (
                 <>
-                  <Loader2 className="size-4 animate-spin mr-2" />
-                  Signing in...
+                  <Loader2 className="size-4 animate-spin me-2" />
+                  {t('admin_login_signing_in')}
                 </>
               ) : (
-                'Sign in'
+                t('admin_login_sign_in')
               )}
             </Button>
           </form>

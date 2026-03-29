@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUpRight, Users, Clock, DollarSign, BarChart3 } from 'lucide-react';
 import { useSiteData, parseJSON, type Project, type MetricItem } from '@/hooks/use-site-data';
+import { useLocale } from '@/lib/i18n';
 
 const metricIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Users, Clock, DollarSign, BarChart3,
@@ -11,6 +12,7 @@ const metricIconMap: Record<string, React.ComponentType<{ className?: string }>>
 
 export function Results() {
   const { data } = useSiteData();
+  const { t } = useLocale();
   const projects: Project[] = data?.projects || [];
 
   const container = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.15 } } };
@@ -20,13 +22,11 @@ export function Results() {
     <section id="results" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center max-w-3xl mx-auto mb-16">
-          <p className="text-sm font-semibold text-primary tracking-wider uppercase mb-3">Portfolio</p>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
-            Real Projects. <span className="text-gradient">Real Results.</span>
+          <p className="text-sm font-semibold text-primary tracking-wider uppercase mb-3">{t('results_sub')}</p>
+          <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
+            {t('results_heading')} <span className="text-gradient">{t('results_heading_highlight')}</span>
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
-            Here are some of the projects I&apos;ve delivered. Each one solved a real business problem and delivered measurable outcomes.
-          </p>
+          <p className="mt-4 text-lg text-muted-foreground leading-relaxed">{t('results_desc')}</p>
         </motion.div>
 
         <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-50px' }} className="space-y-8">
@@ -40,7 +40,7 @@ export function Results() {
                     <div className="text-6xl font-black text-primary/20 group-hover:text-primary/30 transition-colors">
                       {project.title.charAt(0)}
                     </div>
-                    <div className="absolute top-4 left-4">
+                    <div className="absolute top-4 start-4">
                       <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">{project.category}</Badge>
                     </div>
                   </div>
@@ -51,7 +51,7 @@ export function Results() {
                         <p className="mt-2 text-muted-foreground leading-relaxed">{project.description}</p>
                       </div>
                       <div className="hidden sm:flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-border/60 text-muted-foreground group-hover:text-primary group-hover:border-primary/30 transition-colors">
-                        <ArrowUpRight className="h-4 w-4" />
+                        <ArrowUpRight className="h-4 w-4 rtl:rotate-180" />
                       </div>
                     </div>
                     <div className="mt-6 flex flex-wrap gap-4 sm:gap-6">
