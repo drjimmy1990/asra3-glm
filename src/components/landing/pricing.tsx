@@ -1,64 +1,54 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Check, ArrowRight, ArrowLeft, Sparkles } from 'lucide-react';
+import { Check, Zap, Rocket, Shield } from 'lucide-react';
 import { useLocale } from '@/lib/i18n';
 
-export function Pricing() {
-  const { t, isRTL } = useLocale();
+export function Advantages() {
+  const { t } = useLocale();
 
-  const Arrow = isRTL ? ArrowLeft : ArrowRight;
-
-  const plans = [
+  const tiers = [
     {
-      name: t('pricing_starter'),
-      description: t('pricing_starter_desc'),
-      price: '$1,500',
-      period: t('pricing_starter_period'),
-      popular: false,
+      icon: Zap,
+      name: t('adv_tier_quick'),
+      description: t('adv_tier_quick_desc'),
       features: [
-        t('pricing_starter_features.0') as string,
-        t('pricing_starter_features.1') as string,
-        t('pricing_starter_features.2') as string,
-        t('pricing_starter_features.3') as string,
-        t('pricing_starter_features.4') as string,
-        t('pricing_starter_features.5') as string,
+        t('adv_quick_features.0') as string,
+        t('adv_quick_features.1') as string,
+        t('adv_quick_features.2') as string,
+        t('adv_quick_features.3') as string,
+        t('adv_quick_features.4') as string,
+        t('adv_quick_features.5') as string,
       ],
     },
     {
-      name: t('pricing_growth'),
-      description: t('pricing_growth_desc'),
-      price: '$5,000',
-      period: t('pricing_growth_period'),
-      popular: true,
+      icon: Rocket,
+      name: t('adv_tier_full'),
+      description: t('adv_tier_full_desc'),
       features: [
-        t('pricing_growth_features.0') as string,
-        t('pricing_growth_features.1') as string,
-        t('pricing_growth_features.2') as string,
-        t('pricing_growth_features.3') as string,
-        t('pricing_growth_features.4') as string,
-        t('pricing_growth_features.5') as string,
-        t('pricing_growth_features.6') as string,
-        t('pricing_growth_features.7') as string,
+        t('adv_full_features.0') as string,
+        t('adv_full_features.1') as string,
+        t('adv_full_features.2') as string,
+        t('adv_full_features.3') as string,
+        t('adv_full_features.4') as string,
+        t('adv_full_features.5') as string,
+        t('adv_full_features.6') as string,
+        t('adv_full_features.7') as string,
       ],
     },
     {
-      name: t('pricing_enterprise'),
-      description: t('pricing_enterprise_desc'),
-      price: 'Custom',
-      period: t('pricing_enterprise_period'),
-      popular: false,
+      icon: Shield,
+      name: t('adv_tier_enterprise'),
+      description: t('adv_tier_enterprise_desc'),
       features: [
-        t('pricing_enterprise_features.0') as string,
-        t('pricing_enterprise_features.1') as string,
-        t('pricing_enterprise_features.2') as string,
-        t('pricing_enterprise_features.3') as string,
-        t('pricing_enterprise_features.4') as string,
-        t('pricing_enterprise_features.5') as string,
-        t('pricing_enterprise_features.6') as string,
-        t('pricing_enterprise_features.7') as string,
+        t('adv_enterprise_features.0') as string,
+        t('adv_enterprise_features.1') as string,
+        t('adv_enterprise_features.2') as string,
+        t('adv_enterprise_features.3') as string,
+        t('adv_enterprise_features.4') as string,
+        t('adv_enterprise_features.5') as string,
+        t('adv_enterprise_features.6') as string,
+        t('adv_enterprise_features.7') as string,
       ],
     },
   ];
@@ -67,70 +57,46 @@ export function Pricing() {
   const item = { hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
 
   return (
-    <section id="pricing" className="relative py-24 sm:py-32">
+    <section id="advantages" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center max-w-3xl mx-auto mb-16">
-          <p className="text-sm font-semibold text-primary tracking-wider uppercase mb-3">{t('pricing_sub')}</p>
+          <p className="text-sm font-semibold text-primary tracking-wider uppercase mb-3">{t('adv_sub')}</p>
           <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
-            {t('pricing_heading')} <span className="text-gradient">{t('pricing_heading_highlight')}</span>
+            {t('adv_heading')} <span className="text-gradient">{t('adv_heading_highlight')}</span>
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground leading-relaxed">{t('pricing_desc')}</p>
+          <p className="mt-4 text-lg text-muted-foreground leading-relaxed">{t('adv_desc')}</p>
         </motion.div>
 
-        <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-50px' }} className="grid gap-6 lg:grid-cols-3 items-start">
-          {plans.map((plan) => (
-            <motion.div
-              key={plan.name}
-              variants={item}
-              className={`relative rounded-2xl border p-6 sm:p-8 transition-all hover:shadow-xl ${
-                plan.popular
-                  ? 'border-primary bg-gradient-to-b from-primary/5 to-card shadow-lg shadow-primary/10'
-                  : 'border-border/60 bg-card/50 hover:border-primary/30 hover:shadow-primary/5'
-              }`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-3 start-1/2 -translate-x-1/2">
-                  <Badge className="bg-primary text-primary-foreground px-4 py-1">
-                    <Sparkles className="me-1.5 h-3 w-3" />
-                    {t('pricing_popular')}
-                  </Badge>
+        <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-50px' }} className="grid gap-8 lg:grid-cols-3 items-start">
+          {tiers.map((tier) => {
+            const Icon = tier.icon;
+            return (
+              <motion.div
+                key={tier.name}
+                variants={item}
+                className="relative rounded-2xl border border-border/60 bg-card/50 p-6 sm:p-8 transition-all hover:shadow-xl hover:border-primary/30 hover:shadow-primary/5"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold">{tier.name}</h3>
+                    <p className="text-xs text-muted-foreground">{tier.description}</p>
+                  </div>
                 </div>
-              )}
 
-              <div>
-                <h3 className="text-xl font-semibold">{plan.name}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{plan.description}</p>
-              </div>
-
-              <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-4xl font-bold">{plan.price}</span>
-                <span className="text-sm text-muted-foreground">/{plan.period}</span>
-              </div>
-
-              <ul className="mt-8 space-y-3">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-3 text-sm">
-                    <Check className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                    <span className="text-muted-foreground">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <a href="#contact" className="mt-8 block">
-                <Button
-                  className={`w-full h-11 ${
-                    plan.popular
-                      ? 'btn-glow bg-primary text-primary-foreground hover:bg-primary/90'
-                      : 'border-border/60 hover:border-primary/50 hover:bg-primary/5 bg-secondary text-secondary-foreground'
-                  }`}
-                  variant={plan.popular ? 'default' : 'outline'}
-                >
-                  {plan.name === t('pricing_enterprise') ? t('pricing_contact') : t('pricing_get_started')}
-                  <Arrow className="ms-2 h-4 w-4" />
-                </Button>
-              </a>
-            </motion.div>
-          ))}
+                <ul className="space-y-3 mt-6">
+                  {tier.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-3 text-sm">
+                      <Check className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                      <span className="text-muted-foreground">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            );
+          })}
         </motion.div>
       </div>
     </section>

@@ -119,18 +119,18 @@ export default function AdminTestimonialsPage() {
   const openEdit = (item: Testimonial) => {
     setEditingId(item.id);
     setForm({
-      name: item.name,
-      name_en: item.name_en,
-      name_ar: item.name_ar,
-      role: item.role,
-      role_en: item.role_en,
-      role_ar: item.role_ar,
-      content: item.content,
-      content_en: item.content_en,
-      content_ar: item.content_ar,
-      rating: item.rating,
-      order: item.order,
-      active: item.active,
+      name: item.name ?? '',
+      name_en: item.name_en ?? '',
+      name_ar: item.name_ar ?? '',
+      role: item.role ?? '',
+      role_en: item.role_en ?? '',
+      role_ar: item.role_ar ?? '',
+      content: item.content ?? '',
+      content_en: item.content_en ?? '',
+      content_ar: item.content_ar ?? '',
+      rating: item.rating ?? 5,
+      order: item.order ?? 0,
+      active: item.active ?? true,
     });
     setFormTab('en');
     setDialogOpen(true);
@@ -335,7 +335,7 @@ export default function AdminTestimonialsPage() {
                     <Label htmlFor="name_en">{t('admin_name')} (English) *</Label>
                     <Input
                       id="name_en"
-                      value={form.name_en}
+                      value={form.name_en ?? ''}
                       onChange={(e) => setForm({ ...form, name_en: e.target.value })}
                       placeholder="Client name"
                       dir="ltr"
@@ -345,7 +345,7 @@ export default function AdminTestimonialsPage() {
                     <Label htmlFor="role_en">{t('admin_role')} (English) *</Label>
                     <Input
                       id="role_en"
-                      value={form.role_en}
+                      value={form.role_en ?? ''}
                       onChange={(e) => setForm({ ...form, role_en: e.target.value })}
                       placeholder="e.g. CEO, Acme Inc."
                       dir="ltr"
@@ -357,7 +357,7 @@ export default function AdminTestimonialsPage() {
                   <Label htmlFor="content_en">{t('admin_content')} (English) *</Label>
                   <Textarea
                     id="content_en"
-                    value={form.content_en}
+                    value={form.content_en ?? ''}
                     onChange={(e) => setForm({ ...form, content_en: e.target.value })}
                     placeholder="What the client said about your work..."
                     rows={4}
@@ -372,7 +372,7 @@ export default function AdminTestimonialsPage() {
                     <Label htmlFor="name_ar">{t('admin_name')} (العربية) *</Label>
                     <Input
                       id="name_ar"
-                      value={form.name_ar}
+                      value={form.name_ar ?? ''}
                       onChange={(e) => setForm({ ...form, name_ar: e.target.value })}
                       placeholder="اسم العميل"
                       dir="rtl"
@@ -382,7 +382,7 @@ export default function AdminTestimonialsPage() {
                     <Label htmlFor="role_ar">{t('admin_role')} (العربية) *</Label>
                     <Input
                       id="role_ar"
-                      value={form.role_ar}
+                      value={form.role_ar ?? ''}
                       onChange={(e) => setForm({ ...form, role_ar: e.target.value })}
                       placeholder="مثال: المدير التنفيذي، شركة إكس"
                       dir="rtl"
@@ -394,7 +394,7 @@ export default function AdminTestimonialsPage() {
                   <Label htmlFor="content_ar">{t('admin_content')} (العربية) *</Label>
                   <Textarea
                     id="content_ar"
-                    value={form.content_ar}
+                    value={form.content_ar ?? ''}
                     onChange={(e) => setForm({ ...form, content_ar: e.target.value })}
                     placeholder="ما قاله العميل عن عملك..."
                     rows={4}

@@ -7,7 +7,7 @@ import { Services } from '@/components/landing/services';
 import { Process } from '@/components/landing/process';
 import { Results } from '@/components/landing/results';
 import { Testimonials } from '@/components/landing/testimonials';
-import { Pricing } from '@/components/landing/pricing';
+import { Advantages } from '@/components/landing/pricing';
 import { FAQ } from '@/components/landing/faq';
 import { Contact } from '@/components/landing/contact';
 import { CTABanner } from '@/components/landing/cta-banner';
@@ -24,7 +24,7 @@ export default function Home() {
         <Process />
         <Results />
         <Testimonials />
-        <Pricing />
+        <Advantages />
         <FAQ />
         <Contact />
         <CTABanner />

@@ -131,24 +131,24 @@ export default function AdminProjectsPage() {
   const openEdit = (project: Project) => {
     setEditingId(project.id);
     setForm({
-      title: project.title,
-      title_en: project.title_en,
-      title_ar: project.title_ar,
-      category: project.category,
-      category_en: project.category_en,
-      category_ar: project.category_ar,
-      description: project.description,
-      description_en: project.description_en,
-      description_ar: project.description_ar,
-      imageUrl: project.imageUrl,
-      metrics: project.metrics,
-      tags: project.tags,
-      tags_en: project.tags_en,
-      tags_ar: project.tags_ar,
-      color: project.color,
-      featured: project.featured,
-      order: project.order,
-      active: project.active,
+      title: project.title ?? '',
+      title_en: project.title_en ?? '',
+      title_ar: project.title_ar ?? '',
+      category: project.category ?? '',
+      category_en: project.category_en ?? '',
+      category_ar: project.category_ar ?? '',
+      description: project.description ?? '',
+      description_en: project.description_en ?? '',
+      description_ar: project.description_ar ?? '',
+      imageUrl: project.imageUrl ?? '',
+      metrics: project.metrics ?? '[]',
+      tags: project.tags ?? '[]',
+      tags_en: project.tags_en ?? '[]',
+      tags_ar: project.tags_ar ?? '[]',
+      color: project.color ?? 'from-emerald-500/20 to-teal-500/20',
+      featured: project.featured ?? false,
+      order: project.order ?? 0,
+      active: project.active ?? true,
     });
     setFormTab('en');
     setDialogOpen(true);
@@ -335,7 +335,7 @@ export default function AdminProjectsPage() {
                     <Label htmlFor="title_en">{t('admin_title')} (English) *</Label>
                     <Input
                       id="title_en"
-                      value={form.title_en}
+                      value={form.title_en ?? ''}
                       onChange={(e) => setForm({ ...form, title_en: e.target.value })}
                       placeholder="Project title"
                       dir="ltr"
@@ -345,7 +345,7 @@ export default function AdminProjectsPage() {
                     <Label htmlFor="category_en">{t('admin_category')} (English) *</Label>
                     <Input
                       id="category_en"
-                      value={form.category_en}
+                      value={form.category_en ?? ''}
                       onChange={(e) => setForm({ ...form, category_en: e.target.value })}
                       placeholder="e.g. SaaS, Web App"
                       dir="ltr"
@@ -357,7 +357,7 @@ export default function AdminProjectsPage() {
                   <Label htmlFor="description_en">{t('admin_description')} (English) *</Label>
                   <Textarea
                     id="description_en"
-                    value={form.description_en}
+                    value={form.description_en ?? ''}
                     onChange={(e) => setForm({ ...form, description_en: e.target.value })}
                     placeholder="Project description"
                     rows={3}
@@ -369,7 +369,7 @@ export default function AdminProjectsPage() {
                   <Label htmlFor="tags_en">{t('admin_tags')} (English)</Label>
                   <Textarea
                     id="tags_en"
-                    value={form.tags_en}
+                    value={form.tags_en ?? ''}
                     onChange={(e) => setForm({ ...form, tags_en: e.target.value })}
                     placeholder='["Next.js", "TypeScript", "Prisma"]'
                     rows={2}
@@ -385,7 +385,7 @@ export default function AdminProjectsPage() {
                     <Label htmlFor="title_ar">{t('admin_title')} (العربية) *</Label>
                     <Input
                       id="title_ar"
-                      value={form.title_ar}
+                      value={form.title_ar ?? ''}
                       onChange={(e) => setForm({ ...form, title_ar: e.target.value })}
                       placeholder="عنوان المشروع"
                       dir="rtl"
@@ -395,7 +395,7 @@ export default function AdminProjectsPage() {
                     <Label htmlFor="category_ar">{t('admin_category')} (العربية) *</Label>
                     <Input
                       id="category_ar"
-                      value={form.category_ar}
+                      value={form.category_ar ?? ''}
                       onChange={(e) => setForm({ ...form, category_ar: e.target.value })}
                       placeholder="مثال: تطبيق ويب، SaaS"
                       dir="rtl"
@@ -407,7 +407,7 @@ export default function AdminProjectsPage() {
                   <Label htmlFor="description_ar">{t('admin_description')} (العربية) *</Label>
                   <Textarea
                     id="description_ar"
-                    value={form.description_ar}
+                    value={form.description_ar ?? ''}
                     onChange={(e) => setForm({ ...form, description_ar: e.target.value })}
                     placeholder="وصف المشروع"
                     rows={3}
@@ -419,7 +419,7 @@ export default function AdminProjectsPage() {
                   <Label htmlFor="tags_ar">{t('admin_tags')} (العربية)</Label>
                   <Textarea
                     id="tags_ar"
-                    value={form.tags_ar}
+                    value={form.tags_ar ?? ''}
                     onChange={(e) => setForm({ ...form, tags_ar: e.target.value })}
                     placeholder='["Next.js", "TypeScript", "Prisma"]'
                     rows={2}

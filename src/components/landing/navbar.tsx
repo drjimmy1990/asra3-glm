@@ -30,7 +30,7 @@ export function Navbar() {
     { label: t('nav_process'), href: '#process' },
     { label: t('nav_results'), href: '#results' },
     { label: t('nav_testimonials'), href: '#testimonials' },
-    { label: t('nav_pricing'), href: '#pricing' },
+    { label: t('nav_advantages'), href: '#advantages' },
     { label: t('nav_faq'), href: '#faq' },
   ];
 

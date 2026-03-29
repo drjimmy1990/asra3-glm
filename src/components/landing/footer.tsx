@@ -18,7 +18,7 @@ export function Footer() {
       { label: t('footer_process'), href: '#process' },
       { label: t('footer_portfolio'), href: '#results' },
       { label: t('footer_testimonials'), href: '#testimonials' },
-      { label: t('footer_pricing'), href: '#pricing' },
+      { label: t('footer_advantages'), href: '#advantages' },
     ],
     resources: [
       { label: t('footer_faq'), href: '#faq' },

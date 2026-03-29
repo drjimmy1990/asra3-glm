@@ -144,18 +144,18 @@ export default function AdminServicesPage() {
   const openEdit = (item: Service) => {
     setEditingId(item.id);
     setForm({
-      iconName: item.iconName,
-      title: item.title,
-      title_en: item.title_en,
-      title_ar: item.title_ar,
-      description: item.description,
-      description_en: item.description_en,
-      description_ar: item.description_ar,
-      features: item.features,
-      features_en: item.features_en,
-      features_ar: item.features_ar,
-      order: item.order,
-      active: item.active,
+      iconName: item.iconName ?? 'Code2',
+      title: item.title ?? '',
+      title_en: item.title_en ?? '',
+      title_ar: item.title_ar ?? '',
+      description: item.description ?? '',
+      description_en: item.description_en ?? '',
+      description_ar: item.description_ar ?? '',
+      features: item.features ?? '[]',
+      features_en: item.features_en ?? '[]',
+      features_ar: item.features_ar ?? '[]',
+      order: item.order ?? 0,
+      active: item.active ?? true,
     });
     setFormTab('en');
     setDialogOpen(true);
@@ -384,7 +384,7 @@ export default function AdminServicesPage() {
                   <Label htmlFor="title_en">{t('admin_title')} (English) *</Label>
                   <Input
                     id="title_en"
-                    value={form.title_en}
+                    value={form.title_en ?? ''}
                     onChange={(e) => setForm({ ...form, title_en: e.target.value })}
                     placeholder="Service title"
                     dir="ltr"
@@ -395,7 +395,7 @@ export default function AdminServicesPage() {
                   <Label htmlFor="description_en">{t('admin_description')} (English) *</Label>
                   <Textarea
                     id="description_en"
-                    value={form.description_en}
+                    value={form.description_en ?? ''}
                     onChange={(e) => setForm({ ...form, description_en: e.target.value })}
                     placeholder="Service description"
                     rows={3}
@@ -407,7 +407,7 @@ export default function AdminServicesPage() {
                   <Label htmlFor="features_en">{t('admin_features')} (English)</Label>
                   <Textarea
                     id="features_en"
-                    value={form.features_en}
+                    value={form.features_en ?? ''}
                     onChange={(e) => setForm({ ...form, features_en: e.target.value })}
                     placeholder='["Custom SaaS Development", "API Integration"]'
                     rows={3}
@@ -422,7 +422,7 @@ export default function AdminServicesPage() {
                   <Label htmlFor="title_ar">{t('admin_title')} (العربية) *</Label>
                   <Input
                     id="title_ar"
-                    value={form.title_ar}
+                    value={form.title_ar ?? ''}
                     onChange={(e) => setForm({ ...form, title_ar: e.target.value })}
                     placeholder="عنوان الخدمة"
                     dir="rtl"
@@ -433,7 +433,7 @@ export default function AdminServicesPage() {
                   <Label htmlFor="description_ar">{t('admin_description')} (العربية) *</Label>
                   <Textarea
                     id="description_ar"
-                    value={form.description_ar}
+                    value={form.description_ar ?? ''}
                     onChange={(e) => setForm({ ...form, description_ar: e.target.value })}
                     placeholder="وصف الخدمة"
                     rows={3}
@@ -445,7 +445,7 @@ export default function AdminServicesPage() {
                   <Label htmlFor="features_ar">{t('admin_features')} (العربية)</Label>
                   <Textarea
                     id="features_ar"
-                    value={form.features_ar}
+                    value={form.features_ar ?? ''}
                     onChange={(e) => setForm({ ...form, features_ar: e.target.value })}
                     placeholder='["تطوير SaaS مخصص", "تكامل API"]'
                     rows={3}

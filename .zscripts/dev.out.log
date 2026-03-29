@@ -2223,3 +2223,91 @@ prisma:query SELECT `main`.`FAQ`.`id`, `main`.`FAQ`.`question`, `main`.`FAQ`.`an
  GET /api/admin/faqs 200 in 8ms (compile: 1923µs, render: 6ms)
 prisma:query SELECT `main`.`SiteSetting`.`id`, `main`.`SiteSetting`.`key`, `main`.`SiteSetting`.`value` FROM `main`.`SiteSetting` WHERE 1=1 LIMIT ? OFFSET ?
  GET /api/admin/settings 200 in 8ms (compile: 2ms, render: 6ms)
+prisma:query SELECT 1
+Error [PrismaClientValidationError]: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["db"].fAQ.update()` invocation in
+/home/z/my-project/.next/dev/server/chunks/[root-of-the-server]__abe578b8._.js:155:153
+
+  152 try {
+  153     const { id } = await params;
+  154     const body = await request.json();
+→ 155     const item = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["db"].fAQ.update({
+            where: {
+              id: "cmncbshaq000rq2vds7r5y0ky"
+            },
+            data: {
+              question: "What types of SaaS projects do you work on?",
+              question_en: "test",
+              ~~~~~~~~~~~
+              answer: "I work on a wide range of SaaS projects, from early-stage MVPs for startups to scaling production applications. This includes subscription-based platforms, marketplace applications, analytics dashboards, internal tools, and B2B/B2C products.",
+              answer_en: "test answer",
+              order: 1,
+              active: true,
+          ?   id?: String | StringFieldUpdateOperationsInput,
+          ?   createdAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+          ?   updatedAt?: DateTime | DateTimeFieldUpdateOperationsInput
+            }
+          })
+
+Unknown argument `question_en`. Did you mean `question`? Available options are marked with ?.
+    at <unknown> (src/app/api/admin/faqs/[id]/route.ts:11:31)
+    at async PUT (src/app/api/admin/faqs/[id]/route.ts:11:18)
+   9 |     const { id } = await params;
+  10 |     const body = await request.json();
+> 11 |     const item = await db.fAQ.update({
+     |                               ^
+  12 |       where: { id },
+  13 |       data: {
+  14 |         ...(body.question !== undefined && { question: body.question }), {
+  clientVersion: '6.19.2'
+}
+ PUT /api/admin/faqs/cmncbshaq000rq2vds7r5y0ky 500 in 812ms (compile: 630ms, render: 181ms)
+ GET /admin/services 200 in 82ms (compile: 65ms, render: 18ms)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`Service`.`id`, `main`.`Service`.`iconName`, `main`.`Service`.`title`, `main`.`Service`.`description`, `main`.`Service`.`features`, `main`.`Service`.`order`, `main`.`Service`.`active`, `main`.`Service`.`createdAt`, `main`.`Service`.`updatedAt` FROM `main`.`Service` WHERE 1=1 ORDER BY `main`.`Service`.`order` ASC LIMIT ? OFFSET ?
+ GET /api/admin/services 200 in 10ms (compile: 2ms, render: 8ms)
+prisma:query SELECT `main`.`SiteSetting`.`id`, `main`.`SiteSetting`.`key`, `main`.`SiteSetting`.`value` FROM `main`.`SiteSetting` WHERE 1=1 LIMIT ? OFFSET ?
+ GET /api/admin/settings 200 in 7ms (compile: 1494µs, render: 5ms)
+ GET / 200 in 67ms (compile: 4ms, render: 64ms)
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT `main`.`Service`.`id`, `main`.`Service`.`iconName`, `main`.`Service`.`title`, `main`.`Service`.`description`, `main`.`Service`.`features`, `main`.`Service`.`order`, `main`.`Service`.`active`, `main`.`Service`.`createdAt`, `main`.`Service`.`updatedAt` FROM `main`.`Service` WHERE `main`.`Service`.`active` = ? ORDER BY `main`.`Service`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Testimonial`.`id`, `main`.`Testimonial`.`name`, `main`.`Testimonial`.`role`, `main`.`Testimonial`.`content`, `main`.`Testimonial`.`rating`, `main`.`Testimonial`.`active`, `main`.`Testimonial`.`order`, `main`.`Testimonial`.`createdAt`, `main`.`Testimonial`.`updatedAt` FROM `main`.`Testimonial` WHERE `main`.`Testimonial`.`active` = ? ORDER BY `main`.`Testimonial`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`SiteSetting`.`id`, `main`.`SiteSetting`.`key`, `main`.`SiteSetting`.`value` FROM `main`.`SiteSetting` WHERE 1=1 LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`FAQ`.`id`, `main`.`FAQ`.`question`, `main`.`FAQ`.`answer`, `main`.`FAQ`.`order`, `main`.`FAQ`.`active`, `main`.`FAQ`.`createdAt`, `main`.`FAQ`.`updatedAt` FROM `main`.`FAQ` WHERE `main`.`FAQ`.`active` = ? ORDER BY `main`.`FAQ`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Project`.`id`, `main`.`Project`.`title`, `main`.`Project`.`category`, `main`.`Project`.`description`, `main`.`Project`.`imageUrl`, `main`.`Project`.`metrics`, `main`.`Project`.`tags`, `main`.`Project`.`color`, `main`.`Project`.`featured`, `main`.`Project`.`order`, `main`.`Project`.`active`, `main`.`Project`.`createdAt`, `main`.`Project`.`updatedAt` FROM `main`.`Project` WHERE `main`.`Project`.`active` = ? ORDER BY `main`.`Project`.`order` ASC LIMIT ? OFFSET ?
+ GET /api/content?lang=en 200 in 9ms (compile: 3ms, render: 7ms)
+prisma:query SELECT `main`.`Service`.`id`, `main`.`Service`.`iconName`, `main`.`Service`.`title`, `main`.`Service`.`description`, `main`.`Service`.`features`, `main`.`Service`.`order`, `main`.`Service`.`active`, `main`.`Service`.`createdAt`, `main`.`Service`.`updatedAt` FROM `main`.`Service` WHERE `main`.`Service`.`active` = ? ORDER BY `main`.`Service`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Testimonial`.`id`, `main`.`Testimonial`.`name`, `main`.`Testimonial`.`role`, `main`.`Testimonial`.`content`, `main`.`Testimonial`.`rating`, `main`.`Testimonial`.`active`, `main`.`Testimonial`.`order`, `main`.`Testimonial`.`createdAt`, `main`.`Testimonial`.`updatedAt` FROM `main`.`Testimonial` WHERE `main`.`Testimonial`.`active` = ? ORDER BY `main`.`Testimonial`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Project`.`id`, `main`.`Project`.`title`, `main`.`Project`.`category`, `main`.`Project`.`description`, `main`.`Project`.`imageUrl`, `main`.`Project`.`metrics`, `main`.`Project`.`tags`, `main`.`Project`.`color`, `main`.`Project`.`featured`, `main`.`Project`.`order`, `main`.`Project`.`active`, `main`.`Project`.`createdAt`, `main`.`Project`.`updatedAt` FROM `main`.`Project` WHERE `main`.`Project`.`active` = ? ORDER BY `main`.`Project`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SiteSetting`.`id`, `main`.`SiteSetting`.`key`, `main`.`SiteSetting`.`value` FROM `main`.`SiteSetting` WHERE 1=1 LIMIT ? OFFSET ?
+ GET /api/content?lang=en 200 in 8ms (compile: 2ms, render: 6ms)
+prisma:query SELECT `main`.`FAQ`.`id`, `main`.`FAQ`.`question`, `main`.`FAQ`.`answer`, `main`.`FAQ`.`order`, `main`.`FAQ`.`active`, `main`.`FAQ`.`createdAt`, `main`.`FAQ`.`updatedAt` FROM `main`.`FAQ` WHERE `main`.`FAQ`.`active` = ? ORDER BY `main`.`FAQ`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Service`.`id`, `main`.`Service`.`iconName`, `main`.`Service`.`title`, `main`.`Service`.`description`, `main`.`Service`.`features`, `main`.`Service`.`order`, `main`.`Service`.`active`, `main`.`Service`.`createdAt`, `main`.`Service`.`updatedAt` FROM `main`.`Service` WHERE `main`.`Service`.`active` = ? ORDER BY `main`.`Service`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Project`.`id`, `main`.`Project`.`title`, `main`.`Project`.`category`, `main`.`Project`.`description`, `main`.`Project`.`imageUrl`, `main`.`Project`.`metrics`, `main`.`Project`.`tags`, `main`.`Project`.`color`, `main`.`Project`.`featured`, `main`.`Project`.`order`, `main`.`Project`.`active`, `main`.`Project`.`createdAt`, `main`.`Project`.`updatedAt` FROM `main`.`Project` WHERE `main`.`Project`.`active` = ? ORDER BY `main`.`Project`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Testimonial`.`id`, `main`.`Testimonial`.`name`, `main`.`Testimonial`.`role`, `main`.`Testimonial`.`content`, `main`.`Testimonial`.`rating`, `main`.`Testimonial`.`active`, `main`.`Testimonial`.`order`, `main`.`Testimonial`.`createdAt`, `main`.`Testimonial`.`updatedAt` FROM `main`.`Testimonial` WHERE `main`.`Testimonial`.`active` = ? ORDER BY `main`.`Testimonial`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SiteSetting`.`id`, `main`.`SiteSetting`.`key`, `main`.`SiteSetting`.`value` FROM `main`.`SiteSetting` WHERE 1=1 LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`FAQ`.`id`, `main`.`FAQ`.`question`, `main`.`FAQ`.`answer`, `main`.`FAQ`.`order`, `main`.`FAQ`.`active`, `main`.`FAQ`.`createdAt`, `main`.`FAQ`.`updatedAt` FROM `main`.`FAQ` WHERE `main`.`FAQ`.`active` = ? ORDER BY `main`.`FAQ`.`order` ASC LIMIT ? OFFSET ?
+ GET /api/content?lang=en 200 in 8ms (compile: 2ms, render: 6ms)
+prisma:query SELECT `main`.`Service`.`id`, `main`.`Service`.`iconName`, `main`.`Service`.`title`, `main`.`Service`.`description`, `main`.`Service`.`features`, `main`.`Service`.`order`, `main`.`Service`.`active`, `main`.`Service`.`createdAt`, `main`.`Service`.`updatedAt` FROM `main`.`Service` WHERE `main`.`Service`.`active` = ? ORDER BY `main`.`Service`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Testimonial`.`id`, `main`.`Testimonial`.`name`, `main`.`Testimonial`.`role`, `main`.`Testimonial`.`content`, `main`.`Testimonial`.`rating`, `main`.`Testimonial`.`active`, `main`.`Testimonial`.`order`, `main`.`Testimonial`.`createdAt`, `main`.`Testimonial`.`updatedAt` FROM `main`.`Testimonial` WHERE `main`.`Testimonial`.`active` = ? ORDER BY `main`.`Testimonial`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Project`.`id`, `main`.`Project`.`title`, `main`.`Project`.`category`, `main`.`Project`.`description`, `main`.`Project`.`imageUrl`, `main`.`Project`.`metrics`, `main`.`Project`.`tags`, `main`.`Project`.`color`, `main`.`Project`.`featured`, `main`.`Project`.`order`, `main`.`Project`.`active`, `main`.`Project`.`createdAt`, `main`.`Project`.`updatedAt` FROM `main`.`Project` WHERE `main`.`Project`.`active` = ? ORDER BY `main`.`Project`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SiteSetting`.`id`, `main`.`SiteSetting`.`key`, `main`.`SiteSetting`.`value` FROM `main`.`SiteSetting` WHERE 1=1 LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`FAQ`.`id`, `main`.`FAQ`.`question`, `main`.`FAQ`.`answer`, `main`.`FAQ`.`order`, `main`.`FAQ`.`active`, `main`.`FAQ`.`createdAt`, `main`.`FAQ`.`updatedAt` FROM `main`.`FAQ` WHERE `main`.`FAQ`.`active` = ? ORDER BY `main`.`FAQ`.`order` ASC LIMIT ? OFFSET ?
+ GET /api/content?lang=en 200 in 9ms (compile: 3ms, render: 6ms)
+ GET /api/content?lang=en 200 in 16ms (compile: 2ms, render: 14ms)
+prisma:query SELECT `main`.`Service`.`id`, `main`.`Service`.`iconName`, `main`.`Service`.`title`, `main`.`Service`.`description`, `main`.`Service`.`features`, `main`.`Service`.`order`, `main`.`Service`.`active`, `main`.`Service`.`createdAt`, `main`.`Service`.`updatedAt` FROM `main`.`Service` WHERE `main`.`Service`.`active` = ? ORDER BY `main`.`Service`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SiteSetting`.`id`, `main`.`SiteSetting`.`key`, `main`.`SiteSetting`.`value` FROM `main`.`SiteSetting` WHERE 1=1 LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Testimonial`.`id`, `main`.`Testimonial`.`name`, `main`.`Testimonial`.`role`, `main`.`Testimonial`.`content`, `main`.`Testimonial`.`rating`, `main`.`Testimonial`.`active`, `main`.`Testimonial`.`order`, `main`.`Testimonial`.`createdAt`, `main`.`Testimonial`.`updatedAt` FROM `main`.`Testimonial` WHERE `main`.`Testimonial`.`active` = ? ORDER BY `main`.`Testimonial`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Project`.`id`, `main`.`Project`.`title`, `main`.`Project`.`category`, `main`.`Project`.`description`, `main`.`Project`.`imageUrl`, `main`.`Project`.`metrics`, `main`.`Project`.`tags`, `main`.`Project`.`color`, `main`.`Project`.`featured`, `main`.`Project`.`order`, `main`.`Project`.`active`, `main`.`Project`.`createdAt`, `main`.`Project`.`updatedAt` FROM `main`.`Project` WHERE `main`.`Project`.`active` = ? ORDER BY `main`.`Project`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`FAQ`.`id`, `main`.`FAQ`.`question`, `main`.`FAQ`.`answer`, `main`.`FAQ`.`order`, `main`.`FAQ`.`active`, `main`.`FAQ`.`createdAt`, `main`.`FAQ`.`updatedAt` FROM `main`.`FAQ` WHERE `main`.`FAQ`.`active` = ? ORDER BY `main`.`FAQ`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Service`.`id`, `main`.`Service`.`iconName`, `main`.`Service`.`title`, `main`.`Service`.`description`, `main`.`Service`.`features`, `main`.`Service`.`order`, `main`.`Service`.`active`, `main`.`Service`.`createdAt`, `main`.`Service`.`updatedAt` FROM `main`.`Service` WHERE `main`.`Service`.`active` = ? ORDER BY `main`.`Service`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Project`.`id`, `main`.`Project`.`title`, `main`.`Project`.`category`, `main`.`Project`.`description`, `main`.`Project`.`imageUrl`, `main`.`Project`.`metrics`, `main`.`Project`.`tags`, `main`.`Project`.`color`, `main`.`Project`.`featured`, `main`.`Project`.`order`, `main`.`Project`.`active`, `main`.`Project`.`createdAt`, `main`.`Project`.`updatedAt` FROM `main`.`Project` WHERE `main`.`Project`.`active` = ? ORDER BY `main`.`Project`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`FAQ`.`id`, `main`.`FAQ`.`question`, `main`.`FAQ`.`answer`, `main`.`FAQ`.`order`, `main`.`FAQ`.`active`, `main`.`FAQ`.`createdAt`, `main`.`FAQ`.`updatedAt` FROM `main`.`FAQ` WHERE `main`.`FAQ`.`active` = ? ORDER BY `main`.`FAQ`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SiteSetting`.`id`, `main`.`SiteSetting`.`key`, `main`.`SiteSetting`.`value` FROM `main`.`SiteSetting` WHERE 1=1 LIMIT ? OFFSET ?
+ GET /api/content?lang=en 200 in 9ms (compile: 4ms, render: 6ms)
+prisma:query SELECT `main`.`Testimonial`.`id`, `main`.`Testimonial`.`name`, `main`.`Testimonial`.`role`, `main`.`Testimonial`.`content`, `main`.`Testimonial`.`rating`, `main`.`Testimonial`.`active`, `main`.`Testimonial`.`order`, `main`.`Testimonial`.`createdAt`, `main`.`Testimonial`.`updatedAt` FROM `main`.`Testimonial` WHERE `main`.`Testimonial`.`active` = ? ORDER BY `main`.`Testimonial`.`order` ASC LIMIT ? OFFSET ?
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+[?25h

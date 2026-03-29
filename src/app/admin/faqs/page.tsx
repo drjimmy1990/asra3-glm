@@ -110,14 +110,14 @@ export default function AdminFaqsPage() {
   const openEdit = (item: FAQ) => {
     setEditingId(item.id);
     setForm({
-      question: item.question,
-      question_en: item.question_en,
-      question_ar: item.question_ar,
-      answer: item.answer,
-      answer_en: item.answer_en,
-      answer_ar: item.answer_ar,
-      order: item.order,
-      active: item.active,
+      question: item.question ?? '',
+      question_en: item.question_en ?? '',
+      question_ar: item.question_ar ?? '',
+      answer: item.answer ?? '',
+      answer_en: item.answer_en ?? '',
+      answer_ar: item.answer_ar ?? '',
+      order: item.order ?? 0,
+      active: item.active ?? true,
     });
     setFormTab('en');
     setDialogOpen(true);
@@ -297,7 +297,7 @@ export default function AdminFaqsPage() {
                   <Label htmlFor="question_en">{t('admin_question')} (English) *</Label>
                   <Textarea
                     id="question_en"
-                    value={form.question_en}
+                    value={form.question_en ?? ''}
                     onChange={(e) => setForm({ ...form, question_en: e.target.value })}
                     placeholder="The question your visitors might ask"
                     rows={3}
@@ -309,7 +309,7 @@ export default function AdminFaqsPage() {
                   <Label htmlFor="answer_en">{t('admin_answer')} (English) *</Label>
                   <Textarea
                     id="answer_en"
-                    value={form.answer_en}
+                    value={form.answer_en ?? ''}
                     onChange={(e) => setForm({ ...form, answer_en: e.target.value })}
                     placeholder="The answer to the question"
                     rows={5}
@@ -323,7 +323,7 @@ export default function AdminFaqsPage() {
                   <Label htmlFor="question_ar">{t('admin_question')} (العربية) *</Label>
                   <Textarea
                     id="question_ar"
-                    value={form.question_ar}
+                    value={form.question_ar ?? ''}
                     onChange={(e) => setForm({ ...form, question_ar: e.target.value })}
                     placeholder="السؤال الذي قد يسأله الزوار"
                     rows={3}
@@ -335,7 +335,7 @@ export default function AdminFaqsPage() {
                   <Label htmlFor="answer_ar">{t('admin_answer')} (العربية) *</Label>
                   <Textarea
                     id="answer_ar"
-                    value={form.answer_ar}
+                    value={form.answer_ar ?? ''}
                     onChange={(e) => setForm({ ...form, answer_ar: e.target.value })}
                     placeholder="إجابة السؤال"
                     rows={5}

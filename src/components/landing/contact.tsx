@@ -156,7 +156,7 @@ export function Contact() {
                       <Label htmlFor="project-type">{t('contact_label_type')}</Label>
                       <Select name="projectType">
                         <SelectTrigger className="h-11 bg-background border-border/60">
-                          <SelectValue placeholder={t('pricing_select_type')} />
+                          <SelectValue placeholder={t('contact_select_type')} />
                         </SelectTrigger>
                         <SelectContent>
                           {projectTypes.map((pt) => (
@@ -169,7 +169,7 @@ export function Contact() {
                       <Label htmlFor="budget">{t('contact_label_budget')}</Label>
                       <Select name="budget">
                         <SelectTrigger className="h-11 bg-background border-border/60">
-                          <SelectValue placeholder={t('pricing_select_budget')} />
+                          <SelectValue placeholder={t('contact_select_budget')} />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="1k-3k">$1,000 - $3,000</SelectItem>
