@@ -34,7 +34,7 @@ export function Footer() {
                 <Zap className="h-4 w-4" />
               </div>
               <span className="text-lg font-bold tracking-tight">
-                SaaS<span className="text-primary">Forge</span>
+                asra3<span className="text-primary">.com</span>
               </span>
             </a>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
@@ -99,7 +99,7 @@ export function Footer() {
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-6">
           <p className="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} SaaSForge. All rights reserved.
+            &copy; {new Date().getFullYear()} asra3.com. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
             <a href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">

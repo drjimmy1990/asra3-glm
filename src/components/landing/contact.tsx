@@ -13,36 +13,54 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Send, Mail, MapPin, Clock, CheckCircle2, ArrowRight } from 'lucide-react';
-
-const contactInfo = [
-  {
-    icon: Mail,
-    title: 'Email',
-    value: 'hello@saasforge.dev',
-    description: 'Drop me a line anytime',
-  },
-  {
-    icon: Clock,
-    title: 'Response Time',
-    value: 'Within 24 hours',
-    description: 'Usually much faster',
-  },
-  {
-    icon: MapPin,
-    title: 'Location',
-    value: 'Remote / Worldwide',
-    description: 'Available across all timezones',
-  },
-];
+import { Send, Mail, MapPin, Clock, CheckCircle2, Loader2 } from 'lucide-react';
+import { useSiteData } from '@/hooks/use-site-data';
 
 export function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const { data } = useSiteData();
+  const contactEmail = data?.settings?.contact_email || 'hello@asra3.com';
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const contactInfo = [
+    { icon: Mail, title: 'Email', value: contactEmail, description: 'Drop me a line anytime' },
+    { icon: Clock, title: 'Response Time', value: 'Within 24 hours', description: 'Usually much faster' },
+    { icon: MapPin, title: 'Location', value: 'Remote / Worldwide', description: 'Available across all timezones' },
+  ];
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
+    setError('');
+    setLoading(true);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const body = {
+      name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      projectType: formData.get('projectType') as string || '',
+      budget: formData.get('budget') as string || '',
+      message: formData.get('message') as string,
+    };
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (res.ok) {
+        setSubmitted(true);
+        form.reset();
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
+    } catch {
+      setError('Network error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -141,6 +159,7 @@ export function Contact() {
                     <div className="space-y-2">
                       <Label htmlFor="name">Full Name</Label>
                       <Input
+                        name="name"
                         id="name"
                         placeholder="John Doe"
                         required
@@ -150,6 +169,7 @@ export function Contact() {
                     <div className="space-y-2">
                       <Label htmlFor="email">Email</Label>
                       <Input
+                        name="email"
                         id="email"
                         type="email"
                         placeholder="john@company.com"
@@ -162,7 +182,7 @@ export function Contact() {
                   <div className="grid gap-5 sm:grid-cols-2">
                     <div className="space-y-2">
                       <Label htmlFor="project-type">Project Type</Label>
-                      <Select>
+                      <Select name="projectType">
                         <SelectTrigger className="h-11 bg-background border-border/60">
                           <SelectValue placeholder="Select a type" />
                         </SelectTrigger>
@@ -177,7 +197,7 @@ export function Contact() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="budget">Budget Range</Label>
-                      <Select>
+                      <Select name="budget">
                         <SelectTrigger className="h-11 bg-background border-border/60">
                           <SelectValue placeholder="Select budget" />
                         </SelectTrigger>
@@ -194,6 +214,7 @@ export function Contact() {
                   <div className="space-y-2">
                     <Label htmlFor="message">Project Details</Label>
                     <Textarea
+                      name="message"
                       id="message"
                       placeholder="Tell me about your project, goals, and timeline..."
                       rows={5}
@@ -202,13 +223,21 @@ export function Contact() {
                     />
                   </div>
 
+                  {error && (
+                    <p className="text-sm text-destructive">{error}</p>
+                  )}
+
                   <Button
                     type="submit"
                     size="lg"
+                    disabled={loading}
                     className="btn-glow bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto h-12 px-8"
                   >
-                    <Send className="mr-2 h-4 w-4" />
-                    Send Message
+                    {loading ? (
+                      <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Sending...</>
+                    ) : (
+                      <><Send className="mr-2 h-4 w-4" />Send Message</>
+                    )}
                   </Button>
                 </form>
               )}

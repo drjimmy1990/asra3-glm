@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,20 +7,69 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  category    String
+  description String
+  imageUrl    String   @default("")
+  metrics     String   @default("[]")
+  tags        String   @default("[]")
+  color       String   @default("from-emerald-500/20 to-teal-500/20")
+  featured    Boolean  @default(false)
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Testimonial {
   id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
+  name      String
+  role      String
+  content   String
+  rating    Int      @default(5)
+  active    Boolean  @default(true)
+  order     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Post {
+model Service {
+  id          String   @id @default(cuid())
+  iconName    String   @default("Code2")
+  title       String
+  description String
+  features    String   @default("[]")
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model FAQ {
   id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
+  question  String
+  answer    String
+  order     Int      @default(0)
+  active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model SiteSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}
+
+model ContactSubmission {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  projectType String   @default("")
+  budget      String   @default("")
+  message     String
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
 }

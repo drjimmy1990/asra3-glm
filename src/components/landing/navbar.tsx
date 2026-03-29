@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
-import { Menu, Zap } from 'lucide-react';
+import { Menu, Zap, Sun, Moon } from 'lucide-react';
+import { useTheme } from 'next-themes';
 
 const navLinks = [
   { label: 'Services', href: '#services' },
@@ -17,11 +18,20 @@ const navLinks = [
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  const handleScroll = () => setScrolled(window.scrollY > 20);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
+    // Subscribe to scroll events
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    // Mark as mounted after subscription is set up
+    const timer = requestAnimationFrame(() => setMounted(true));
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      cancelAnimationFrame(timer);
+    };
   }, []);
 
   return (
@@ -38,7 +48,7 @@ export function Navbar() {
             <Zap className="h-5 w-5" />
           </div>
           <span className="text-xl font-bold tracking-tight">
-            SaaS<span className="text-primary">Forge</span>
+            asra3<span className="text-primary">.com</span>
           </span>
         </a>
 
@@ -55,7 +65,18 @@ export function Navbar() {
           ))}
         </div>
 
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-2">
+          {mounted && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="size-9 text-muted-foreground hover:text-foreground"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}
+            </Button>
+          )}
           <a href="#contact">
             <Button className="btn-glow bg-primary text-primary-foreground hover:bg-primary/90 px-6">
               Let&apos;s Talk

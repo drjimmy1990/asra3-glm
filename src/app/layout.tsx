@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -14,33 +15,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SaaS & Automation Solutions | Freelance Developer",
+  title: "asra3.com | SaaS & Automation Solutions",
   description:
-    "I build high-performance SaaS products and intelligent automation solutions that save your business time, reduce costs, and drive scalable growth. Let's turn your vision into reality.",
+    "I build high-performance SaaS products and intelligent automation solutions that save your business time, reduce costs, and drive scalable growth.",
   keywords: [
-    "SaaS development",
-    "automation solutions",
-    "freelance developer",
-    "custom software",
-    "API integration",
-    "workflow automation",
-    "MVP development",
-    "full-stack development",
-    "startup developer",
-    "no-code automation",
+    "asra3", "SaaS development", "automation solutions", "freelance developer",
+    "custom software", "API integration", "workflow automation", "MVP development",
+    "full-stack development", "startup developer",
   ],
-  authors: [{ name: "Freelance SaaS & Automation Expert" }],
+  authors: [{ name: "asra3.com" }],
   openGraph: {
-    title: "SaaS & Automation Solutions | Freelance Developer",
-    description:
-      "Transform your business with custom SaaS products and intelligent automation. From MVP to scale.",
+    title: "asra3.com | SaaS & Automation Solutions",
+    description: "Transform your business with custom SaaS products and intelligent automation.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "SaaS & Automation Solutions",
-    description:
-      "Transform your business with custom SaaS products and intelligent automation.",
+    title: "asra3.com | SaaS & Automation Solutions",
+    description: "Transform your business with custom SaaS products and intelligent automation.",
   },
 };
 
@@ -54,8 +46,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        {children}
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
