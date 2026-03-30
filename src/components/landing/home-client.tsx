@@ -20,12 +20,16 @@ interface HomeClientProps {
   initialLocale: string;
 }
 
-// Suppress THREE.Clock deprecation warning (upstream issue in @react-three/fiber)
+// Suppress persistent library warnings (upstream issues in @react-three/fiber and Framer Motion)
 if (typeof window !== 'undefined') {
   const origWarn = console.warn;
   console.warn = (...args: unknown[]) => {
     const msg = args[0];
-    if (typeof msg === 'string' && (msg.includes('THREE.Clock') || msg.includes('Clock: This module'))) return;
+    if (typeof msg === 'string' && (
+      msg.includes('THREE.Clock') || 
+      msg.includes('Clock: This module') ||
+      msg.includes('non-static position')
+    )) return;
     origWarn.apply(console, args);
   };
 }

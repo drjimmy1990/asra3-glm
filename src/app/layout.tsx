@@ -51,7 +51,7 @@ export default function RootLayout({
   return (
     <html lang="en" dir="ltr" suppressHydrationWarning data-scroll-behavior="smooth">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${notoArabic.variable} antialiased bg-background text-foreground relative relative`}
+        className={`${geistSans.variable} ${geistMono.variable} ${notoArabic.variable} antialiased bg-background text-foreground relative`}
       >
         <ThemeProvider
           attribute="class"

@@ -20,7 +20,7 @@ export function Testimonials({ data }: TestimonialsProps) {
   return (
     <section id="testimonials" className="relative py-24 sm:py-32 bg-muted/30">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center max-w-3xl mx-auto mb-16">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="relative text-center max-w-3xl mx-auto mb-16">
           <p className="text-sm font-semibold text-primary tracking-wider uppercase mb-3">{t('testimonials_sub')}</p>
           <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
             {t('testimonials_heading')} <span className="text-primary">{t('testimonials_heading_highlight')}</span>
@@ -28,7 +28,7 @@ export function Testimonials({ data }: TestimonialsProps) {
           <p className="mt-4 text-lg text-muted-foreground leading-relaxed">{t('testimonials_desc')}</p>
         </motion.div>
 
-        <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-50px' }} className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-50px' }} className="relative grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((tc) => (
             <motion.div key={tc.id} variants={item} whileHover={{ y: -4, transition: { duration: 0.2 } }} className="group relative rounded-2xl border border-border/60 bg-card/50 p-6 transition-all hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
               <div className="flex gap-1 mb-4">

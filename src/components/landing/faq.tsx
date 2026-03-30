@@ -16,7 +16,7 @@ export function FAQ({ data }: FAQProps) {
   return (
     <section id="faq" className="relative py-24 sm:py-32 bg-muted/30">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center mb-16">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="relative text-center mb-16">
           <p className="text-sm font-semibold text-primary tracking-wider uppercase mb-3">{t('faq_sub')}</p>
           <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
             <span className="text-primary">{t('faq_heading')}</span>
@@ -26,7 +26,7 @@ export function FAQ({ data }: FAQProps) {
           </p>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
+        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="relative">
           <Accordion type="single" collapsible className="space-y-3">
             {faqs.map((faq, index) => (
               <AccordionItem

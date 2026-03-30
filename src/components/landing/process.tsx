@@ -20,7 +20,7 @@ export function Process() {
   return (
     <section id="process" className="relative py-24 sm:py-32 bg-muted/30">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center max-w-3xl mx-auto mb-16">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="relative text-center max-w-3xl mx-auto mb-16">
           <p className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-4">{t('process_sub')}</p>
           <h2 className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
             {t('process_heading')} <span className="text-primary">{t('process_heading_highlight')}</span>

@@ -35,7 +35,7 @@ export function TrustedBy() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: '-50px' }}
-          className="flex flex-wrap items-center justify-center gap-4 sm:gap-6"
+          className="relative flex flex-wrap items-center justify-center gap-4 sm:gap-6"
         >
           {tools.map((tool) => (
             <motion.div

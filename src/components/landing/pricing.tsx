@@ -36,7 +36,7 @@ export function Advantages() {
   return (
     <section id="advantages" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center max-w-3xl mx-auto mb-16">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="relative text-center max-w-3xl mx-auto mb-16">
           <p className="text-sm font-semibold text-primary tracking-wider uppercase mb-3">{t('adv_sub')}</p>
           <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
             {t('adv_heading')} <span className="text-primary">{t('adv_heading_highlight')}</span>
@@ -44,7 +44,7 @@ export function Advantages() {
           <p className="mt-4 text-lg text-muted-foreground leading-relaxed">{t('adv_desc')}</p>
         </motion.div>
 
-        <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-50px' }} className="grid gap-8 lg:grid-cols-3 items-start">
+        <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-50px' }} className="relative grid gap-8 lg:grid-cols-3 items-start">
           {tiers.map((tier) => {
             const Icon = tier.icon;
             return (

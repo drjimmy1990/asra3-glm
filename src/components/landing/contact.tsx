@@ -88,7 +88,7 @@ export function Contact({ data }: ContactProps) {
   return (
     <section id="contact" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center max-w-3xl mx-auto mb-16">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="relative text-center max-w-3xl mx-auto mb-16">
           <p className="text-sm font-semibold text-primary tracking-wider uppercase mb-3">{t('contact_sub')}</p>
           <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
             {t('contact_heading')} <span className="text-primary">{t('contact_heading_highlight')}</span>
@@ -102,7 +102,7 @@ export function Contact({ data }: ContactProps) {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="lg:col-span-2 space-y-6"
+            className="relative lg:col-span-2 space-y-6"
           >
             <div className="space-y-6">
               {contactInfo.map((info) => (
@@ -147,7 +147,7 @@ export function Contact({ data }: ContactProps) {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="lg:col-span-3"
+            className="relative lg:col-span-3"
           >
             <div className="rounded-2xl border border-border/60 bg-card/50 p-6 sm:p-8">
               {submitted ? (

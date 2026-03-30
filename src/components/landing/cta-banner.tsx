@@ -17,7 +17,7 @@ export function CTABanner() {
       <div className="absolute bottom-0 end-1/4 h-64 w-64 rounded-full bg-primary/10 blur-3xl animate-pulse-glow" style={{ animationDelay: '1.5s' }} />
 
       <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="relative">
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm font-medium text-primary mb-6">
             <Zap className="h-3.5 w-3.5" />
             {t('cta_badge')}
