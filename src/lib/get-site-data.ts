@@ -1,17 +1,6 @@
 import { db } from '@/lib/db';
 import { cache } from 'react';
-
-export interface SiteSettings {
-  [key: string]: string;
-}
-
-export interface SiteData {
-  services: any[];
-  projects: any[];
-  testimonials: any[];
-  faqs: any[];
-  settings: SiteSettings;
-}
+import { type SiteData } from '@/hooks/use-site-data';
 
 /**
  * Server-side data fetching for the homepage.
@@ -87,6 +76,6 @@ export const getSiteData = cache(async (lang: string = 'en'): Promise<SiteData> 
     projects: serialize(localizedProjects),
     testimonials: serialize(localizedTestimonials),
     faqs: serialize(localizedFaqs),
-    settings: localizedSettings,
+    settings: localizedSettings as SiteData['settings'],
   };
 });

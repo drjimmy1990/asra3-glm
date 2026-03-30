@@ -4,20 +4,20 @@ import { useState, useEffect } from 'react';
 import { useLocale } from '@/lib/i18n';
 
 export interface SiteSettings {
-  site_name: string;
-  site_tagline: string;
-  hero_title: string;
-  hero_subtitle: string;
-  hero_stat_1_value: string;
-  hero_stat_1_label: string;
-  hero_stat_2_value: string;
-  hero_stat_2_label: string;
-  hero_stat_3_value: string;
-  hero_stat_3_label: string;
-  hero_stat_4_value: string;
-  hero_stat_4_label: string;
-  contact_email: string;
-  [key: string]: string;
+  site_name?: string;
+  site_tagline?: string;
+  hero_title?: string;
+  hero_subtitle?: string;
+  hero_stat_1_value?: string;
+  hero_stat_1_label?: string;
+  hero_stat_2_value?: string;
+  hero_stat_2_label?: string;
+  hero_stat_3_value?: string;
+  hero_stat_3_label?: string;
+  hero_stat_4_value?: string;
+  hero_stat_4_label?: string;
+  contact_email?: string;
+  [key: string]: string | undefined;
 }
 
 export interface MetricItem {
