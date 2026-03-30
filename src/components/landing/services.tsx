@@ -78,11 +78,11 @@ export function Services({ data }: ServicesProps) {
     <section id="services" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="relative text-center max-w-3xl mx-auto mb-16">
-          <p className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-4">{t('services_sub')}</p>
-          <h2 className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
+          <p className="text-xs font-bold text-primary tracking-[0.25em] uppercase mb-4">{t('services_sub')}</p>
+          <h2 className="text-[var(--text-4xl)] sm:text-[var(--text-5xl)] lg:text-[var(--text-6xl)] font-black tracking-tighter">
             {t('services_heading')} <span className="text-primary">{t('services_heading_highlight')}</span>
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground leading-relaxed">{t('services_desc')}</p>
+          <p className="mt-6 text-lg sm:text-[var(--text-lg)] text-muted-foreground leading-relaxed">{t('services_desc')}</p>
         </motion.div>
 
         <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-50px' }} className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
@@ -111,15 +111,15 @@ export function Services({ data }: ServicesProps) {
                   <IconComp className="h-8 w-8" />
                 </motion.div>
                 
-                <h3 className="mt-8 text-2xl font-bold tracking-tight">{service.title}</h3>
-                <p className="mt-4 text-base text-muted-foreground leading-relaxed">{service.description}</p>
+                <h3 className="mt-8 text-[var(--text-2xl)] font-bold tracking-tight">{service.title}</h3>
+                <p className="mt-4 text-[var(--text-base)] text-muted-foreground leading-relaxed">{service.description}</p>
                 <ul className="mt-8 space-y-3">
                   {features.map((feature, idx) => (
                     <motion.li 
                       key={`${service.id}-${idx}`} 
                       initial={{ opacity: 0.8 }}
                       whileHover={{ opacity: 1, x: isRTL ? -4 : 4 }}
-                      className="relative flex items-center gap-3 text-base font-medium text-foreground transition-all"
+                      className="relative flex items-center gap-3 text-[var(--text-sm)] font-medium text-foreground transition-all"
                     >
                       <div className="h-2 w-2 rounded-full bg-primary" />
                       {feature}

@@ -23,11 +23,12 @@ interface HeroProps {
 // Staggered word animation component
 function AnimatedText({ text, delayOffset = 0 }: { text: string; delayOffset?: number }) {
   const words = text.split(" ");
+  const { isRTL } = useLocale();
   
   return (
     <span className="inline-block">
       {words.map((word, i) => (
-        <span key={i} className="inline-block overflow-hidden pb-2 me-3">
+        <span key={i} className={`inline-block overflow-hidden px-1 ${isRTL ? 'me-4 pt-4 pb-6 -mt-4' : 'me-3 pb-2'}`}>
           <motion.span
             className="inline-block"
             initial={{ y: "100%", opacity: 0 }}
@@ -52,7 +53,7 @@ function StatValue({ value }: { value: string }) {
   const animatedValue = useCounter(value, ref);
   
   return (
-    <div ref={ref} className="relative text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground tracking-tight">
+    <div ref={ref} className="relative text-[var(--text-3xl)] sm:text-[var(--text-4xl)] lg:text-[var(--text-5xl)] font-black text-foreground tracking-tighter">
       {animatedValue}
     </div>
   );
@@ -120,7 +121,7 @@ export function Hero({ data }: HeroProps) {
           >
             
             <motion.h1 
-              className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl text-foreground selection:bg-primary/20"
+              className="text-[var(--text-6xl)] lg:text-[var(--text-display)] font-black tracking-tighter rtl:tracking-normal text-foreground selection:bg-primary/20 leading-[1.1] sm:leading-[1] lg:leading-[0.9] rtl:leading-normal pb-4"
             >
               <AnimatedText text={heroTitle} delayOffset={0.1} />
             </motion.h1>
@@ -129,7 +130,7 @@ export function Hero({ data }: HeroProps) {
               initial={{ opacity: 0, y: 15 }} 
               animate={{ opacity: 1, y: 0 }} 
               transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }} 
-              className="mt-6 sm:mt-8 max-w-xl text-lg text-muted-foreground sm:text-lg leading-relaxed font-normal"
+              className="mt-6 sm:mt-8 max-w-xl text-lg sm:text-[var(--text-lg)] text-muted-foreground leading-relaxed font-normal"
             >
               {heroSubtitle}
             </motion.div>
