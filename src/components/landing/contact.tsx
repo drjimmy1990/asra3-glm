@@ -25,7 +25,7 @@ export function Contact({ data }: ContactProps) {
 
   const contactInfo = [
     { icon: Mail, title: t('contact_email_title'), value: contactEmail, description: t('contact_email_desc') },
-    { icon: Clock, title: t('contact_response_title'), value: t('contact_response_desc').includes('24') ? (isRTL ? 'خلال ٢٤ ساعة' : 'Within 24 hours') : t('contact_response_desc'), description: t('contact_response_desc') },
+    { icon: Clock, title: t('contact_response_title'), value: t('contact_response_desc'), description: isRTL ? 'عادة ما يكون الرد أسرع' : 'Usually much faster' },
     { icon: MapPin, title: t('contact_location_title'), value: isRTL ? 'عن بُعد / جميع المناطق الزمنية' : 'Remote / Worldwide', description: t('contact_location_desc') },
   ];
 

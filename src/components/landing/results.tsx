@@ -35,7 +35,7 @@ export function Results({ data }: ResultsProps) {
         </motion.div>
 
         <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-50px' }} className="space-y-8">
-          {projects.map((project) => {
+          {projects.map((project, idx) => {
             const metrics = parseJSON<MetricItem[]>(project.metrics, []);
             const tags = parseJSON<string[]>(project.tags, []);
             const blogSlug = project.blogPosts?.[0]?.slug;
@@ -55,6 +55,7 @@ export function Results({ data }: ResultsProps) {
                         fill
                         className="object-cover"
                         sizes="(max-width: 1024px) 100vw, 40vw"
+                        priority={idx === 0}
                       />
                     </motion.div>
                   ) : (

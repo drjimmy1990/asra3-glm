@@ -20,6 +20,16 @@ interface HomeClientProps {
   initialLocale: string;
 }
 
+// Suppress THREE.Clock deprecation warning (upstream issue in @react-three/fiber)
+if (typeof window !== 'undefined') {
+  const origWarn = console.warn;
+  console.warn = (...args: unknown[]) => {
+    const msg = args[0];
+    if (typeof msg === 'string' && (msg.includes('THREE.Clock') || msg.includes('Clock: This module'))) return;
+    origWarn.apply(console, args);
+  };
+}
+
 /**
  * Client-side shell for the homepage.
  * Receives SSR-fetched data as props so content is available immediately.
@@ -30,9 +40,9 @@ export function HomeClient({ initialData, initialLocale }: HomeClientProps) {
   const data = clientData || initialData;
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="relative min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-1">
+      <main className="relative flex-1">
         <Hero data={data} />
         <TrustedBy />
         <Services data={data} />

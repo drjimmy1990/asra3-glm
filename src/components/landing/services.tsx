@@ -119,7 +119,7 @@ export function Services({ data }: ServicesProps) {
                       key={`${service.id}-${idx}`} 
                       initial={{ opacity: 0.8 }}
                       whileHover={{ opacity: 1, x: isRTL ? -4 : 4 }}
-                      className="flex items-center gap-3 text-base font-medium text-foreground transition-all"
+                      className="relative flex items-center gap-3 text-base font-medium text-foreground transition-all"
                     >
                       <div className="h-2 w-2 rounded-full bg-primary" />
                       {feature}
