@@ -19,6 +19,7 @@ export function Contact({ data }: ContactProps) {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [selectedBudget, setSelectedBudget] = useState('');
   const { t, isRTL } = useLocale();
   const contactEmail = data?.settings?.contact_email || 'hello@asra3.com';
 
@@ -34,11 +35,18 @@ export function Contact({ data }: ContactProps) {
     setLoading(true);
     const form = e.currentTarget;
     const formData = new FormData(form);
+
+    let finalBudget = formData.get('budget') as string || '';
+    if (finalBudget === 'other') {
+      finalBudget = formData.get('customBudget') as string || '';
+    }
+
     const body = {
       name: formData.get('name') as string,
       email: formData.get('email') as string,
+      mobile: formData.get('mobile') as string || '',
       projectType: formData.get('projectType') as string || '',
-      budget: formData.get('budget') as string || '',
+      budget: finalBudget,
       message: formData.get('message') as string,
     };
     try {
@@ -69,10 +77,12 @@ export function Contact({ data }: ContactProps) {
   ];
 
   const budgetOptions = [
+    { value: '0-500', label: isRTL ? '٠ - ٥٠٠$' : '$0 - $500' },
+    { value: '500-1000', label: isRTL ? '٥٠٠$ - ١,٠٠٠$' : '$500 - $1,000' },
     { value: '1k-3k', label: isRTL ? '١,٠٠٠$ - ٣,٠٠٠$' : '$1,000 - $3,000' },
     { value: '3k-5k', label: isRTL ? '٣,٠٠٠$ - ٥,٠٠٠$' : '$3,000 - $5,000' },
-    { value: '5k-10k', label: isRTL ? '٥,٠٠٠$ - ١٠,٠٠٠$' : '$5,000 - $10,000' },
-    { value: '10k+', label: isRTL ? '+١٠,٠٠٠$' : '$10,000+' },
+    { value: '5k+', label: isRTL ? '+٥,٠٠٠$' : '$5,000+' },
+    { value: 'other', label: isRTL ? 'أخرى' : 'Other' },
   ];
 
   return (
@@ -170,6 +180,10 @@ export function Contact({ data }: ContactProps) {
 
                   <div className="grid gap-5 sm:grid-cols-2">
                     <div className="space-y-2">
+                      <Label htmlFor="mobile">{isRTL ? 'رقم الجوال (اختياري)' : 'Mobile Number (Optional)'}</Label>
+                      <Input name="mobile" id="mobile" type="tel" placeholder={isRTL ? '+966 50 123 4567' : '+1 234 567 8900'} className="h-11 bg-background border-border/60" />
+                    </div>
+                    <div className="space-y-2">
                       <Label htmlFor="project-type">{t('contact_label_type')}</Label>
                       <Select name="projectType">
                         <SelectTrigger id="project-type" className="h-11 bg-background border-border/60">
@@ -182,9 +196,12 @@ export function Contact({ data }: ContactProps) {
                         </SelectContent>
                       </Select>
                     </div>
+                  </div>
+
+                  <div className="grid gap-5 sm:grid-cols-2">
                     <div className="space-y-2">
                       <Label htmlFor="budget">{t('contact_label_budget')}</Label>
-                      <Select name="budget">
+                      <Select name="budget" onValueChange={setSelectedBudget}>
                         <SelectTrigger id="budget" className="h-11 bg-background border-border/60">
                           <SelectValue placeholder={t('contact_select_budget')} />
                         </SelectTrigger>
@@ -195,6 +212,12 @@ export function Contact({ data }: ContactProps) {
                         </SelectContent>
                       </Select>
                     </div>
+                    {selectedBudget === 'other' && (
+                      <div className="space-y-2 animate-fade-in">
+                        <Label htmlFor="customBudget">{isRTL ? 'ميزانية محددة' : 'Specific Budget'}</Label>
+                        <Input name="customBudget" id="customBudget" placeholder={isRTL ? 'مثال: ٤٥٠$' : 'e.g. $450'} required className="h-11 bg-background border-border/60" />
+                      </div>
+                    )}
                   </div>
 
                   <div className="space-y-2">

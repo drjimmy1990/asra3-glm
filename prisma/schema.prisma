@@ -92,6 +92,7 @@ model ContactSubmission {
   id          String   @id @default(cuid())
   name        String
   email       String
+  mobile      String   @default("")
   projectType String   @default("")
   budget      String   @default("")
   message     String

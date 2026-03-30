@@ -99,7 +99,7 @@ export function Services({ data }: ServicesProps) {
                 }} 
                 className="group relative rounded-2xl border-2 border-border/80 bg-card p-8 sm:p-10 transition-all hover:border-primary/80 hover:shadow-2xl overflow-hidden"
               >
-                <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
+                <div className="absolute top-0 end-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
                   <IconComp className="w-32 h-32" />
                 </div>
                 
@@ -118,7 +118,7 @@ export function Services({ data }: ServicesProps) {
                     <motion.li 
                       key={`${service.id}-${idx}`} 
                       initial={{ opacity: 0.8 }}
-                      whileHover={{ opacity: 1, x: 4 }}
+                      whileHover={{ opacity: 1, x: isRTL ? -4 : 4 }}
                       className="flex items-center gap-3 text-base font-medium text-foreground transition-all"
                     >
                       <div className="h-2 w-2 rounded-full bg-primary" />

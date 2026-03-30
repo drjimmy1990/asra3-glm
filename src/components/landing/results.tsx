@@ -85,15 +85,23 @@ export function Results({ data }: ResultsProps) {
                     {metrics.map((metric) => {
                       const IconComp = metricIconMap[metric.icon] || BarChart3;
                       return (
-                        <div key={metric.label} className="flex items-center gap-3">
-                          <div className="p-2 bg-primary/10 rounded-lg">
+                        <motion.div 
+                          key={metric.label} 
+                          whileHover={{ y: -2 }}
+                          className="flex items-center gap-3 cursor-default group/metric"
+                        >
+                          <motion.div 
+                            whileHover={{ rotate: [0, -10, 10, 0] }}
+                            transition={{ duration: 0.4 }}
+                            className="p-2 bg-primary/10 rounded-lg group-hover/metric:bg-primary/20 transition-colors"
+                          >
                             <IconComp className="h-5 w-5 text-primary" />
-                          </div>
+                          </motion.div>
                           <div>
                             <div className="text-xl font-bold tracking-tight">{metric.value}</div>
                             <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{metric.label}</div>
                           </div>
-                        </div>
+                        </motion.div>
                       );
                     })}
                   </div>

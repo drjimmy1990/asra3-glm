@@ -28,43 +28,54 @@ export function Process() {
           <p className="mt-4 text-lg text-muted-foreground leading-relaxed">{t('process_desc')}</p>
         </motion.div>
 
-        <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-50px' }} className="relative">
-          <div className="absolute start-6 top-0 bottom-0 hidden w-px bg-gradient-to-b from-primary/40 via-primary/20 to-transparent md:block" />
-          <div className="space-y-8 md:space-y-12">
-            {steps.map((step) => (
-              <motion.div 
-                key={step.number} 
-                variants={item} 
-                whileHover={{ x: isRTL ? -12 : 12 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="relative flex gap-6 md:gap-10 group"
-              >
-                <div className="relative flex-shrink-0">
-                  <motion.div 
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    className="flex h-16 w-16 items-center justify-center rounded-full border-4 border-primary bg-background text-primary font-black text-lg z-10 relative transition-colors group-hover:bg-primary group-hover:text-primary-foreground shadow-lg"
-                  >
-                    {step.number}
-                  </motion.div>
-                </div>
-                <div className="flex-1 rounded-2xl border-2 border-border/80 bg-card p-8 sm:p-10 transition-all hover:border-primary/80 hover:shadow-2xl overflow-hidden">
-                  <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="relative">
-                    <div className="flex items-center gap-4 mb-4">
+        <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-50px' }} className="relative max-w-4xl mx-auto">
+          <div className="absolute start-8 md:start-1/2 top-0 bottom-0 hidden w-0.5 bg-border/50 md:block -translate-x-1/2" />
+          <div className="space-y-12 md:space-y-24">
+            {steps.map((step, index) => {
+              const isEven = index % 2 === 0;
+              return (
+                <motion.div 
+                  key={step.number} 
+                  variants={item} 
+                  className={`relative flex flex-col md:flex-row gap-8 md:gap-16 items-start md:items-center ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`}
+                >
+                  <div className={`flex-1 ${isEven ? 'md:text-end' : 'md:text-start'}`}>
+                    <div className={`flex items-center gap-4 mb-4 ${isEven ? 'md:flex-row-reverse' : ''}`}>
                       <motion.div
                         animate={{ y: [0, -4, 0] }}
                         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                        className="p-3 bg-primary/10 rounded-xl"
+                        className="p-3 bg-primary/10 rounded-xl inline-block"
                       >
                         <step.icon className="h-6 w-6 text-primary" />
                       </motion.div>
-                      <h3 className="text-2xl font-bold tracking-tight group-hover:text-primary transition-colors">{step.title}</h3>
+                      <h3 className="text-2xl font-bold tracking-tight text-foreground transition-colors">{step.title}</h3>
                     </div>
-                    <p className="text-base text-muted-foreground leading-relaxed group-hover:text-foreground transition-colors">{step.description}</p>
+                    <p className="text-lg text-muted-foreground leading-relaxed transition-colors">{step.description}</p>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+
+                  <div className="relative flex-shrink-0 hidden md:flex items-center justify-center w-16">
+                    <motion.div 
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      className="group/number flex h-16 w-16 items-center justify-center rounded-full border-4 border-background bg-primary text-primary-foreground font-black text-xl z-10 relative transition-transform shadow-xl overflow-hidden cursor-default"
+                    >
+                      <motion.span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover/number:-translate-y-full">
+                        {step.number}
+                      </motion.span>
+                      <motion.span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 translate-y-full group-hover/number:translate-y-0">
+                        ✓
+                      </motion.span>
+                    </motion.div>
+                  </div>
+
+                  {/* Mobile Number Indicator */}
+                  <div className="flex md:hidden items-center gap-4 text-primary font-black text-4xl opacity-20 absolute top-0 end-0">
+                    {step.number}
+                  </div>
+
+                  <div className="flex-1 hidden md:block" />
+                </motion.div>
+              );
+            })}
           </div>
         </motion.div>
       </div>
