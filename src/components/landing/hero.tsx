@@ -57,42 +57,46 @@ export function Hero({ data }: HeroProps) {
       <div className="pointer-events-none absolute inset-0 transition-opacity duration-300 opacity-0 hover:opacity-100" style={{ background: `radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), oklch(0.55 0.17 163 / 0.06), transparent 40%)` }} />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
           <Badge variant="secondary" className="mb-6 px-4 py-1.5 text-sm font-medium border border-primary/20 bg-primary/5 text-primary">
             <Sparkles className="me-2 h-3.5 w-3.5" />
             {t('hero_badge')}
           </Badge>
         </motion.div>
 
-        <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }} className="mx-auto max-w-4xl text-4xl font-extrabold sm:text-5xl md:text-6xl lg:text-7xl">
-          <span className="text-gradient">{heroTitle}</span>
+        <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }} className="mx-auto max-w-4xl text-4xl font-extrabold sm:text-5xl md:text-6xl lg:text-7xl">
+          <span className="text-gradient leading-tight">{heroTitle}</span>
         </motion.h1>
 
-        <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }} className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground sm:text-xl leading-relaxed">
+        <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }} className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground sm:text-xl leading-relaxed">
           {heroSubtitle}
         </motion.p>
 
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }} className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }} className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
           <a href="#contact">
-            <Button size="lg" className="btn-glow bg-primary text-primary-foreground hover:bg-primary/90 px-8 text-base font-semibold h-12">
-              {t('hero_cta')}
-              <Arrow className="ms-2 h-4 w-4" />
-            </Button>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button size="lg" className="btn-glow bg-primary text-primary-foreground hover:bg-primary/90 px-8 text-base font-semibold h-12">
+                {t('hero_cta')}
+                <Arrow className="ms-2 h-4 w-4" />
+              </Button>
+            </motion.div>
           </a>
           <a href="#results">
-            <Button size="lg" variant="outline" className="border-border/60 hover:border-primary/50 hover:bg-primary/5 px-8 text-base font-semibold h-12">
-              <Play className="me-2 h-4 w-4 text-primary" />
-              {t('hero_cta_secondary')}
-            </Button>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button size="lg" variant="outline" className="border-border/60 hover:border-primary/50 hover:bg-primary/5 px-8 text-base font-semibold h-12">
+                <Play className="me-2 h-4 w-4 text-primary" />
+                {t('hero_cta_secondary')}
+              </Button>
+            </motion.div>
           </a>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.5 }} className="mt-16 grid grid-cols-2 gap-8 sm:grid-cols-4 mx-auto max-w-3xl">
-          {stats.map((stat) => (
-            <div key={stat.label} className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-gradient">{stat.value}</div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }} className="mt-16 grid grid-cols-2 gap-8 sm:grid-cols-4 mx-auto max-w-3xl">
+          {stats.map((stat, idx) => (
+            <motion.div key={stat.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.6 + (idx * 0.1), ease: [0.16, 1, 0.3, 1] }} className="text-center group">
+              <div className="text-2xl sm:text-3xl font-bold text-gradient group-hover:scale-110 transition-transform duration-300 inline-block">{stat.value}</div>
               <div className="mt-1 text-xs sm:text-sm text-muted-foreground">{stat.label}</div>
-            </div>
+            </motion.div>
           ))}
         </motion.div>
       </div>

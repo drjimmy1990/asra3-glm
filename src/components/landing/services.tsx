@@ -38,18 +38,38 @@ export function Services({ data }: ServicesProps) {
             const IconComp = iconMap[service.iconName] || Code2;
             const features = parseJSON<string[]>(service.features, []);
             return (
-              <motion.div key={service.id} variants={card} whileHover={{ y: -4, transition: { duration: 0.2 } }} className="group relative rounded-2xl border border-border/60 bg-card/50 p-6 sm:p-8 transition-all hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+              <motion.div 
+                key={service.id} 
+                variants={card} 
+                whileHover={{ 
+                  y: -8, 
+                  transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } 
+                }} 
+                className="group relative rounded-2xl border border-border/60 bg-card/50 p-6 sm:p-8 transition-all hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/5 overflow-hidden"
+              >
+                <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-primary/5 blur-2xl group-hover:bg-primary/10 transition-colors" />
+                
+                <motion.div 
+                  whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
+                  transition={{ duration: 0.4 }}
+                  className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground"
+                >
                   <IconComp className="h-6 w-6" />
-                </div>
-                <h3 className="mt-5 text-xl font-semibold">{service.title}</h3>
+                </motion.div>
+                
+                <h3 className="mt-5 text-xl font-semibold group-hover:text-primary transition-colors">{service.title}</h3>
                 <p className="mt-3 text-muted-foreground leading-relaxed">{service.description}</p>
-                <ul className="mt-5 space-y-2">
+                <ul className="mt-5 space-y-2.5">
                   {features.map((feature, idx) => (
-                    <li key={`${service.id}-${idx}`} className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <motion.li 
+                      key={`${service.id}-${idx}`} 
+                      initial={{ opacity: 0.8 }}
+                      whileHover={{ opacity: 1, x: 4 }}
+                      className="flex items-center gap-2 text-sm text-muted-foreground transition-all"
+                    >
                       <div className="h-1.5 w-1.5 rounded-full bg-primary/60" />
                       {feature}
-                    </li>
+                    </motion.li>
                   ))}
                 </ul>
               </motion.div>

@@ -32,18 +32,35 @@ export function Process() {
           <div className="absolute start-6 top-0 bottom-0 hidden w-px bg-gradient-to-b from-primary/40 via-primary/20 to-transparent md:block" />
           <div className="space-y-8 md:space-y-12">
             {steps.map((step) => (
-              <motion.div key={step.number} variants={item} className="relative flex gap-6 md:gap-10">
+              <motion.div 
+                key={step.number} 
+                variants={item} 
+                whileHover={{ x: isRTL ? -12 : 12 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="relative flex gap-6 md:gap-10 group"
+              >
                 <div className="relative flex-shrink-0">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-primary bg-background text-primary font-bold text-sm z-10 relative">
+                  <motion.div 
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                    className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-primary bg-background text-primary font-bold text-sm z-10 relative transition-colors group-hover:bg-primary group-hover:text-primary-foreground"
+                  >
                     {step.number}
-                  </div>
+                  </motion.div>
                 </div>
-                <div className="flex-1 rounded-2xl border border-border/60 bg-card/50 p-6 sm:p-8 transition-all hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
-                  <div className="flex items-center gap-3 mb-3">
-                    <step.icon className="h-5 w-5 text-primary" />
-                    <h3 className="text-xl font-semibold">{step.title}</h3>
+                <div className="flex-1 rounded-2xl border border-border/60 bg-card/50 p-6 sm:p-8 transition-all hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/5 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/0 via-primary/0 to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="relative">
+                    <div className="flex items-center gap-3 mb-3">
+                      <motion.div
+                        animate={{ y: [0, -4, 0] }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                      >
+                        <step.icon className="h-5 w-5 text-primary" />
+                      </motion.div>
+                      <h3 className="text-xl font-semibold group-hover:text-primary transition-colors">{step.title}</h3>
+                    </div>
+                    <p className="text-muted-foreground leading-relaxed group-hover:text-foreground transition-colors">{step.description}</p>
                   </div>
-                  <p className="text-muted-foreground leading-relaxed">{step.description}</p>
                 </div>
               </motion.div>
             ))}

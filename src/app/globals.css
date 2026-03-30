@@ -163,6 +163,16 @@
   to { opacity: 1; }
 }
 
+@keyframes reveal-mask {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes reveal-mask-rtl {
+  from { clip-path: inset(0 0 0 100%); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
@@ -177,11 +187,23 @@
 }
 
 .animate-slide-up {
-  animation: slide-up 0.8s ease-out forwards;
+  animation: slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-fade-in {
   animation: fade-in 1s ease-out forwards;
+}
+
+.animate-reveal {
+  animation: reveal-mask 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+[dir="rtl"] .animate-reveal {
+  animation: reveal-mask-rtl 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+.transition-height {
+  transition: grid-template-rows 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .hero-gradient {

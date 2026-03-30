@@ -221,7 +221,6 @@ export default function BlogPostPage() {
             [&_iframe]:rounded-xl [&_iframe]:shadow-md [&_iframe]:w-full [&_iframe]:aspect-video
           ">
             <ReactMarkdown
-              children={content}
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeRaw]}
               components={{
@@ -263,7 +262,9 @@ export default function BlogPostPage() {
                   );
                 },
               }}
-            />
+            >
+              {content}
+            </ReactMarkdown>
           </div>
         </div>
 

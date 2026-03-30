@@ -43,15 +43,20 @@ export function Results({ data }: ResultsProps) {
               <div className="grid gap-0 lg:grid-cols-5">
                 <div className={`relative lg:col-span-2 min-h-[200px] bg-gradient-to-br ${project.color} flex items-center justify-center`}>
                   {project.imageUrl ? (
-                    <img
+                    <motion.img
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                       src={project.imageUrl}
                       alt={project.title}
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="text-6xl font-black text-primary/20 group-hover:text-primary/30 transition-colors">
+                    <motion.div 
+                      whileHover={{ scale: 1.1, rotate: 2 }}
+                      className="text-6xl font-black text-primary/20 group-hover:text-primary/30 transition-colors"
+                    >
                       {project.title.charAt(0)}
-                    </div>
+                    </motion.div>
                   )}
                   <div className="absolute top-4 start-4">
                     <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">{project.category}</Badge>
@@ -93,7 +98,15 @@ export function Results({ data }: ResultsProps) {
             );
 
             return (
-              <motion.div key={project.id} variants={card} whileHover={{ y: -4, transition: { duration: 0.2 } }} className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card/50 transition-all hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5">
+              <motion.div 
+                key={project.id} 
+                variants={card} 
+                whileHover={{ 
+                  y: -8, 
+                  transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } 
+                }} 
+                className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card/50 transition-all hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/5"
+              >
                 {blogSlug ? (
                   <Link href={`/blog/${blogSlug}`} className="block w-full h-full">
                     {cardContent}
