@@ -3,15 +3,18 @@
 import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUpRight, Users, Clock, DollarSign, BarChart3 } from 'lucide-react';
-import { useSiteData, parseJSON, type Project, type MetricItem } from '@/hooks/use-site-data';
+import { parseJSON, type Project, type MetricItem, type SiteData } from '@/hooks/use-site-data';
 import { useLocale } from '@/lib/i18n';
 
 const metricIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Users, Clock, DollarSign, BarChart3,
 };
 
-export function Results() {
-  const { data } = useSiteData();
+interface ResultsProps {
+  data?: SiteData | null;
+}
+
+export function Results({ data }: ResultsProps) {
   const { t } = useLocale();
   const projects: Project[] = data?.projects || [];
 
@@ -37,9 +40,17 @@ export function Results() {
               <motion.div key={project.id} variants={card} whileHover={{ y: -4, transition: { duration: 0.2 } }} className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card/50 transition-all hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5">
                 <div className="grid gap-0 lg:grid-cols-5">
                   <div className={`relative lg:col-span-2 min-h-[200px] bg-gradient-to-br ${project.color} flex items-center justify-center`}>
-                    <div className="text-6xl font-black text-primary/20 group-hover:text-primary/30 transition-colors">
-                      {project.title.charAt(0)}
-                    </div>
+                    {project.imageUrl ? (
+                      <img
+                        src={project.imageUrl}
+                        alt={project.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="text-6xl font-black text-primary/20 group-hover:text-primary/30 transition-colors">
+                        {project.title.charAt(0)}
+                      </div>
+                    )}
                     <div className="absolute top-4 start-4">
                       <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">{project.category}</Badge>
                     </div>

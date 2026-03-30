@@ -76,27 +76,43 @@ export interface SiteData {
   settings: SiteSettings;
 }
 
-export function useSiteData() {
-  const [data, setData] = useState<SiteData | null>(null);
-  const [loading, setLoading] = useState(true);
+/**
+ * Hook for site data with optional SSR initial data.
+ * If initialData is provided, uses it immediately without fetching.
+ * Re-fetches only when locale changes (to get localized content).
+ */
+export function useSiteData(initialData?: SiteData | null) {
+  const [data, setData] = useState<SiteData | null>(initialData || null);
+  const [loading, setLoading] = useState(!initialData);
   const { locale } = useLocale();
+  const [prevLocale, setPrevLocale] = useState(locale);
 
   useEffect(() => {
-    async function fetchContent() {
-      try {
-        const res = await fetch(`/api/content?lang=${locale}`);
-        if (res.ok) {
-          const json = await res.json();
-          setData(json);
-        }
-      } catch (error) {
-        console.error('Failed to fetch content:', error);
-      } finally {
-        setLoading(false);
-      }
+    // Skip fetch if we have initial data and locale hasn't changed
+    if (initialData && locale === prevLocale && data) {
+      return;
     }
-    fetchContent();
-  }, [locale]);
+
+    // If locale changed, re-fetch with new locale
+    if (locale !== prevLocale || !data) {
+      setPrevLocale(locale);
+      async function fetchContent() {
+        setLoading(true);
+        try {
+          const res = await fetch(`/api/content?lang=${locale}`);
+          if (res.ok) {
+            const json = await res.json();
+            setData(json);
+          }
+        } catch (error) {
+          console.error('Failed to fetch content:', error);
+        } finally {
+          setLoading(false);
+        }
+      }
+      fetchContent();
+    }
+  }, [locale, prevLocale, initialData, data]);
 
   return { data, loading };
 }

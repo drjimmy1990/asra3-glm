@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
-import { Menu, Zap, Sun, Moon, Globe } from 'lucide-react';
+import { Menu, Zap, Sun, Moon, Globe, BookOpen } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useLocale } from '@/lib/i18n';
+import Link from 'next/link';
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -13,11 +14,19 @@ export function Navbar() {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
   const { locale, setLocale, t, isRTL } = useLocale();
-
-  const handleScroll = () => setScrolled(window.scrollY > 20);
+  const ticking = useRef(false);
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
+    const handleScroll = () => {
+      if (!ticking.current) {
+        requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 20);
+          ticking.current = false;
+        });
+        ticking.current = true;
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
     const timer = requestAnimationFrame(() => setMounted(true));
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -43,7 +52,7 @@ export function Navbar() {
       }`}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <a href="#" className="flex items-center gap-2 group">
+        <a href="/" className="flex items-center gap-2 group">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-transform group-hover:scale-110">
             <Zap className="h-5 w-5" />
           </div>
@@ -63,6 +72,13 @@ export function Navbar() {
               {link.label}
             </a>
           ))}
+          <Link
+            href="/blog"
+            className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-accent flex items-center gap-1.5"
+          >
+            <BookOpen className="size-3.5" />
+            {isRTL ? 'المدونة' : 'Blog'}
+          </Link>
         </div>
 
         <div className="hidden md:flex items-center gap-2">
@@ -116,6 +132,14 @@ export function Navbar() {
                   {link.label}
                 </a>
               ))}
+              <Link
+                href="/blog"
+                onClick={() => setMobileOpen(false)}
+                className="rounded-md px-3 py-2.5 text-base font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-accent flex items-center gap-2"
+              >
+                <BookOpen className="size-4" />
+                {isRTL ? 'المدونة' : 'Blog'}
+              </Link>
               <div className="flex items-center gap-2 mt-4">
                 <Button variant="ghost" size="sm" onClick={toggleLocale} className="text-muted-foreground hover:text-foreground">
                   <Globe className="size-4 me-1" />
@@ -137,3 +161,4 @@ export function Navbar() {
     </header>
   );
 }
+

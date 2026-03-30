@@ -34,7 +34,7 @@ function useNavItems() {
   return [
     { href: '/admin/dashboard', label: t('admin_dashboard'), icon: LayoutDashboard },
     { href: '/admin/projects', label: t('admin_projects'), icon: FolderKanban },
-    { href: '/admin/blog', label: 'Blog', icon: FileText },
+    { href: '/admin/blog', label: t('admin_blog'), icon: FileText },
     { href: '/admin/testimonials', label: t('admin_testimonials'), icon: MessageSquareQuote },
     { href: '/admin/services', label: t('admin_services'), icon: Settings },
     { href: '/admin/faqs', label: t('admin_faqs'), icon: HelpCircle },

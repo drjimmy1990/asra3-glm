@@ -2,11 +2,14 @@
 
 import { motion } from 'framer-motion';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { useSiteData, type FAQItem } from '@/hooks/use-site-data';
+import { type FAQItem, type SiteData } from '@/hooks/use-site-data';
 import { useLocale } from '@/lib/i18n';
 
-export function FAQ() {
-  const { data } = useSiteData();
+interface FAQProps {
+  data?: SiteData | null;
+}
+
+export function FAQ({ data }: FAQProps) {
   const { t } = useLocale();
   const faqs: FAQItem[] = data?.faqs || [];
 

@@ -139,7 +139,7 @@ export default function AdminDashboardPage() {
           <Loader2 className="size-8 animate-spin text-primary" />
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {statCards.map((card) => (
             <Link key={card.key} href={card.href}>
               <Card className="hover:shadow-md transition-shadow cursor-pointer group h-full">
@@ -165,7 +165,7 @@ export default function AdminDashboardPage() {
       {/* Quick Actions */}
       <div>
         <h2 className="text-lg font-semibold mb-4">{t('admin_quick_actions')}</h2>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {statCards.map((card) => (
             <Link key={`action-${card.key}`} href={card.href}>
               <div className="flex items-center gap-3 rounded-lg border p-3 hover:bg-muted/50 transition-colors cursor-pointer">

@@ -5,13 +5,16 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import { ArrowRight, ArrowLeft, Play, Sparkles } from 'lucide-react';
-import { useSiteData } from '@/hooks/use-site-data';
+import { type SiteData } from '@/hooks/use-site-data';
 import { useLocale } from '@/lib/i18n';
 
-export function Hero() {
+interface HeroProps {
+  data?: SiteData | null;
+}
+
+export function Hero({ data }: HeroProps) {
   const heroRef = useRef<HTMLElement>(null);
-  const { data } = useSiteData();
-  const { t, isRTL, locale } = useLocale();
+  const { t, isRTL } = useLocale();
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {

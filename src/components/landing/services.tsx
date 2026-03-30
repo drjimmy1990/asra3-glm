@@ -3,15 +3,18 @@
 import { motion } from 'framer-motion';
 import { Code2, Workflow, Puzzle, Rocket, ArrowRight, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useSiteData, parseJSON, type Service } from '@/hooks/use-site-data';
+import { parseJSON, type Service, type SiteData } from '@/hooks/use-site-data';
 import { useLocale } from '@/lib/i18n';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Code2, Workflow, Puzzle, Rocket, Database: Code2, Globe: Workflow, Shield: Puzzle, Layers: Rocket,
 };
 
-export function Services() {
-  const { data } = useSiteData();
+interface ServicesProps {
+  data?: SiteData | null;
+}
+
+export function Services({ data }: ServicesProps) {
   const { t, isRTL } = useLocale();
   const services: Service[] = data?.services || [];
 
@@ -42,8 +45,8 @@ export function Services() {
                 <h3 className="mt-5 text-xl font-semibold">{service.title}</h3>
                 <p className="mt-3 text-muted-foreground leading-relaxed">{service.description}</p>
                 <ul className="mt-5 space-y-2">
-                  {features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-2 text-sm text-muted-foreground">
+                  {features.map((feature, idx) => (
+                    <li key={`${service.id}-${idx}`} className="flex items-center gap-2 text-sm text-muted-foreground">
                       <div className="h-1.5 w-1.5 rounded-full bg-primary/60" />
                       {feature}
                     </li>

@@ -265,6 +265,7 @@ export const translations = {
     admin_error_generic: 'Something went wrong',
     admin_saved: 'saved successfully',
     admin_removed: 'has been removed',
+    admin_blog: 'Blog',
     admin_error_invalid_password: 'Invalid password',
   },
 
@@ -532,6 +533,7 @@ export const translations = {
     admin_error_generic: 'حدث خطأ ما',
     admin_saved: 'تم الحفظ بنجاح',
     admin_removed: 'تمت الإزالة',
+    admin_blog: 'المدونة',
     admin_error_invalid_password: 'كلمة مرور غير صحيحة',
   },
 } as const;

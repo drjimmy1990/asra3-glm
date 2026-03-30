@@ -3,11 +3,14 @@
 import { motion } from 'framer-motion';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Star } from 'lucide-react';
-import { useSiteData, type Testimonial } from '@/hooks/use-site-data';
+import { type Testimonial, type SiteData } from '@/hooks/use-site-data';
 import { useLocale } from '@/lib/i18n';
 
-export function Testimonials() {
-  const { data } = useSiteData();
+interface TestimonialsProps {
+  data?: SiteData | null;
+}
+
+export function Testimonials({ data }: TestimonialsProps) {
   const { t } = useLocale();
   const testimonials: Testimonial[] = data?.testimonials || [];
 

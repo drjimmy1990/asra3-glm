@@ -40,6 +40,8 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     document.documentElement.dir = dir;
     document.documentElement.lang = locale;
     localStorage.setItem('asra3-locale', locale);
+    // Also set a cookie so Server Components can read the locale
+    document.cookie = `asra3-locale=${locale};path=/;max-age=${60 * 60 * 24 * 365};SameSite=Lax`;
   }, [locale]);
 
   const setLocale = useCallback((l: Locale) => {
@@ -47,7 +49,9 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const t = useCallback((key: TranslationKey): string => {
-    return translations[locale][key] || key;
+    const val = translations[locale][key];
+    if (typeof val === 'string') return val;
+    return key;
   }, [locale]);
 
   const dir = locale === 'ar' ? 'rtl' as const : 'ltr' as const;

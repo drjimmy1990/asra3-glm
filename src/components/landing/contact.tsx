@@ -8,14 +8,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Send, Mail, MapPin, Clock, CheckCircle2, Loader2 } from 'lucide-react';
-import { useSiteData } from '@/hooks/use-site-data';
+import { type SiteData } from '@/hooks/use-site-data';
 import { useLocale } from '@/lib/i18n';
 
-export function Contact() {
+interface ContactProps {
+  data?: SiteData | null;
+}
+
+export function Contact({ data }: ContactProps) {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { data } = useSiteData();
   const { t, isRTL } = useLocale();
   const contactEmail = data?.settings?.contact_email || 'hello@asra3.com';
 
@@ -63,6 +66,13 @@ export function Contact() {
     { value: 'integration', label: t('contact_type_integration') },
     { value: 'mvp', label: t('contact_type_mvp') },
     { value: 'other', label: t('contact_type_other') },
+  ];
+
+  const budgetOptions = [
+    { value: '1k-3k', label: isRTL ? '١,٠٠٠$ - ٣,٠٠٠$' : '$1,000 - $3,000' },
+    { value: '3k-5k', label: isRTL ? '٣,٠٠٠$ - ٥,٠٠٠$' : '$3,000 - $5,000' },
+    { value: '5k-10k', label: isRTL ? '٥,٠٠٠$ - ١٠,٠٠٠$' : '$5,000 - $10,000' },
+    { value: '10k+', label: isRTL ? '+١٠,٠٠٠$' : '$10,000+' },
   ];
 
   return (
@@ -137,6 +147,13 @@ export function Contact() {
                   </div>
                   <h3 className="text-xl font-semibold">{t('contact_success_title')}</h3>
                   <p className="mt-2 text-muted-foreground">{t('contact_success_desc')}</p>
+                  <Button
+                    variant="outline"
+                    className="mt-6"
+                    onClick={() => setSubmitted(false)}
+                  >
+                    {isRTL ? 'إرسال رسالة أخرى' : 'Send Another Message'}
+                  </Button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
@@ -172,10 +189,9 @@ export function Contact() {
                           <SelectValue placeholder={t('contact_select_budget')} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="1k-3k">$1,000 - $3,000</SelectItem>
-                          <SelectItem value="3k-5k">$3,000 - $5,000</SelectItem>
-                          <SelectItem value="5k-10k">$5,000 - $10,000</SelectItem>
-                          <SelectItem value="10k+">$10,000+</SelectItem>
+                          {budgetOptions.map((opt) => (
+                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </div>
@@ -183,7 +199,7 @@ export function Contact() {
 
                   <div className="space-y-2">
                     <Label htmlFor="message">{t('contact_label_message')}</Label>
-                    <Textarea name="message" id="message" placeholder={t('contact_placeholder_message')} rows={5} required className="bg-background border-border/60 resize-none" />
+                    <Textarea name="message" id="message" placeholder={t('contact_placeholder_message')} rows={5} required maxLength={2000} className="bg-background border-border/60 resize-none" />
                   </div>
 
                   {error && <p className="text-sm text-destructive">{error}</p>}
