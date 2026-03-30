@@ -81,7 +81,7 @@ export function Contact({ data }: ContactProps) {
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center max-w-3xl mx-auto mb-16">
           <p className="text-sm font-semibold text-primary tracking-wider uppercase mb-3">{t('contact_sub')}</p>
           <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
-            {t('contact_heading')} <span className="text-gradient">{t('contact_heading_highlight')}</span>
+            {t('contact_heading')} <span className="text-primary">{t('contact_heading_highlight')}</span>
           </h2>
           <p className="mt-4 text-lg text-muted-foreground leading-relaxed">{t('contact_desc')}</p>
         </motion.div>
@@ -204,7 +204,7 @@ export function Contact({ data }: ContactProps) {
 
                   {error && <p className="text-sm text-destructive">{error}</p>}
 
-                  <Button type="submit" size="lg" disabled={loading} className="btn-glow bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto h-12 px-8">
+                  <Button type="submit" size="lg" disabled={loading} className="bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto h-12 px-8 shadow-sm">
                     {loading ? (
                       <><Loader2 className="me-2 h-4 w-4 animate-spin" />{t('contact_sending')}</>
                     ) : (

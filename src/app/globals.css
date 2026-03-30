@@ -45,11 +45,11 @@
 
 :root {
   --radius: 0.75rem;
-  --background: oklch(1 0 0);
+  --background: oklch(0.99 0.01 261);
   --foreground: oklch(0.13 0.028 261);
-  --card: oklch(0.995 0.002 261);
+  --card: oklch(0.995 0.005 261);
   --card-foreground: oklch(0.13 0.028 261);
-  --popover: oklch(1 0 0);
+  --popover: oklch(0.99 0.01 261);
   --popover-foreground: oklch(0.13 0.028 261);
   --primary: oklch(0.55 0.17 163);
   --primary-foreground: oklch(1 0 0);
@@ -206,18 +206,6 @@
   transition: grid-template-rows 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.hero-gradient {
-  background: radial-gradient(ellipse at 20% 50%, oklch(0.55 0.17 163 / 0.15) 0%, transparent 50%),
-              radial-gradient(ellipse at 80% 20%, oklch(0.45 0.18 163 / 0.1) 0%, transparent 50%),
-              radial-gradient(ellipse at 50% 80%, oklch(0.65 0.15 163 / 0.08) 0%, transparent 50%);
-}
-
-.dark .hero-gradient {
-  background: radial-gradient(ellipse at 20% 50%, oklch(0.55 0.17 163 / 0.2) 0%, transparent 50%),
-              radial-gradient(ellipse at 80% 20%, oklch(0.45 0.18 163 / 0.15) 0%, transparent 50%),
-              radial-gradient(ellipse at 50% 80%, oklch(0.65 0.15 163 / 0.1) 0%, transparent 50%);
-}
-
 .grid-bg {
   background-image: 
     linear-gradient(oklch(0.55 0.17 163 / 0.03) 1px, transparent 1px),
@@ -230,31 +218,4 @@
     linear-gradient(oklch(0.55 0.17 163 / 0.06) 1px, transparent 1px),
     linear-gradient(90deg, oklch(0.55 0.17 163 / 0.06) 1px, transparent 1px);
   background-size: 60px 60px;
-}
-
-.glass {
-  background: oklch(1 0 0 / 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid oklch(1 0 0 / 0.2);
-}
-
-.dark .glass {
-  background: oklch(0.16 0.025 261 / 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid oklch(1 0 0 / 0.1);
-}
-
-.text-gradient {
-  background: linear-gradient(135deg, oklch(0.55 0.17 163), oklch(0.45 0.18 163), oklch(0.65 0.15 163));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.btn-glow {
-  box-shadow: 0 0 20px oklch(0.55 0.17 163 / 0.3), 0 0 60px oklch(0.55 0.17 163 / 0.1);
-}
-
-.btn-glow:hover {
-  box-shadow: 0 0 30px oklch(0.55 0.17 163 / 0.5), 0 0 80px oklch(0.55 0.17 163 / 0.2);
 }

@@ -24,14 +24,14 @@ export function CTABanner() {
           </div>
 
           <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
-            {t('cta_heading')} <span className="text-gradient">{t('cta_heading_highlight')}</span>
+            {t('cta_heading')} <span className="text-primary">{t('cta_heading_highlight')}</span>
           </h2>
 
           <p className="mt-4 text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">{t('cta_desc')}</p>
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <a href="#contact">
-              <Button size="lg" className="btn-glow bg-primary text-primary-foreground hover:bg-primary/90 px-8 text-base font-semibold h-12">
+              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 text-base font-semibold h-12 shadow-sm">
                 {t('cta_button')}
                 <Arrow className="ms-2 h-4 w-4" />
               </Button>

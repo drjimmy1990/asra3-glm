@@ -49,9 +49,8 @@ export function Hero({ data }: HeroProps) {
       ref={heroRef}
       className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20"
     >
-      <div className="absolute inset-0 hero-gradient" />
       <div className="absolute inset-0 grid-bg" />
-      <div className="absolute top-1/4 start-1/4 h-72 w-72 rounded-full bg-primary/10 blur-3xl animate-float" />
+      <div className="absolute top-1/4 start-1/4 h-72 w-72 rounded-full bg-primary/5 blur-3xl animate-float" />
       <div className="absolute bottom-1/4 end-1/4 h-96 w-96 rounded-full bg-primary/5 blur-3xl animate-float" style={{ animationDelay: '2s' }} />
       <div className="absolute top-1/2 end-1/3 h-48 w-48 rounded-full bg-primary/8 blur-2xl animate-pulse-glow" style={{ animationDelay: '1s' }} />
       <div className="pointer-events-none absolute inset-0 transition-opacity duration-300 opacity-0 hover:opacity-100" style={{ background: `radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), oklch(0.55 0.17 163 / 0.06), transparent 40%)` }} />
@@ -64,38 +63,38 @@ export function Hero({ data }: HeroProps) {
           </Badge>
         </motion.div>
 
-        <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }} className="mx-auto max-w-4xl text-4xl font-extrabold sm:text-5xl md:text-6xl lg:text-7xl">
-          <span className="text-gradient leading-tight">{heroTitle}</span>
+        <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }} className="mx-auto max-w-5xl text-5xl font-black tracking-tighter sm:text-7xl md:text-8xl">
+          <span className="text-foreground leading-[1.1] block">{heroTitle}</span>
         </motion.h1>
 
-        <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }} className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground sm:text-xl leading-relaxed">
+        <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }} className="mx-auto mt-8 max-w-2xl text-xl text-muted-foreground sm:text-2xl leading-relaxed font-medium">
           {heroSubtitle}
         </motion.p>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }} className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }} className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
           <a href="#contact">
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Button size="lg" className="btn-glow bg-primary text-primary-foreground hover:bg-primary/90 px-8 text-base font-semibold h-12">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 px-10 py-7 text-lg font-bold shadow-xl">
                 {t('hero_cta')}
-                <Arrow className="ms-2 h-4 w-4" />
+                <Arrow className="ms-3 h-5 w-5" />
               </Button>
             </motion.div>
           </a>
           <a href="#results">
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Button size="lg" variant="outline" className="border-border/60 hover:border-primary/50 hover:bg-primary/5 px-8 text-base font-semibold h-12">
-                <Play className="me-2 h-4 w-4 text-primary" />
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button size="lg" variant="outline" className="border-2 border-border hover:border-primary hover:bg-primary/5 px-10 py-7 text-lg font-bold shadow-sm">
+                <Play className="me-3 h-5 w-5 text-primary" />
                 {t('hero_cta_secondary')}
               </Button>
             </motion.div>
           </a>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }} className="mt-16 grid grid-cols-2 gap-8 sm:grid-cols-4 mx-auto max-w-3xl">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }} className="mt-20 grid grid-cols-2 gap-x-8 gap-y-12 sm:grid-cols-4 mx-auto max-w-4xl border-t-2 border-border/50 pt-12">
           {stats.map((stat, idx) => (
-            <motion.div key={stat.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.6 + (idx * 0.1), ease: [0.16, 1, 0.3, 1] }} className="text-center group">
-              <div className="text-2xl sm:text-3xl font-bold text-gradient group-hover:scale-110 transition-transform duration-300 inline-block">{stat.value}</div>
-              <div className="mt-1 text-xs sm:text-sm text-muted-foreground">{stat.label}</div>
+            <motion.div key={stat.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.6 + (idx * 0.1), ease: [0.16, 1, 0.3, 1] }} className="text-center group flex flex-col items-center">
+              <div className="text-4xl sm:text-5xl font-black text-foreground tracking-tighter group-hover:scale-110 transition-transform duration-300 inline-block">{stat.value}</div>
+              <div className="mt-3 text-sm sm:text-base font-bold text-muted-foreground uppercase tracking-widest">{stat.label}</div>
             </motion.div>
           ))}
         </motion.div>

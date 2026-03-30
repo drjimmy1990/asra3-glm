@@ -23,7 +23,7 @@ export function Testimonials({ data }: TestimonialsProps) {
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center max-w-3xl mx-auto mb-16">
           <p className="text-sm font-semibold text-primary tracking-wider uppercase mb-3">{t('testimonials_sub')}</p>
           <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
-            {t('testimonials_heading')} <span className="text-gradient">{t('testimonials_heading_highlight')}</span>
+            {t('testimonials_heading')} <span className="text-primary">{t('testimonials_heading_highlight')}</span>
           </h2>
           <p className="mt-4 text-lg text-muted-foreground leading-relaxed">{t('testimonials_desc')}</p>
         </motion.div>

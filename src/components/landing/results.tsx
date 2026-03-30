@@ -27,9 +27,9 @@ export function Results({ data }: ResultsProps) {
     <section id="results" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center max-w-3xl mx-auto mb-16">
-          <p className="text-sm font-semibold text-primary tracking-wider uppercase mb-3">{t('results_sub')}</p>
-          <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
-            {t('results_heading')} <span className="text-gradient">{t('results_heading_highlight')}</span>
+          <p className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-4">{t('results_sub')}</p>
+          <h2 className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
+            {t('results_heading')} <span className="text-primary">{t('results_heading_highlight')}</span>
           </h2>
           <p className="mt-4 text-lg text-muted-foreground leading-relaxed">{t('results_desc')}</p>
         </motion.div>
@@ -69,35 +69,37 @@ export function Results({ data }: ResultsProps) {
                     <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">{project.category}</Badge>
                   </div>
                 </div>
-                <div className="p-6 sm:p-8 lg:col-span-3">
+                <div className="p-8 sm:p-10 lg:col-span-3">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <h3 className="text-xl font-semibold group-hover:text-primary transition-colors">{project.title}</h3>
-                      <p className="mt-2 text-muted-foreground leading-relaxed">{project.description}</p>
+                      <h3 className="text-2xl font-bold tracking-tight group-hover:text-primary transition-colors">{project.title}</h3>
+                      <p className="mt-3 text-base text-muted-foreground leading-relaxed">{project.description}</p>
                     </div>
                     {blogSlug && (
-                      <div className="hidden sm:flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-border/60 text-muted-foreground group-hover:text-primary group-hover:border-primary/30 group-hover:bg-primary/5 transition-all">
-                        <ArrowUpRight className="h-4 w-4 rtl:rotate-180" />
+                      <div className="hidden sm:flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl border-2 border-border/80 text-muted-foreground group-hover:text-primary group-hover:border-primary/80 group-hover:bg-primary/10 transition-all">
+                        <ArrowUpRight className="h-5 w-5 rtl:rotate-180" />
                       </div>
                     )}
                   </div>
-                  <div className="mt-6 flex flex-wrap gap-4 sm:gap-6">
+                  <div className="mt-8 flex flex-wrap gap-6 sm:gap-8">
                     {metrics.map((metric) => {
                       const IconComp = metricIconMap[metric.icon] || BarChart3;
                       return (
-                        <div key={metric.label} className="flex items-center gap-2">
-                          <IconComp className="h-4 w-4 text-primary" />
+                        <div key={metric.label} className="flex items-center gap-3">
+                          <div className="p-2 bg-primary/10 rounded-lg">
+                            <IconComp className="h-5 w-5 text-primary" />
+                          </div>
                           <div>
-                            <div className="text-sm font-semibold">{metric.value}</div>
-                            <div className="text-xs text-muted-foreground">{metric.label}</div>
+                            <div className="text-xl font-bold tracking-tight">{metric.value}</div>
+                            <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{metric.label}</div>
                           </div>
                         </div>
                       );
                     })}
                   </div>
-                  <div className="mt-5 flex flex-wrap gap-2">
+                  <div className="mt-8 flex flex-wrap gap-2">
                     {tags.map((tag) => (
-                      <Badge key={tag} variant="outline" className="text-xs font-normal border-border/60">{tag}</Badge>
+                      <Badge key={tag} variant="secondary" className="px-3 py-1 font-medium">{tag}</Badge>
                     ))}
                   </div>
                 </div>
@@ -112,7 +114,7 @@ export function Results({ data }: ResultsProps) {
                   y: -8, 
                   transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } 
                 }} 
-                className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card/50 transition-all hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/5"
+                className="group relative overflow-hidden rounded-2xl border-2 border-border/80 bg-card transition-all hover:border-primary/80 hover:shadow-2xl"
               >
                 {blogSlug ? (
                   <Link href={`/blog/${blogSlug}`} className="block w-full h-full">

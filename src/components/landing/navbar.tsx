@@ -48,7 +48,7 @@ export function Navbar() {
   return (
     <header
       className={`fixed top-0 start-0 end-0 z-50 transition-all duration-300 ${
-        scrolled ? 'glass shadow-lg shadow-primary/5' : 'bg-transparent'
+        scrolled ? 'bg-background/95 backdrop-blur-md border-b shadow-sm' : 'bg-transparent'
       }`}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
@@ -106,7 +106,7 @@ export function Navbar() {
             </>
           )}
           <a href="#contact">
-            <Button className="btn-glow bg-primary text-primary-foreground hover:bg-primary/90 px-6">
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90 px-6 shadow-sm">
               {t('nav_cta')}
             </Button>
           </a>
@@ -150,7 +150,7 @@ export function Navbar() {
                 </Button>
               </div>
               <a href="#contact" onClick={() => setMobileOpen(false)} className="mt-4">
-                <Button className="btn-glow bg-primary text-primary-foreground hover:bg-primary/90 w-full">
+                <Button className="bg-primary text-primary-foreground hover:bg-primary/90 w-full shadow-sm">
                   {t('nav_cta')}
                 </Button>
               </a>
