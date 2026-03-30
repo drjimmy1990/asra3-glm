@@ -58,6 +58,7 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useLocale } from '@/lib/i18n';
 import { LanguageTabs } from '@/components/admin/language-tabs';
+import { TagInput } from '@/components/admin/tag-input';
 import dynamic from 'next/dynamic';
 import 'easymde/dist/easymde.min.css';
 
@@ -525,17 +526,17 @@ export default function AdminBlogPage() {
             </div>
 
             {/* Tags & Order */}
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label>Tags (JSON array)</Label>
-                <Input
+            <div className="grid gap-4 sm:grid-cols-[1fr_100px]">
+              <div className="space-y-1.5">
+                <Label>Tags</Label>
+                <TagInput
                   value={form.tags}
-                  onChange={(e) => setForm({ ...form, tags: e.target.value })}
-                  placeholder='["AI", "Automation", "SaaS"]'
-                  className="font-mono text-sm"
+                  onChange={(v) => setForm({ ...form, tags: v })}
+                  placeholder="Type tag and press Enter..."
+                  dir="ltr"
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <Label>Order</Label>
                 <Input
                   type="number"

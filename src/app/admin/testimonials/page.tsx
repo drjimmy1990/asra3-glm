@@ -312,7 +312,7 @@ export default function AdminTestimonialsPage() {
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <div className="flex items-center justify-between">
               <DialogTitle>
@@ -360,7 +360,7 @@ export default function AdminTestimonialsPage() {
                     value={form.content_en ?? ''}
                     onChange={(e) => setForm({ ...form, content_en: e.target.value })}
                     placeholder="What the client said about your work..."
-                    rows={4}
+                    rows={3}
                     dir="ltr"
                   />
                 </div>
@@ -434,17 +434,15 @@ export default function AdminTestimonialsPage() {
 
             <Separator />
 
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>{t('admin_active')}</Label>
-                <p className="text-xs text-muted-foreground">
-                  {t('admin_show_public')}
-                </p>
-              </div>
+            <div className="flex items-center gap-3">
               <Switch
                 checked={form.active}
                 onCheckedChange={(checked) => setForm({ ...form, active: checked })}
               />
+              <div>
+                <Label className="text-sm">{t('admin_active')}</Label>
+                <p className="text-[11px] text-muted-foreground">{t('admin_show_public')}</p>
+              </div>
             </div>
           </div>
 

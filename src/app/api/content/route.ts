@@ -8,7 +8,16 @@ export async function GET(request: Request) {
 
     const [services, projects, testimonials, faqs, settings] = await Promise.all([
       db.service.findMany({ where: { active: true }, orderBy: { order: 'asc' } }),
-      db.project.findMany({ where: { active: true }, orderBy: { order: 'asc' } }),
+      db.project.findMany({ 
+        where: { active: true }, 
+        orderBy: { order: 'asc' },
+        include: {
+          blogPosts: {
+            select: { slug: true },
+            where: { published: true }
+          }
+        }
+      }),
       db.testimonial.findMany({ where: { active: true }, orderBy: { order: 'asc' } }),
       db.fAQ.findMany({ where: { active: true }, orderBy: { order: 'asc' } }),
       db.siteSetting.findMany(),

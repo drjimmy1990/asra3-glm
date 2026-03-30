@@ -16,6 +16,20 @@ import {
   Globe,
   Shield,
   Layers,
+  Bot,
+  Brain,
+  LayoutDashboard,
+  Server,
+  Zap,
+  Users,
+  MessageCircle,
+  ShieldCheck,
+  Heart,
+  Star,
+  Activity,
+  Mail,
+  Package,
+  type LucideIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -59,6 +73,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { useLocale } from '@/lib/i18n';
 import { LanguageTabs } from '@/components/admin/language-tabs';
+import { TagInput } from '@/components/admin/tag-input';
 
 interface Service {
   id: string;
@@ -78,7 +93,9 @@ interface Service {
   updatedAt: string;
 }
 
-const iconOptions = [
+const iconOptions: { value: string; label: string; icon: LucideIcon }[] = [
+  { value: 'Bot', label: 'Bot', icon: Bot },
+  { value: 'Brain', label: 'Brain', icon: Brain },
   { value: 'Code2', label: 'Code', icon: Code2 },
   { value: 'Workflow', label: 'Workflow', icon: Workflow },
   { value: 'Puzzle', label: 'Puzzle', icon: Puzzle },
@@ -86,7 +103,19 @@ const iconOptions = [
   { value: 'Database', label: 'Database', icon: Database },
   { value: 'Globe', label: 'Globe', icon: Globe },
   { value: 'Shield', label: 'Shield', icon: Shield },
+  { value: 'ShieldCheck', label: 'Shield ✓', icon: ShieldCheck },
   { value: 'Layers', label: 'Layers', icon: Layers },
+  { value: 'LayoutDashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { value: 'Server', label: 'Server', icon: Server },
+  { value: 'Zap', label: 'Zap', icon: Zap },
+  { value: 'Users', label: 'Users', icon: Users },
+  { value: 'MessageCircle', label: 'Message', icon: MessageCircle },
+  { value: 'Heart', label: 'Heart', icon: Heart },
+  { value: 'Star', label: 'Star', icon: Star },
+  { value: 'Activity', label: 'Activity', icon: Activity },
+  { value: 'Mail', label: 'Mail', icon: Mail },
+  { value: 'Package', label: 'Package', icon: Package },
+  { value: 'Cog', label: 'Settings', icon: Cog },
 ];
 
 const emptyForm = {
@@ -269,9 +298,8 @@ export default function AdminServicesPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="min-w-[180px]">{t('admin_title')}</TableHead>
-                <TableHead>{t('admin_icon')}</TableHead>
-                <TableHead className="min-w-[200px]">{t('admin_description')}</TableHead>
+                <TableHead className="min-w-[250px]">{t('admin_title')}</TableHead>
+                <TableHead className="min-w-[130px]">{t('admin_icon')}</TableHead>
                 <TableHead className="text-center">{t('admin_active')}</TableHead>
                 <TableHead className="text-center">{t('admin_order')}</TableHead>
                 <TableHead className="text-end">{t('admin_actions')}</TableHead>
@@ -280,15 +308,21 @@ export default function AdminServicesPage() {
             <TableBody>
               {items.map((item) => (
                 <TableRow key={item.id}>
-                  <TableCell className="font-medium">{getDisplayTitle(item)}</TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-2">
-                      {getIconComponent(item.iconName)}
-                      <span className="text-xs text-muted-foreground">{item.iconName}</span>
+                    <div className="flex flex-col gap-0.5">
+                      <span className="font-medium text-sm">{getDisplayTitle(item)}</span>
+                      <span className="text-xs text-muted-foreground truncate max-w-[300px]">
+                        {getDisplayDescription(item)}
+                      </span>
                     </div>
                   </TableCell>
-                  <TableCell className="max-w-[250px] truncate text-muted-foreground text-xs">
-                    {getDisplayDescription(item)}
+                  <TableCell>
+                    <div className="flex items-center gap-2 whitespace-nowrap">
+                      <span className="flex items-center justify-center size-7 rounded-md bg-primary/10 text-primary">
+                        {getIconComponent(item.iconName)}
+                      </span>
+                      <span className="text-xs text-muted-foreground">{item.iconName}</span>
+                    </div>
                   </TableCell>
                   <TableCell className="text-center">
                     <Badge variant={item.active ? 'default' : 'outline'}>
@@ -327,9 +361,9 @@ export default function AdminServicesPage() {
         )}
       </div>
 
-      {/* Create/Edit Dialog */}
+      {/* Create/Edit Dialog — compact layout */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <div className="flex items-center justify-between">
               <DialogTitle>
@@ -345,8 +379,9 @@ export default function AdminServicesPage() {
           </DialogHeader>
 
           <div className="grid gap-4 py-2">
+            {/* Icon + Order side by side */}
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <Label htmlFor="iconName">{t('admin_icon')}</Label>
                 <Select
                   value={form.iconName}
@@ -355,7 +390,7 @@ export default function AdminServicesPage() {
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select icon" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="max-h-[240px]">
                     {iconOptions.map((opt) => (
                       <SelectItem key={opt.value} value={opt.value}>
                         <span className="flex items-center gap-2">
@@ -367,7 +402,7 @@ export default function AdminServicesPage() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <Label htmlFor="order">{t('admin_order')}</Label>
                 <Input
                   id="order"
@@ -380,7 +415,7 @@ export default function AdminServicesPage() {
 
             {formTab === 'en' ? (
               <>
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <Label htmlFor="title_en">{t('admin_title')} (English) *</Label>
                   <Input
                     id="title_en"
@@ -391,34 +426,32 @@ export default function AdminServicesPage() {
                   />
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <Label htmlFor="description_en">{t('admin_description')} (English) *</Label>
                   <Textarea
                     id="description_en"
                     value={form.description_en ?? ''}
                     onChange={(e) => setForm({ ...form, description_en: e.target.value })}
                     placeholder="Service description"
-                    rows={3}
+                    rows={2}
                     dir="ltr"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="features_en">{t('admin_features')} (English)</Label>
-                  <Textarea
-                    id="features_en"
-                    value={form.features_en ?? ''}
-                    onChange={(e) => setForm({ ...form, features_en: e.target.value })}
-                    placeholder='["Custom SaaS Development", "API Integration"]'
-                    rows={3}
-                    className="font-mono text-xs"
+                {/* Features as chips instead of JSON textarea */}
+                <div className="space-y-1.5">
+                  <Label>{t('admin_features')} (English)</Label>
+                  <TagInput
+                    value={form.features_en}
+                    onChange={(v) => setForm({ ...form, features_en: v })}
+                    placeholder="Type feature and press Enter..."
                     dir="ltr"
                   />
                 </div>
               </>
             ) : (
               <>
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <Label htmlFor="title_ar">{t('admin_title')} (العربية) *</Label>
                   <Input
                     id="title_ar"
@@ -429,27 +462,24 @@ export default function AdminServicesPage() {
                   />
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <Label htmlFor="description_ar">{t('admin_description')} (العربية) *</Label>
                   <Textarea
                     id="description_ar"
                     value={form.description_ar ?? ''}
                     onChange={(e) => setForm({ ...form, description_ar: e.target.value })}
                     placeholder="وصف الخدمة"
-                    rows={3}
+                    rows={2}
                     dir="rtl"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="features_ar">{t('admin_features')} (العربية)</Label>
-                  <Textarea
-                    id="features_ar"
-                    value={form.features_ar ?? ''}
-                    onChange={(e) => setForm({ ...form, features_ar: e.target.value })}
-                    placeholder='["تطوير SaaS مخصص", "تكامل API"]'
-                    rows={3}
-                    className="font-mono text-xs"
+                <div className="space-y-1.5">
+                  <Label>{t('admin_features')} (العربية)</Label>
+                  <TagInput
+                    value={form.features_ar}
+                    onChange={(v) => setForm({ ...form, features_ar: v })}
+                    placeholder="اكتب ميزة واضغط Enter..."
                     dir="rtl"
                   />
                 </div>
@@ -458,17 +488,15 @@ export default function AdminServicesPage() {
 
             <Separator />
 
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>{t('admin_active')}</Label>
-                <p className="text-xs text-muted-foreground">
-                  {t('admin_show_public')}
-                </p>
-              </div>
+            <div className="flex items-center gap-3">
               <Switch
                 checked={form.active}
                 onCheckedChange={(checked) => setForm({ ...form, active: checked })}
               />
+              <div>
+                <Label className="text-sm">{t('admin_active')}</Label>
+                <p className="text-[11px] text-muted-foreground">{t('admin_show_public')}</p>
+              </div>
             </div>
           </div>
 

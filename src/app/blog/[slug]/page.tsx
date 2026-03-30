@@ -221,6 +221,7 @@ export default function BlogPostPage() {
             [&_iframe]:rounded-xl [&_iframe]:shadow-md [&_iframe]:w-full [&_iframe]:aspect-video
           ">
             <ReactMarkdown
+              children={content}
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeRaw]}
               components={{
@@ -238,7 +239,7 @@ export default function BlogPostPage() {
                   }
 
                   return (
-                    <figure className="my-6">
+                    <span className="block my-6">
                       <img
                         src={src}
                         alt={cleanAlt}
@@ -254,11 +255,11 @@ export default function BlogPostPage() {
                         {...props}
                       />
                       {cleanAlt && (
-                        <figcaption className="text-center text-sm text-muted-foreground mt-3">
+                        <span className="block text-center text-sm text-muted-foreground mt-3">
                           {cleanAlt}
-                        </figcaption>
+                        </span>
                       )}
-                    </figure>
+                    </span>
                   );
                 },
               }}

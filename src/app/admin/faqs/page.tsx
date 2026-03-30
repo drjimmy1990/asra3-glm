@@ -275,7 +275,7 @@ export default function AdminFaqsPage() {
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <div className="flex items-center justify-between">
               <DialogTitle>
@@ -300,7 +300,7 @@ export default function AdminFaqsPage() {
                     value={form.question_en ?? ''}
                     onChange={(e) => setForm({ ...form, question_en: e.target.value })}
                     placeholder="The question your visitors might ask"
-                    rows={3}
+                    rows={2}
                     dir="ltr"
                   />
                 </div>
@@ -312,7 +312,7 @@ export default function AdminFaqsPage() {
                     value={form.answer_en ?? ''}
                     onChange={(e) => setForm({ ...form, answer_en: e.target.value })}
                     placeholder="The answer to the question"
-                    rows={5}
+                    rows={3}
                     dir="ltr"
                   />
                 </div>
@@ -358,17 +358,15 @@ export default function AdminFaqsPage() {
 
             <Separator />
 
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>{t('admin_active')}</Label>
-                <p className="text-xs text-muted-foreground">
-                  {t('admin_show_public')}
-                </p>
-              </div>
+            <div className="flex items-center gap-3">
               <Switch
                 checked={form.active}
                 onCheckedChange={(checked) => setForm({ ...form, active: checked })}
               />
+              <div>
+                <Label className="text-sm">{t('admin_active')}</Label>
+                <p className="text-[11px] text-muted-foreground">{t('admin_show_public')}</p>
+              </div>
             </div>
           </div>
 

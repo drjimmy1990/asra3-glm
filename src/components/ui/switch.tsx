@@ -12,16 +12,20 @@ function Switch({
   return (
     <SwitchPrimitive.Root
       data-slot="switch"
+      style={{ width: 48, height: 28, padding: 3 }}
       className={cn(
-        "peer data-[state=checked]:bg-primary data-[state=unchecked]:bg-input focus-visible:border-ring focus-visible:ring-ring/50 dark:data-[state=unchecked]:bg-input/80 inline-flex h-[1.15rem] w-8 shrink-0 items-center rounded-full border border-transparent shadow-xs transition-all outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50",
+        "peer inline-flex shrink-0 cursor-pointer items-center rounded-full shadow-inner transition-colors duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-muted-foreground/20",
         className
       )}
       {...props}
     >
       <SwitchPrimitive.Thumb
         data-slot="switch-thumb"
+        style={{ width: 22, height: 22 }}
         className={cn(
-          "bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground pointer-events-none block size-4 rounded-full ring-0 transition-transform data-[state=checked]:translate-x-[calc(100%-2px)] data-[state=unchecked]:translate-x-0"
+          "pointer-events-none block rounded-full bg-white shadow-md ring-1 ring-black/5 transition-transform duration-200 ease-in-out",
+          "data-[state=unchecked]:translate-x-0",
+          "data-[state=checked]:translate-x-5 rtl:data-[state=checked]:-translate-x-5"
         )}
       />
     </SwitchPrimitive.Root>
@@ -29,3 +33,4 @@ function Switch({
 }
 
 export { Switch }
+

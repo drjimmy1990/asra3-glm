@@ -45,6 +45,8 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { useLocale } from '@/lib/i18n';
 import { LanguageTabs } from '@/components/admin/language-tabs';
+import { TagInput } from '@/components/admin/tag-input';
+import { MetricsEditor } from '@/components/admin/metrics-editor';
 
 interface Project {
   id: string;
@@ -312,7 +314,7 @@ export default function AdminProjectsPage() {
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <div className="flex items-center justify-between">
               <DialogTitle>
@@ -330,8 +332,9 @@ export default function AdminProjectsPage() {
           <div className="grid gap-4 py-2">
             {formTab === 'en' ? (
               <>
+                {/* Title + Category on same row */}
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     <Label htmlFor="title_en">{t('admin_title')} (English) *</Label>
                     <Input
                       id="title_en"
@@ -341,7 +344,7 @@ export default function AdminProjectsPage() {
                       dir="ltr"
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     <Label htmlFor="category_en">{t('admin_category')} (English) *</Label>
                     <Input
                       id="category_en"
@@ -353,27 +356,25 @@ export default function AdminProjectsPage() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <Label htmlFor="description_en">{t('admin_description')} (English) *</Label>
                   <Textarea
                     id="description_en"
                     value={form.description_en ?? ''}
                     onChange={(e) => setForm({ ...form, description_en: e.target.value })}
                     placeholder="Project description"
-                    rows={3}
+                    rows={2}
                     dir="ltr"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="tags_en">{t('admin_tags')} (English)</Label>
-                  <Textarea
-                    id="tags_en"
-                    value={form.tags_en ?? ''}
-                    onChange={(e) => setForm({ ...form, tags_en: e.target.value })}
-                    placeholder='["Next.js", "TypeScript", "Prisma"]'
-                    rows={2}
-                    className="font-mono text-xs"
+                {/* Tags as chips */}
+                <div className="space-y-1.5">
+                  <Label>{t('admin_tags')} (English)</Label>
+                  <TagInput
+                    value={form.tags_en}
+                    onChange={(v) => setForm({ ...form, tags_en: v })}
+                    placeholder="Type tag and press Enter..."
                     dir="ltr"
                   />
                 </div>
@@ -381,7 +382,7 @@ export default function AdminProjectsPage() {
             ) : (
               <>
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     <Label htmlFor="title_ar">{t('admin_title')} (العربية) *</Label>
                     <Input
                       id="title_ar"
@@ -391,7 +392,7 @@ export default function AdminProjectsPage() {
                       dir="rtl"
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     <Label htmlFor="category_ar">{t('admin_category')} (العربية) *</Label>
                     <Input
                       id="category_ar"
@@ -403,66 +404,44 @@ export default function AdminProjectsPage() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <Label htmlFor="description_ar">{t('admin_description')} (العربية) *</Label>
                   <Textarea
                     id="description_ar"
                     value={form.description_ar ?? ''}
                     onChange={(e) => setForm({ ...form, description_ar: e.target.value })}
                     placeholder="وصف المشروع"
-                    rows={3}
+                    rows={2}
                     dir="rtl"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="tags_ar">{t('admin_tags')} (العربية)</Label>
-                  <Textarea
-                    id="tags_ar"
-                    value={form.tags_ar ?? ''}
-                    onChange={(e) => setForm({ ...form, tags_ar: e.target.value })}
-                    placeholder='["Next.js", "TypeScript", "Prisma"]'
-                    rows={2}
-                    className="font-mono text-xs"
+                <div className="space-y-1.5">
+                  <Label>{t('admin_tags')} (العربية)</Label>
+                  <TagInput
+                    value={form.tags_ar}
+                    onChange={(v) => setForm({ ...form, tags_ar: v })}
+                    placeholder="اكتب وسم واضغط Enter..."
                     dir="rtl"
                   />
                 </div>
               </>
             )}
 
-            <div className="space-y-2">
-              <Label htmlFor="imageUrl">{t('admin_image_url')}</Label>
-              <Input
-                id="imageUrl"
-                value={form.imageUrl}
-                onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-                placeholder="https://example.com/image.png"
-              />
-            </div>
+            {/* Shared fields: Image + Color + Order on compact rows */}
+            <Separator />
 
-            <div className="space-y-2">
-              <Label htmlFor="metrics">{t('admin_metrics')}</Label>
-              <Textarea
-                id="metrics"
-                value={form.metrics}
-                onChange={(e) => setForm({ ...form, metrics: e.target.value })}
-                placeholder='["100+ Users", "99.9% Uptime"]'
-                rows={2}
-                className="font-mono text-xs"
-              />
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="color">{t('admin_color')}</Label>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <div className="space-y-1.5 sm:col-span-2">
+                <Label htmlFor="imageUrl">{t('admin_image_url')}</Label>
                 <Input
-                  id="color"
-                  value={form.color}
-                  onChange={(e) => setForm({ ...form, color: e.target.value })}
-                  placeholder="from-emerald-500/20 to-teal-500/20"
+                  id="imageUrl"
+                  value={form.imageUrl}
+                  onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+                  placeholder="https://example.com/image.png"
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <Label htmlFor="order">{t('admin_order')}</Label>
                 <Input
                   id="order"
@@ -473,32 +452,37 @@ export default function AdminProjectsPage() {
               </div>
             </div>
 
-            <Separator />
-
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>{t('admin_featured')}</Label>
-                <p className="text-xs text-muted-foreground">
-                  {t('admin_featured_desc')}
-                </p>
-              </div>
-              <Switch
-                checked={form.featured}
-                onCheckedChange={(checked) => setForm({ ...form, featured: checked })}
+            {/* Metrics visual editor */}
+            <div className="space-y-1.5">
+              <Label>{t('admin_metrics')}</Label>
+              <MetricsEditor
+                value={form.metrics}
+                onChange={(v) => setForm({ ...form, metrics: v })}
               />
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>{t('admin_active')}</Label>
-                <p className="text-xs text-muted-foreground">
-                  {t('admin_show_public')}
-                </p>
+            {/* Toggles side by side */}
+            <div className="flex flex-wrap gap-6">
+              <div className="flex items-center gap-3">
+                <Switch
+                  checked={form.featured}
+                  onCheckedChange={(checked) => setForm({ ...form, featured: checked })}
+                />
+                <div>
+                  <Label className="text-sm">{t('admin_featured')}</Label>
+                  <p className="text-[11px] text-muted-foreground">{t('admin_featured_desc')}</p>
+                </div>
               </div>
-              <Switch
-                checked={form.active}
-                onCheckedChange={(checked) => setForm({ ...form, active: checked })}
-              />
+              <div className="flex items-center gap-3">
+                <Switch
+                  checked={form.active}
+                  onCheckedChange={(checked) => setForm({ ...form, active: checked })}
+                />
+                <div>
+                  <Label className="text-sm">{t('admin_active')}</Label>
+                  <p className="text-[11px] text-muted-foreground">{t('admin_show_public')}</p>
+                </div>
+              </div>
             </div>
           </div>
 

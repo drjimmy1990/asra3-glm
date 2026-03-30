@@ -38,6 +38,7 @@ export interface Project {
   featured: boolean;
   order: number;
   active: boolean;
+  blogPosts?: { slug: string }[];
 }
 
 export interface Testimonial {
