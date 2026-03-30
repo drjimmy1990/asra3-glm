@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLocale } from '@/lib/i18n';
 import {
   ArrowRight,
@@ -140,10 +141,12 @@ export default function BlogPage() {
                   {/* Cover */}
                   {post.coverImage ? (
                     <div className="relative aspect-[16/9] overflow-hidden bg-muted">
-                      <img
+                      <Image
                         src={post.coverImage}
                         alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                     </div>

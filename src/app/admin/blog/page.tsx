@@ -59,6 +59,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useLocale } from '@/lib/i18n';
 import { LanguageTabs } from '@/components/admin/language-tabs';
 import { TagInput } from '@/components/admin/tag-input';
+import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import 'easymde/dist/easymde.min.css';
 
@@ -500,7 +501,13 @@ export default function AdminBlogPage() {
                 />
                 {form.coverImage && (
                   <div className="relative h-24 rounded-lg overflow-hidden bg-muted">
-                    <img src={form.coverImage} alt="Cover" className="w-full h-full object-cover" />
+                    <Image 
+                      src={form.coverImage} 
+                      alt="Cover" 
+                      fill 
+                      className="object-cover" 
+                      sizes="96px"
+                    />
                   </div>
                 )}
               </div>

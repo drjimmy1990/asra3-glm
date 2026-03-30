@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUpRight, Users, Clock, DollarSign, BarChart3 } from 'lucide-react';
 import Link from 'next/link';
@@ -41,15 +42,21 @@ export function Results({ data }: ResultsProps) {
 
             const cardContent = (
               <div className="grid gap-0 lg:grid-cols-5">
-                <div className={`relative lg:col-span-2 min-h-[200px] bg-gradient-to-br ${project.color} flex items-center justify-center`}>
+                <div className={`relative lg:col-span-2 min-h-[240px] bg-gradient-to-br ${project.color} flex items-center justify-center overflow-hidden`}>
                   {project.imageUrl ? (
-                    <motion.img
+                    <motion.div
                       whileHover={{ scale: 1.05 }}
                       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                      src={project.imageUrl}
-                      alt={project.title}
-                      className="w-full h-full object-cover"
-                    />
+                      className="absolute inset-0 w-full h-full"
+                    >
+                      <Image
+                        src={project.imageUrl}
+                        alt={project.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 1024px) 100vw, 40vw"
+                      />
+                    </motion.div>
                   ) : (
                     <motion.div 
                       whileHover={{ scale: 1.1, rotate: 2 }}

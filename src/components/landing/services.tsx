@@ -1,13 +1,65 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Code2, Workflow, Puzzle, Rocket, ArrowRight, ArrowLeft } from 'lucide-react';
+import { 
+  Code2, 
+  Workflow, 
+  Puzzle, 
+  Rocket, 
+  ArrowRight, 
+  ArrowLeft,
+  Bot,
+  Brain,
+  Database,
+  Globe,
+  Shield,
+  ShieldCheck,
+  Layers,
+  Cpu,
+  Cloud,
+  Terminal,
+  Server,
+  Zap,
+  Users,
+  MessageCircle,
+  Heart,
+  Star,
+  Activity,
+  Mail,
+  Package,
+  LayoutDashboard,
+  Cog
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { parseJSON, type Service, type SiteData } from '@/hooks/use-site-data';
 import { useLocale } from '@/lib/i18n';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Code2, Workflow, Puzzle, Rocket, Database: Code2, Globe: Workflow, Shield: Puzzle, Layers: Rocket,
+  Code2, 
+  Workflow, 
+  Puzzle, 
+  Rocket, 
+  Database, 
+  Globe, 
+  Shield, 
+  Layers,
+  Bot,
+  Brain,
+  ShieldCheck,
+  Cpu,
+  Cloud,
+  Terminal,
+  Server,
+  Zap,
+  Users,
+  MessageCircle,
+  Heart,
+  Star,
+  Activity,
+  Mail,
+  Package,
+  LayoutDashboard,
+  Cog
 };
 
 interface ServicesProps {

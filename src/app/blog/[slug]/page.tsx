@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useLocale } from '@/lib/i18n';
 import ReactMarkdown from 'react-markdown';
@@ -197,11 +198,14 @@ export default function BlogPostPage() {
 
         {/* Cover Image */}
         {post.coverImage && (
-          <div className="max-w-4xl mx-auto mb-8 sm:mb-12 rounded-2xl overflow-hidden shadow-lg">
-            <img
+          <div className="max-w-4xl mx-auto mb-8 sm:mb-12 rounded-2xl overflow-hidden shadow-lg relative aspect-video">
+            <Image
               src={post.coverImage}
               alt={post.title}
-              className="w-full h-auto"
+              fill
+              priority
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 1024px"
             />
           </div>
         )}
@@ -239,20 +243,30 @@ export default function BlogPostPage() {
 
                   return (
                     <span className="block my-6">
-                      <img
-                        src={src}
-                        alt={cleanAlt}
-                        width={width}
-                        height={height}
-                        className="rounded-xl shadow-md mx-auto"
-                        style={{
-                          maxWidth: '100%',
-                          height: 'auto',
-                          ...(width ? { width: `${width}px` } : {}),
-                        }}
-                        loading="lazy"
-                        {...props}
-                      />
+                      {width && height ? (
+                        <Image
+                          src={src || ''}
+                          alt={cleanAlt}
+                          width={parseInt(width, 10)}
+                          height={parseInt(height, 10)}
+                          className="rounded-xl shadow-md mx-auto"
+                          style={{
+                            maxWidth: '100%',
+                            height: 'auto',
+                            width: `${width}px`,
+                          }}
+                          {...(props as any)}
+                        />
+                      ) : (
+                        <img
+                          src={src}
+                          alt={cleanAlt}
+                          className="rounded-xl shadow-md mx-auto"
+                          style={{ maxWidth: '100%', height: 'auto' }}
+                          loading="lazy"
+                          {...props}
+                        />
+                      )}
                       {cleanAlt && (
                         <span className="block text-center text-sm text-muted-foreground mt-3">
                           {cleanAlt}
