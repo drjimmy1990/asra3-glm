@@ -3,53 +3,30 @@
 import { motion } from 'framer-motion';
 import { Check, Zap, Rocket, Shield } from 'lucide-react';
 import { useLocale } from '@/lib/i18n';
+import { translations } from '@/lib/translations';
 
 export function Advantages() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
+  const tr = translations[locale];
 
   const tiers = [
     {
       icon: Zap,
       name: t('adv_tier_quick'),
       description: t('adv_tier_quick_desc'),
-      features: [
-        t('adv_quick_features.0') as string,
-        t('adv_quick_features.1') as string,
-        t('adv_quick_features.2') as string,
-        t('adv_quick_features.3') as string,
-        t('adv_quick_features.4') as string,
-        t('adv_quick_features.5') as string,
-      ],
+      features: tr.adv_quick_features as readonly string[],
     },
     {
       icon: Rocket,
       name: t('adv_tier_full'),
       description: t('adv_tier_full_desc'),
-      features: [
-        t('adv_full_features.0') as string,
-        t('adv_full_features.1') as string,
-        t('adv_full_features.2') as string,
-        t('adv_full_features.3') as string,
-        t('adv_full_features.4') as string,
-        t('adv_full_features.5') as string,
-        t('adv_full_features.6') as string,
-        t('adv_full_features.7') as string,
-      ],
+      features: tr.adv_full_features as readonly string[],
     },
     {
       icon: Shield,
       name: t('adv_tier_enterprise'),
       description: t('adv_tier_enterprise_desc'),
-      features: [
-        t('adv_enterprise_features.0') as string,
-        t('adv_enterprise_features.1') as string,
-        t('adv_enterprise_features.2') as string,
-        t('adv_enterprise_features.3') as string,
-        t('adv_enterprise_features.4') as string,
-        t('adv_enterprise_features.5') as string,
-        t('adv_enterprise_features.6') as string,
-        t('adv_enterprise_features.7') as string,
-      ],
+      features: tr.adv_enterprise_features as readonly string[],
     },
   ];
 
