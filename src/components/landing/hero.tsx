@@ -136,7 +136,7 @@ export function Hero({ data }: HeroProps) {
       {/* === CONTENT === */}
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
         <motion.div
-          className="relative max-w-4xl"
+          className="relative max-w-4xl mx-auto text-center"
           style={{ y: yText, opacity: opacityText }}
         >
           {/* Status badge */}
@@ -156,7 +156,7 @@ export function Hero({ data }: HeroProps) {
           </motion.div>
 
           {/* Main heading */}
-          <h1 className="text-[var(--text-5xl)] lg:text-[var(--text-display)] font-black tracking-tighter rtl:tracking-normal text-foreground leading-[0.95] rtl:leading-[1.3] pb-2 [text-wrap:balance]">
+          <h1 className="text-[var(--text-5xl)] lg:text-[var(--text-display)] font-black tracking-tighter rtl:tracking-normal text-foreground leading-[0.95] rtl:leading-[1.3] pb-2 [text-wrap:balance] mx-auto">
             <AnimatedHeading text={heroTitle} delayOffset={0.15} />
           </h1>
 
@@ -165,7 +165,7 @@ export function Hero({ data }: HeroProps) {
             initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ duration: 0.8, delay: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
-            className="mt-5 sm:mt-6 max-w-2xl text-lg sm:text-xl text-muted-foreground leading-relaxed"
+            className="mt-5 sm:mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-muted-foreground leading-relaxed"
           >
             {heroSubtitle}
           </motion.p>
@@ -175,7 +175,7 @@ export function Hero({ data }: HeroProps) {
             initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ duration: 0.8, delay: 0.55, ease: [0.25, 0.1, 0.25, 1] }}
-            className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-4"
+            className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4"
           >
             <a href="#contact" className="group">
               <Button
@@ -210,7 +210,7 @@ export function Hero({ data }: HeroProps) {
                   delay: 0.65 + idx * 0.1,
                   ease: [0.25, 0.1, 0.25, 1],
                 }}
-                className="flex flex-col gap-1"
+                className="flex flex-col items-center gap-1"
               >
                 <StatValue value={stat.value} />
                 <div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
