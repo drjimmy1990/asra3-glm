@@ -10,6 +10,7 @@ import {
   Loader2,
   TrendingUp,
   Mail,
+  type LucideIcon,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -37,7 +38,7 @@ export default function AdminDashboardPage() {
   const statCards: {
     key: keyof DashboardStats;
     labelKey: string;
-    icon: React.ElementType;
+    icon: LucideIcon;
     href: string;
     color: string;
     bgColor: string;

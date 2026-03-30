@@ -2,58 +2,60 @@
 
 import { useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { motion, useTransform, useScroll } from 'framer-motion';
-import { ArrowRight, ArrowLeft, Play, Sparkles } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Play } from 'lucide-react';
 import { type SiteData } from '@/hooks/use-site-data';
 import { useLocale } from '@/lib/i18n';
-import dynamic from 'next/dynamic';
 import { useCounter } from '@/hooks/use-counter';
+import dynamic from 'next/dynamic';
 
-// Lazy load the 3D scene so it doesn't block initial render
-const HeroScene = dynamic(() => import('./hero-scene'), { 
+// Lazy load the particle canvas — it's not critical for first paint
+const HeroParticles = dynamic(() => import('./hero-particles'), {
   ssr: false,
-  loading: () => <div className="relative w-full h-full min-h-[400px] flex items-center justify-center animate-pulse"><div className="w-32 h-32 rounded-full border border-primary/20 opacity-50" /></div>
+  loading: () => null,
 });
 
 interface HeroProps {
   data?: SiteData | null;
 }
 
-// Staggered word animation component
-function AnimatedText({ text, delayOffset = 0 }: { text: string; delayOffset?: number }) {
-  const words = text.split(" ");
+// Staggered character animation for the hero heading
+function AnimatedHeading({ text, delayOffset = 0 }: { text: string; delayOffset?: number }) {
+  const words = text.split(' ');
   const { isRTL } = useLocale();
-  
+
   return (
-    <span className="inline-block">
-      {words.map((word, i) => (
-        <span key={i} className={`inline-block overflow-hidden px-1 ${isRTL ? 'me-4 pt-4 pb-6 -mt-4' : 'me-3 pb-2'}`}>
+    <>
+      {words.map((word, wi) => (
+        <span key={wi} className="inline-block overflow-hidden">
           <motion.span
-            className="inline-block"
-            initial={{ y: "100%", opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
+            className={`inline-block ${isRTL ? 'me-3 pt-3 pb-5 -mt-3' : 'me-3 pb-2'}`}
+            initial={{ y: '110%', opacity: 0, rotateX: 40 }}
+            animate={{ y: 0, opacity: 1, rotateX: 0 }}
             transition={{
-              duration: 0.6,
-              delay: delayOffset + (i * 0.1),
-              ease: [0.16, 1, 0.3, 1]
+              duration: 0.7,
+              delay: delayOffset + wi * 0.08,
+              ease: [0.16, 1, 0.3, 1],
             }}
           >
             {word}
           </motion.span>
         </span>
       ))}
-    </span>
+    </>
   );
 }
 
-// Simplified Stat Value component
+// Spring-animated stat counter
 function StatValue({ value }: { value: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const animatedValue = useCounter(value, ref);
-  
+
   return (
-    <div ref={ref} className="relative text-[var(--text-3xl)] sm:text-[var(--text-4xl)] lg:text-[var(--text-5xl)] font-black text-foreground tracking-tighter">
+    <div
+      ref={ref}
+      className="text-2xl sm:text-3xl lg:text-4xl font-black text-foreground dark:text-white tracking-tighter tabular-nums"
+    >
       {animatedValue}
     </div>
   );
@@ -62,35 +64,33 @@ function StatValue({ value }: { value: string }) {
 export function Hero({ data }: HeroProps) {
   const heroRef = useRef<HTMLElement>(null);
   const { t, isRTL } = useLocale();
-  
-  // Parallax Scroll Effects
+
+  // Parallax scroll
   const { scrollYProgress } = useScroll({
     target: heroRef,
-    offset: ["start start", "end start"]
+    offset: ['start start', 'end start'],
   });
-  
-  const yText = useTransform(scrollYProgress, [0, 1], [0, 100]); // Reduced distance
-  const opacityText = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.5, 0]);
-  const y3D = useTransform(scrollYProgress, [0, 1], [0, 50]); // Reduced distance
-  const opacity3D = useTransform(scrollYProgress, [0, 0.8, 1], [1, 0.2, 0]);
+  const yText = useTransform(scrollYProgress, [0, 1], [0, 80]);
+  const opacityText = useTransform(scrollYProgress, [0, 0.6, 1], [1, 0.3, 0]);
 
-  // Subtle Mouse radial spotlight (reduced opacity from 0.12 to 0.08)
+  // Magnetic cursor spotlight
   useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
     const handleMouseMove = (e: MouseEvent) => {
-      if (!heroRef.current) return;
-      const rect = heroRef.current.getBoundingClientRect();
+      const rect = el.getBoundingClientRect();
       const x = ((e.clientX - rect.left) / rect.width) * 100;
       const y = ((e.clientY - rect.top) / rect.height) * 100;
-      heroRef.current.style.setProperty('--mouse-x', `${x}%`);
-      heroRef.current.style.setProperty('--mouse-y', `${y}%`);
+      el.style.setProperty('--mouse-x', `${x}%`);
+      el.style.setProperty('--mouse-y', `${y}%`);
     };
-    const el = heroRef.current;
-    if (el) el.addEventListener('mousemove', handleMouseMove);
-    return () => { if (el) el.removeEventListener('mousemove', handleMouseMove); };
+    el.addEventListener('mousemove', handleMouseMove);
+    return () => el.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   const heroTitle = data?.settings?.hero_title || t('hero_title_fallback');
   const heroSubtitle = data?.settings?.hero_subtitle || t('hero_subtitle_fallback');
+  const Arrow = isRTL ? ArrowLeft : ArrowRight;
 
   const stats = [
     { value: data?.settings?.hero_stat_1_value || '50+', label: data?.settings?.hero_stat_1_label || t('stat_projects') },
@@ -99,99 +99,131 @@ export function Hero({ data }: HeroProps) {
     { value: data?.settings?.hero_stat_4_value || '$2M+', label: data?.settings?.hero_stat_4_label || t('stat_revenue') },
   ];
 
-  const Arrow = isRTL ? ArrowLeft : ArrowRight;
-
   return (
     <section
       ref={heroRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 sm:pt-32 pb-20"
+      className="relative min-h-[100dvh] flex items-center overflow-hidden pt-16 sm:pt-24 pb-12"
     >
-      <div className="absolute inset-0 grid-bg opacity-50" />
-      
-      {/* Quieter Background: Removed the heavy multi-color blobs. Kept only the spotlight for subtle focus. */}
-      <div className="pointer-events-none absolute inset-0 transition-opacity duration-700 opacity-0 hover:opacity-100 hidden sm:block" style={{ background: `radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), oklch(0.55 0.17 163 / 0.06), transparent 40%)` }} />
+      {/* === BACKGROUND LAYERS === */}
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-start w-full">
-        <div className="grid lg:grid-cols-12 gap-16 lg:gap-12 items-center">
-          
-          {/* Left Column: Text & Stats */}
-          <motion.div 
-            className="relative lg:col-span-7 flex flex-col justify-center"
-            style={{ y: yText, opacity: opacityText }}
-          >
-            
-            <motion.h1 
-              className="text-[var(--text-6xl)] lg:text-[var(--text-display)] font-black tracking-tighter rtl:tracking-normal text-foreground selection:bg-primary/20 leading-[1.1] sm:leading-[1] lg:leading-[0.9] rtl:leading-normal pb-4"
-            >
-              <AnimatedText text={heroTitle} delayOffset={0.1} />
-            </motion.h1>
+      {/* Grid pattern */}
+      <div className="absolute inset-0 grid-bg opacity-40" />
 
-            <motion.div 
-              initial={{ opacity: 0, y: 15 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }} 
-              className="mt-6 sm:mt-8 max-w-xl text-lg sm:text-[var(--text-lg)] text-muted-foreground leading-relaxed font-normal"
-            >
-              {heroSubtitle}
-            </motion.div>
+      {/* Radial gradient mesh — slow ambient animation */}
+      <div
+        className="absolute inset-0 opacity-30 dark:opacity-20 pointer-events-none"
+        style={{
+          background: `
+            radial-gradient(ellipse 80% 60% at 70% 40%, oklch(0.55 0.17 163 / 0.15), transparent),
+            radial-gradient(ellipse 60% 80% at 30% 60%, oklch(0.6 0.12 200 / 0.1), transparent)
+          `,
+        }}
+      />
 
-            {/* Buttons - Simplified, removed heavy shadows and extreme hover scales */}
-            <motion.div 
-              initial={{ opacity: 0, y: 15 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ duration: 0.8, delay: 0.4, ease: [0.25, 0.1, 0.25, 1] }} 
-              className="mt-10 sm:mt-12 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-5"
-            >
-              <a href="#contact" className="w-full sm:w-auto group">
-                <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-base font-semibold shadow-sm transition-all duration-300">
-                  {t('hero_cta')}
-                  <Arrow className="ms-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Button>
-              </a>
-              <a href="#results" className="w-full sm:w-auto group">
-                <Button size="lg" variant="ghost" className="w-full sm:w-auto border border-border/50 hover:border-border hover:bg-secondary/50 px-8 py-6 text-base font-medium transition-all duration-300">
-                  <Play className="me-2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                  {t('hero_cta_secondary')}
-                </Button>
-              </a>
-            </motion.div>
+      {/* Cursor spotlight — only on desktop */}
+      <div
+        className="pointer-events-none absolute inset-0 transition-opacity duration-500 opacity-0 hover:opacity-100 hidden lg:block"
+        style={{
+          background: `radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), oklch(0.55 0.17 163 / 0.06), transparent 40%)`,
+        }}
+      />
 
-            {/* Stats - Stripped of card borders, focusing on clean typography and rhythm */}
-            <div className="mt-16 sm:mt-24 grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-10">
-              {stats.map((stat, idx) => (
-                <motion.div 
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.5 + (idx * 0.1), ease: [0.25, 0.1, 0.25, 1] }}
-                  className="flex flex-col gap-1.5"
-                >
-                  <StatValue value={stat.value} />
-                  <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{stat.label}</div>
-                </motion.div>
-              ))}
-            </div>
-
-          </motion.div>
-
-          {/* Right Column: 3D Scene */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }} 
-            animate={{ opacity: 1, scale: 1 }} 
-            transition={{ duration: 1.5, delay: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-            style={{ y: y3D, opacity: opacity3D }}
-            className="relative lg:col-span-5 h-[400px] lg:h-[550px] w-full z-0"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none lg:hidden" />
-            <HeroScene />
-          </motion.div>
-
-        </div>
+      {/* Interactive particle network — fills entire hero background */}
+      <div className="absolute inset-0 z-0">
+        <HeroParticles />
       </div>
 
-      <div className="absolute bottom-0 start-0 end-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none z-10" />
+      {/* === CONTENT === */}
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
+        <motion.div
+          className="relative max-w-4xl"
+          style={{ y: yText, opacity: opacityText }}
+        >
+          {/* Status badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 0.6, delay: 0.05 }}
+            className="mb-6"
+          >
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-sm px-4 py-1.5 text-sm font-medium text-primary">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+              </span>
+              {isRTL ? 'متاح للمشاريع الجديدة' : 'Available for new projects'}
+            </span>
+          </motion.div>
+
+          {/* Main heading */}
+          <h1 className="text-[var(--text-5xl)] lg:text-[var(--text-display)] font-black tracking-tighter rtl:tracking-normal text-foreground leading-[0.95] rtl:leading-[1.3] pb-2 [text-wrap:balance]">
+            <AnimatedHeading text={heroTitle} delayOffset={0.15} />
+          </h1>
+
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 0.8, delay: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
+            className="mt-5 sm:mt-6 max-w-2xl text-lg sm:text-xl text-muted-foreground leading-relaxed"
+          >
+            {heroSubtitle}
+          </motion.p>
+
+          {/* CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 0.8, delay: 0.55, ease: [0.25, 0.1, 0.25, 1] }}
+            className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-4"
+          >
+            <a href="#contact" className="group">
+              <Button
+                size="lg"
+                className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-base font-semibold shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300"
+              >
+                {t('hero_cta')}
+                <Arrow className="ms-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 rtl:group-hover:-translate-x-1" />
+              </Button>
+            </a>
+            <a href="#results" className="group">
+              <Button
+                size="lg"
+                variant="ghost"
+                className="w-full sm:w-auto border border-border/50 hover:border-primary/30 hover:bg-primary/5 px-8 py-6 text-base font-medium transition-all duration-300"
+              >
+                <Play className="me-2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                {t('hero_cta_secondary')}
+              </Button>
+            </a>
+          </motion.div>
+
+          {/* Stats row */}
+          <div className="mt-12 sm:mt-14 grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-6 border-t border-border/40 pt-8">
+            {stats.map((stat, idx) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.7,
+                  delay: 0.65 + idx * 0.1,
+                  ease: [0.25, 0.1, 0.25, 1],
+                }}
+                className="flex flex-col gap-1"
+              >
+                <StatValue value={stat.value} />
+                <div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+                  {stat.label}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Bottom fade gradient */}
+      <div className="absolute bottom-0 start-0 end-0 h-16 bg-gradient-to-t from-background to-transparent pointer-events-none z-[5]" />
     </section>
   );
 }
-
-
