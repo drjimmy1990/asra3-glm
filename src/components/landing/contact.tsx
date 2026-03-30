@@ -172,7 +172,7 @@ export function Contact({ data }: ContactProps) {
                     <div className="space-y-2">
                       <Label htmlFor="project-type">{t('contact_label_type')}</Label>
                       <Select name="projectType">
-                        <SelectTrigger className="h-11 bg-background border-border/60">
+                        <SelectTrigger id="project-type" className="h-11 bg-background border-border/60">
                           <SelectValue placeholder={t('contact_select_type')} />
                         </SelectTrigger>
                         <SelectContent>
@@ -185,7 +185,7 @@ export function Contact({ data }: ContactProps) {
                     <div className="space-y-2">
                       <Label htmlFor="budget">{t('contact_label_budget')}</Label>
                       <Select name="budget">
-                        <SelectTrigger className="h-11 bg-background border-border/60">
+                        <SelectTrigger id="budget" className="h-11 bg-background border-border/60">
                           <SelectValue placeholder={t('contact_select_budget')} />
                         </SelectTrigger>
                         <SelectContent>
