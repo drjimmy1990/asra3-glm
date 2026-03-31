@@ -51,7 +51,7 @@ npm -v    # Should show 10.x+
 
 ```bash
 cd /www/wwwroot/
-git clone https://github.com/YOUR_USER/asra3-glm.git asra3.com
+git clone https://github.com/drjimmy1990/asra3-glm asra3.com
 cd asra3.com
 ```
 
@@ -191,96 +191,42 @@ pm2 stop asra3     # Stop the server
 
 ---
 
-## Step 9: Configure Nginx Reverse Proxy (via aaPanel)
+## Step 8: Standard UI Deployment (aaPanel Node Project)
 
-### 9a. Create Website in aaPanel
+The easiest way to deploy is using the **"Add Node project"** UI in aaPanel.
 
-1. Go to **Websites → Add Site**
-2. Set domain: `asra3.com` (and `www.asra3.com`)
-3. Root directory: `/www/wwwroot/asra3.com`
-4. PHP: **Static** (not PHP)
-5. Click **Submit**
+### 8a. Add Project (PM2 Project Tab)
+In **Website** -> **Node Project** -> **Add Project** -> **PM2 Project** tab:
 
-### 9b. Configure Reverse Proxy
+1. **Project Name**: `asra3`
+2. **Node Version**: Select **v20.14.0** or higher.
+3. **Startup File**: Click the folder icon and select:
+   `/www/wwwroot/asra3.com/.next/standalone/server.js`
+4. **Run Directory**: Click the folder icon and select:
+   `/www/wwwroot/asra3.com/.next/standalone`
+5. **Memory Limit**: Set to `512` or `1024` MB.
+6. **Package Manager**: Select **npm** (not used for running, but required by UI).
 
-1. Click on the site → **Reverse Proxy**
-2. Add a new proxy:
-   - **Proxy Name**: `nextjs`
-   - **Target URL**: `http://127.0.0.1:3000`
-   - **Send Domain**: `$host`
-3. Submit
+### 8b. Set Domain (Default Project Tab)
+In the **Default Project** tab:
 
-### 9c. Edit Nginx Config (Advanced)
+1. **Domain Name**: Enter your domain (e.g., `asra3.com`).
+2. **Port**: `3000` (ensure this matches `PORT` in `.env`).
+3. **Allow External Access**: **Toggle ON**.
 
-Click on the site → **Config** to manually edit. Replace the location block:
+Click **Confirm**. aaPanel will automatically:
+- Start the server using PM2.
+- Create an Nginx site and reverse proxy to port 3000.
 
-```nginx
-server {
-    listen 80;
-    listen 443 ssl http2;
-    server_name asra3.com www.asra3.com;
+---
 
-    # SSL (managed by aaPanel Let's Encrypt)
-    # ssl_certificate and ssl_certificate_key are auto-added
+## Step 9: Configure SSL (HTTPS)
 
-    # Serve uploaded files directly (bypass Node.js)
-    location /uploads/ {
-        alias /www/wwwroot/asra3.com/public/uploads/;
-        expires 30d;
-        add_header Cache-Control "public, immutable";
-        try_files $uri =404;
-    }
-
-    # Serve static Next.js assets directly
-    location /_next/static/ {
-        alias /www/wwwroot/asra3.com/.next/static/;
-        expires 365d;
-        add_header Cache-Control "public, immutable";
-    }
-
-    # Serve public assets directly
-    location ~* \.(ico|png|jpg|jpeg|gif|svg|webp|woff2?|ttf|eot|css|js)$ {
-        root /www/wwwroot/asra3.com/public;
-        expires 30d;
-        add_header Cache-Control "public";
-        try_files $uri @nextjs;
-    }
-
-    # Proxy everything else to Next.js
-    location / {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
-        proxy_read_timeout 120s;
-        proxy_send_timeout 120s;
-
-        # Increase body size limit for image uploads
-        client_max_body_size 10m;
-    }
-
-    location @nextjs {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-```
-
-### 9d. Enable SSL
-
-1. Click on the site → **SSL**
-2. Select **Let's Encrypt**
-3. Check your domain(s)
-4. Click **Apply**
-5. Enable **Force HTTPS** toggle
+1. Go to **Website** -> **Node Project**.
+2. Click **Add SSL** (or select your site and go to the SSL tab).
+3. Select **Let's Encrypt**.
+4. Check your domain and click **Apply**.
+5. Enable **Force HTTPS**.
 
 ---
 
