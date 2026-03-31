@@ -241,8 +241,9 @@ pm2 restart asra3
 
 
 
-# 0. BACKUP DB FIRST
+# 0. BACKUP DB & UPLOADS FIRST
 cp /www/wwwroot/asra3.com/db/custom.db /root/custom.db.backup
+cp -r /www/wwwroot/asra3.com/public/uploads /root/uploads.backup
 
 # 1. Stop & remove old process
 pm2 delete asra3
@@ -262,10 +263,11 @@ DATABASE_URL="file:/www/wwwroot/asra3.com/db/custom.db"
 PORT=3008
 EOF
 
-# 5. Restore DB
+# 5. Restore DB & UPLOADS
 mkdir -p /www/wwwroot/asra3.com/db
+mkdir -p /www/wwwroot/asra3.com/public
 cp /root/custom.db.backup /www/wwwroot/asra3.com/db/custom.db
-
+cp -r /root/uploads.backup /www/wwwroot/asra3.com/public/uploads
 # 6. Install
 npm install --legacy-peer-deps
 
