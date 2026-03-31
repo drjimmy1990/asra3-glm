@@ -4,6 +4,9 @@ import { db } from '@/lib/db';
 import BlogPostClient from './page-client';
 import { BlogPostingSchema } from '@/components/seo/blog-posting-schema';
 
+// Render on-demand (SSR) — post content is dynamic and comes from DB
+export const dynamic = 'force-dynamic';
+
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://asra3.com';
 
 interface PageProps {

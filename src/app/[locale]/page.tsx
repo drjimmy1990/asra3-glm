@@ -3,6 +3,10 @@ import { getSiteData } from '@/lib/get-site-data';
 import { HomeClient } from '@/components/landing/home-client';
 import { PersonSchema } from '@/components/seo/person-schema';
 
+// Render on-demand (SSR) — not prerendered at build time.
+// The home page fetches live DB data (services, projects, etc.)
+export const dynamic = 'force-dynamic';
+
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://asra3.com';
 
 interface HomeProps {
