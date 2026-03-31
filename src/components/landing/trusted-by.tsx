@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useLocale } from '@/lib/i18n';
+import type { SiteData } from '@/hooks/use-site-data';
 
 const tools = [
   { name: 'Next.js', icon: '⚡' },
@@ -31,8 +32,17 @@ const tools = [
 const container = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.04 } } };
 const item = { hidden: { opacity: 0, y: 12, scale: 0.95 }, show: { opacity: 1, y: 0, scale: 1 } };
 
-export function TrustedBy() {
-  const { t } = useLocale();
+interface TrustedByProps {
+  data?: SiteData;
+}
+
+export function TrustedBy({ data }: TrustedByProps) {
+  const { t, locale } = useLocale();
+  const settings = data?.settings || {};
+  
+  const heading = locale === 'ar' 
+    ? (settings.trusted_heading_ar || t('trusted_heading'))
+    : (settings.trusted_heading_en || settings.trusted_heading || t('trusted_heading'));
 
   return (
     <section className="relative py-20 border-y border-border/40 overflow-hidden">
@@ -51,7 +61,7 @@ export function TrustedBy() {
           className="text-center mb-12"
         >
           <h3 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
-            {t('trusted_heading')}
+            {heading}
           </h3>
           <div className="mt-3 mx-auto w-16 h-1 rounded-full bg-gradient-to-r from-primary/60 via-primary to-primary/60" />
         </motion.div>
