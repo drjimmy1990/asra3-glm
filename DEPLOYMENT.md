@@ -179,3 +179,27 @@ pm2 restart asra3
 - `/www/wwwroot/asra3.com/` — Your main code.
 - `/www/wwwroot/asra3.com/.next/standalone/` — The **actual** folder running the site.
 - `/db/custom.db` — Your database file.
+
+
+
+
+
+
+UPDATE:
+# 1. Pull the fix
+git pull origin master
+
+# 2. Make sure the database folder exists
+mkdir -p /www/wwwroot/asra3.com/db
+
+# 3. Install (always use --legacy-peer-deps)
+npm install --legacy-peer-deps
+
+# 4. Build (will now succeed — no DB needed at build time)
+npm run build
+
+# 5. Relink uploads (every time after build)
+ln -sfn /www/wwwroot/asra3.com/public/uploads /www/wwwroot/asra3.com/.next/standalone/public/uploads
+
+# 6. Restart
+pm2 restart asra3
