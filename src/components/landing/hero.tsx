@@ -19,29 +19,62 @@ interface HeroProps {
   data?: SiteData | null;
 }
 
-// Staggered character animation for the hero heading
+// Staggered character animation with glowing middle line
+// Supports "|" as explicit line break markers: "Line 1|Line 2|Line 3"
 function AnimatedHeading({ text, delayOffset = 0 }: { text: string; delayOffset?: number }) {
-  const words = text.split(' ');
   const { isRTL } = useLocale();
+
+  // Split by | for explicit lines, then by space for words within each line
+  const lines = text.split('|').map(line => line.trim().split(' '));
+  const totalWords = lines.reduce((sum, line) => sum + line.length, 0);
+  const totalLines = lines.length;
+  // Middle line index (for 3 lines: index 1; for 1 line: index 0)
+  const middleLineIndex = Math.floor(totalLines / 2);
+  let globalWordIndex = 0;
 
   return (
     <>
-      {words.map((word, wi) => (
-        <span key={wi} className="inline-block overflow-hidden">
-          <motion.span
-            className={`inline-block ${isRTL ? 'me-3 pt-3 pb-5 -mt-3' : 'me-3 pb-2'}`}
-            initial={{ y: '110%', opacity: 0, rotateX: 40 }}
-            animate={{ y: 0, opacity: 1, rotateX: 0 }}
-            transition={{
-              duration: 0.7,
-              delay: delayOffset + wi * 0.08,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-          >
-            {word}
-          </motion.span>
-        </span>
-      ))}
+      {lines.map((words, li) => {
+        const isMiddleLine = totalLines >= 3 ? li === middleLineIndex : false;
+
+        return (
+          // 🔧 Arabic line gap: change -mt-4 to adjust spacing (-mt-2=loose, -mt-6=tight, -mt-8=very tight)
+          <span key={li} className={`block ${isMiddleLine ? 'hero-glow-line' : ''} ${isRTL && li > 0 ? '-mt-8' : ''}`}>
+            {words.map((word, wi) => {
+              const currentIndex = globalWordIndex++;
+              // Outer lines: foreground→emerald gradient | Middle line: full emerald
+              const progress = totalWords > 1 ? currentIndex / (totalWords - 1) : 0;
+              const fgPercent = isMiddleLine ? 0 : Math.round(100 - progress * 35);
+
+              return (
+                <span key={wi} className="inline-block overflow-hidden">
+                  <motion.span
+                    className={`inline-block ${isRTL ? 'me-3' : 'me-3 pb-2'}`}
+                    style={{
+                      color: isMiddleLine
+                        ? 'var(--primary)'
+                        : `color-mix(in oklch, var(--foreground) ${fgPercent}%, var(--primary))`,
+                      ...(isMiddleLine ? {
+                        textShadow: '0 0 30px oklch(0.6 0.19 163 / 0.4), 0 0 60px oklch(0.6 0.19 163 / 0.15)',
+                        filter: 'brightness(1.1)',
+                      } : {}),
+                    }}
+                    initial={{ y: '110%', opacity: 0, rotateX: 40 }}
+                    animate={{ y: 0, opacity: 1, rotateX: 0 }}
+                    transition={{
+                      duration: 0.7,
+                      delay: delayOffset + currentIndex * 0.08,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                  >
+                    {word}
+                  </motion.span>
+                </span>
+              );
+            })}
+          </span>
+        );
+      })}
     </>
   );
 }
@@ -144,7 +177,7 @@ export function Hero({ data }: HeroProps) {
             initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ duration: 0.6, delay: 0.05 }}
-            className="mb-6"
+            className={`mb-6 ${isRTL ? 'mb-4' : 'mb-6'}`}
           >
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-sm px-4 py-1.5 text-sm font-medium text-primary">
               <span className="relative flex h-2 w-2">
@@ -156,7 +189,12 @@ export function Hero({ data }: HeroProps) {
           </motion.div>
 
           {/* Main heading */}
-          <h1 className="text-[var(--text-5xl)] lg:text-[var(--text-display)] font-black tracking-tighter rtl:tracking-normal text-foreground leading-[0.95] rtl:leading-[1.3] pb-2 [text-wrap:balance] mx-auto">
+          <h1
+            className={`font-black text-foreground text-[var(--text-hero-heading)] pb-2 mx-auto ${isRTL
+              ? 'tracking-normal leading-[0.95]'
+              : 'tracking-tighter leading-[0.95]'
+              }`}
+          >
             <AnimatedHeading text={heroTitle} delayOffset={0.15} />
           </h1>
 
@@ -165,7 +203,7 @@ export function Hero({ data }: HeroProps) {
             initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ duration: 0.8, delay: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
-            className="mt-5 sm:mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-muted-foreground leading-relaxed"
+            className={`max-w-2xl mx-auto text-lg sm:text-xl text-muted-foreground leading-relaxed ${isRTL ? 'mt-3 sm:mt-4' : 'mt-5 sm:mt-6'}`}
           >
             {heroSubtitle}
           </motion.p>
@@ -213,7 +251,7 @@ export function Hero({ data }: HeroProps) {
                 className="flex flex-col items-center gap-1"
               >
                 <StatValue value={stat.value} />
-                <div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+                <div className="text-[11px] font-semibold text-muted-foreground/80 uppercase tracking-wider">
                   {stat.label}
                 </div>
               </motion.div>

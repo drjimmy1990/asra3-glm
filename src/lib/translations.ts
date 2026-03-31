@@ -29,7 +29,7 @@ export const translations = {
     faq_desc: 'Everything you need to know about working together. From timelines and scoping to technology choices and support.',
 
     // Hero Arabic fallbacks (used when DB has no value)
-    hero_title_fallback: 'I Build SaaS Products & Automation That Scale',
+    hero_title_fallback: 'I Build AI-Powered|Bots, SaaS Products &|Automation Systems',
     hero_subtitle_fallback: 'From idea to launch — I help startups and businesses ship production-ready SaaS applications and intelligent workflow automations that save hundreds of hours and drive real revenue growth.',
 
     // Services
@@ -297,7 +297,7 @@ export const translations = {
     faq_desc: 'كل ما تحتاج معرفته عن العمل معاً. من الجداول الزمنية وتحديد النطاق إلى خيارات التقنية والدعم.',
 
     // Hero Arabic fallbacks (used when DB has no value)
-    hero_title_fallback: 'أبني منتجات SaaS وحلول أتمتة قابلة للتوسع',
+    hero_title_fallback: 'أبني بوتات ذكية،|منتجات SaaS|و أنظمة أتمتة متكاملة',
     hero_subtitle_fallback: 'من الفكرة إلى الإطلاق — أساعد الشركات الناشئة والأعمال في إطلاق تطبيقات SaaS جاهزة للإنتاج وأتمتة عمليات ذكية توفر مئات الساعات وتدفع نمواً حقيقياً في الإيرادات.',
 
     // Services

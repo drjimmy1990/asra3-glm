@@ -90,6 +90,11 @@
   --text-5xl: clamp(3rem, 2.2rem + 4vw, 5rem);
   --text-6xl: clamp(3.75rem, 2.8rem + 5vw, 6.5rem);
   --text-display: clamp(4.5rem, 3.5rem + 8vw, 9rem);
+  --text-hero-heading: clamp(4.5rem, 3.5rem + 8vw, 9rem);
+}
+
+[dir="rtl"] {
+  --text-hero-heading: clamp(1.75rem, 1.5rem + 2.5vw, 10rem);
 }
 
 .dark {
@@ -130,6 +135,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground font-sans;
     font-size: var(--text-base);
@@ -137,14 +143,36 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-heading tracking-tight text-foreground;
     line-height: 1.1;
   }
-  h1 { font-size: var(--text-5xl); font-weight: 800; }
-  h2 { font-size: var(--text-4xl); font-weight: 700; }
-  h3 { font-size: var(--text-3xl); font-weight: 700; }
-  h4 { font-size: var(--text-2xl); font-weight: 600; }
+
+  h1 {
+    font-size: var(--text-5xl);
+    font-weight: 800;
+  }
+
+  h2 {
+    font-size: var(--text-4xl);
+    font-weight: 700;
+  }
+
+  h3 {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+  }
+
+  h4 {
+    font-size: var(--text-2xl);
+    font-weight: 600;
+  }
 
   p {
     max-width: 70ch;
@@ -169,8 +197,12 @@
   --text-display: clamp(4rem, 3.5rem + 9vw, 8.5rem);
 }
 
-[dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3, [dir="rtl"] h4 {
-  line-height: 1.4; /* Arabic needs more vertical space */
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4 {
+  line-height: 1.4;
+  /* Arabic needs more vertical space */
 }
 
 [dir="rtl"] .tracking-tight {
@@ -182,39 +214,83 @@
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
+
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
 }
 
 @keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @keyframes slide-up {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes reveal-mask {
-  from { clip-path: inset(0 100% 0 0); }
-  to { clip-path: inset(0 0 0 0); }
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
 }
 
 @keyframes reveal-mask-rtl {
-  from { clip-path: inset(0 0 0 100%); }
-  to { clip-path: inset(0 0 0 0); }
+  from {
+    clip-path: inset(0 0 0 100%);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
 }
 
 .animate-float {
@@ -251,15 +327,48 @@
 }
 
 .grid-bg {
-  background-image: 
+  background-image:
     linear-gradient(oklch(0.55 0.17 163 / 0.03) 1px, transparent 1px),
     linear-gradient(90deg, oklch(0.55 0.17 163 / 0.03) 1px, transparent 1px);
   background-size: 60px 60px;
 }
 
 .dark .grid-bg {
-  background-image: 
+  background-image:
     linear-gradient(oklch(0.55 0.17 163 / 0.06) 1px, transparent 1px),
     linear-gradient(90deg, oklch(0.55 0.17 163 / 0.06) 1px, transparent 1px);
   background-size: 60px 60px;
+}
+
+/* Hero heading glow for the middle line */
+.hero-glow-line {
+  animation: hero-glow-pulse 4s ease-in-out infinite;
+}
+
+@keyframes hero-glow-pulse {
+
+  0%,
+  100% {
+    filter: brightness(1.05) drop-shadow(0 0 20px oklch(0.55 0.17 163 / 0.2));
+  }
+
+  50% {
+    filter: brightness(1.15) drop-shadow(0 0 40px oklch(0.6 0.19 163 / 0.35));
+  }
+}
+
+.dark .hero-glow-line {
+  animation: hero-glow-pulse-dark 4s ease-in-out infinite;
+}
+
+@keyframes hero-glow-pulse-dark {
+
+  0%,
+  100% {
+    filter: brightness(1.1) drop-shadow(0 0 25px oklch(0.6 0.19 163 / 0.3));
+  }
+
+  50% {
+    filter: brightness(1.25) drop-shadow(0 0 50px oklch(0.65 0.22 163 / 0.5));
+  }
 }
