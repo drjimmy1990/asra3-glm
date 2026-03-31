@@ -3,248 +3,440 @@ name: blog-post-from-project
 description: Use when creating a blog post for the asra3.com website from a project, case study, or portfolio piece. Generates bilingual (EN/AR) blog content with markdown formatting, image placeholders, SEO tags, cover image ideas, and all fields ready to paste into the admin panel.
 ---
 
-# Blog Post From Project
+# Blog Post From Project — v2
 
-## Purpose
-
-Generate a complete, publish-ready blog post for asra3.com from any project, case study, or client work. The output includes **every field** the admin panel requires so the user can copy-paste directly without any additional writing.
-
-## When to Use
-
-- After completing a project and wanting to showcase it on the blog
-- When creating a case study or portfolio write-up
-- When the user says: "write a blog post", "create blog content", "blog about this project"
+> **Goal**: Produce a complete, publish-ready blog post in a SINGLE output. The user copies sections directly into the admin panel with zero rewriting.
 
 ---
 
-## Required Input
+## 1 · Gather Input (Ask If Missing)
 
-Before writing, you MUST gather the following from the user (ask if not provided):
+| Input | Required? | Example |
+|-------|:---------:|---------|
+| **Project Name** | ✅ | LeadHunter SaaS |
+| **1-line summary** | ✅ | AI-powered lead gen for B2B sales |
+| **Problem solved** | ✅ | Manual prospecting wastes 20+ hrs/week |
+| **Key features** (3-6) | ✅ | Real-time scraping, AI scoring, CRM sync |
+| **Tech stack** | ✅ | Next.js, Supabase, OpenAI, Stripe, n8n |
+| **Results / metrics** | ✅ | 3× faster qualification, 80% less manual work |
+| **Target audience** | ✅ | SaaS founders, B2B teams |
+| **Screenshots available?** | ✅ | Yes — dashboard, onboarding, mobile view |
+| Timeline | optional | 4 weeks |
+| Client quote | optional | "Saved us 15 hours a week" |
 
-| Input | Description | Example |
-|-------|-------------|---------|
-| **Project Name** | The name of the project | "LeadHunter SaaS Platform" |
-| **What it does** | 1-2 sentence summary | "AI-powered lead generation for B2B sales teams" |
-| **Problem solved** | The pain point addressed | "Manual prospecting wastes 20+ hours/week" |
-| **Key features** | 3-6 bullet points of main capabilities | Real-time scraping, AI scoring, CRM sync |
-| **Tech stack** | Frameworks, tools, APIs used | Next.js, Supabase, OpenAI, Stripe, n8n |
-| **Results/metrics** | Quantifiable outcomes (if available) | "3x faster lead qualification", "80% reduction in manual work" |
-| **Target audience** | Who benefits from this project | "SaaS founders", "E-commerce businesses" |
-| **Timeline** | How long the project took (optional) | "4 weeks" |
+> **Speed rule**: If the user gives you a project directory or codebase, scan it yourself — don't ask for what you can read.
 
 ---
 
-## Output Structure
+## 2 · Output Sections (All Required)
 
-You MUST produce ALL of the following sections in a single, organized response. Use the exact headers below so the user can navigate easily.
-
-### 1. METADATA (Admin Panel Fields)
+Produce these **7 sections** in order:
 
 ```
-SLUG:           [kebab-case-slug]
-TITLE (EN):     [English title — compelling, SEO-friendly, max 70 chars]
-TITLE (AR):     [Arabic title — natural, not machine-translated]
-EXCERPT (EN):   [1-2 sentence hook, max 160 chars — this is the meta description]
-EXCERPT (AR):   [Arabic equivalent of the excerpt]
-COVER IMAGE:    [Detailed description for generating the cover image — see §4]
+§1  METADATA
+§2  CONTENT — ENGLISH
+§3  CONTENT — ARABIC
+§4  COVER IMAGE PROMPT
+§5  TAGS
+§6  SCREENSHOTS LIST (from the project)
+§7  GENERATED IMAGES LIST (AI-created)
+```
+
+---
+
+### §1 · METADATA
+
+```yaml
+SLUG:           kebab-case-slug-max-60-chars
+TITLE_EN:       "Compelling, SEO-rich title (max 70 chars)"
+TITLE_AR:       "عنوان عربي طبيعي وليس ترجمة حرفية (max 70 chars)"
+EXCERPT_EN:     "1-2 sentence hook, max 160 chars — doubles as meta description"
+EXCERPT_AR:     "نسخة عربية طبيعية للملخص (max 160 chars)"
+COVER_IMAGE:    see §4
 TAGS:           ["tag1", "tag2", "tag3", "tag4", "tag5"]
-LINKED PROJECT: [Project name to link in admin, or "None"]
+LINKED_PROJECT: "Project Name" or "None"
 PUBLISHED:      true
 ```
 
-### 2. CONTENT — ENGLISH (Markdown)
+---
 
-Write the full blog post body in Markdown. Follow this structure:
+### §2 · CONTENT — ENGLISH (Markdown)
+
+Write the full blog body. Use **ALL** the markdown features our renderer supports (see §8 reference).
+
+#### Required Structure:
 
 ```markdown
 ## The Problem
 
-[2-3 paragraphs describing the pain point. Be specific and relatable.
-Use real-world scenarios the target audience faces daily.]
+[2-3 paragraphs — specific, relatable pain. Use real scenarios.]
 
-![problem-illustration](PLACEHOLDER: Describe an image showing the frustration or inefficiency — e.g., "A stressed business owner drowning in spreadsheets and manual data entry, dark moody lighting, modern flat illustration style")
+![stressed-entrepreneur-manual-data](GENERATE: A stressed entrepreneur surrounded by paper invoices and spreadsheets, blue-grey moody lighting, modern flat illustration, 16:9)
 
 ## The Solution: [Project Name]
 
-[2-3 paragraphs introducing the project. Focus on the "what" and "why".
-Explain the approach and architecture at a high level.]
+[2-3 paragraphs — what we built, why this approach, high-level architecture.]
 
-![solution-overview](PLACEHOLDER: Describe a clean dashboard or product screenshot concept — e.g., "Modern SaaS dashboard with real-time analytics cards, dark theme, showing lead scores and conversion metrics, glassmorphism UI style")
+![project-name-dashboard-overview](SCREENSHOT: Main dashboard view showing the key value proposition)
 
 ## Key Features
 
-### ⚡ [Feature 1 Name]
+### ⚡ [Feature 1]
 
-[1-2 paragraphs explaining this feature and its value to the user]
+[1-2 paragraphs on what it does and why it matters]
 
-### 🔄 [Feature 2 Name]
+![project-name-feature-1-detail](SCREENSHOT: Close-up of [feature] in action)
 
-[1-2 paragraphs]
-
-### 📊 [Feature 3 Name]
+### 🔄 [Feature 2]
 
 [1-2 paragraphs]
 
-![features-showcase](PLACEHOLDER: Describe a feature comparison or multi-panel screenshot concept — e.g., "Three side-by-side UI panels showing the automation workflow: input → processing → output, connected by animated arrows, clean minimal design")
+### 📊 [Feature 3]
+
+[1-2 paragraphs]
+
+> 💡 **Pro tip**: [A useful insight the reader can apply immediately]
+
+![project-name-features-grid](SCREENSHOT: Side-by-side of 2-3 feature screens)
 
 ## Tech Stack & Architecture
 
-[1-2 paragraphs explaining the technical decisions and why each technology was chosen]
+[1-2 paragraphs explaining technical decisions]
 
 | Layer | Technology | Why |
-|-------|-----------|-----|
-| Frontend | Next.js + React | [Brief reason] |
+|:------|:-----------|:----|
+| Frontend | Next.js 16 + React 19 | Server Components, edge-ready |
 | Backend | [Tech] | [Brief reason] |
 | Database | [Tech] | [Brief reason] |
 | AI/ML | [Tech] | [Brief reason] |
 | Automation | [Tech] | [Brief reason] |
 | Deployment | [Tech] | [Brief reason] |
 
-![architecture-diagram](PLACEHOLDER: Describe a clean system architecture diagram — e.g., "Minimal technical architecture diagram showing data flow: User → Next.js Frontend → API Routes → Supabase DB → n8n Automations → OpenAI, dark background with neon green connection lines")
+![project-name-architecture-diagram](GENERATE: Clean system architecture diagram, dark background #0a0a0a, data flow boxes connected by emerald green #10b981 lines, white labels, minimal style)
 
 ## Results & Impact
 
-[2-3 paragraphs with concrete metrics and outcomes. Use numbers.]
+[2-3 paragraphs with hard numbers]
 
-> **"[A compelling quote or key metric highlighted as a blockquote]"**
+> **"[Key metric or client quote as a blockquote]"**
 
-![results-metrics](PLACEHOLDER: Describe a results infographic — e.g., "Clean infographic showing before/after metrics: '20 hrs → 2 hrs manual work', '3x conversion rate', '80% cost reduction', modern dark theme with emerald green accent colors matching asra3 brand")
+![project-name-results-infographic](GENERATE: Dark theme infographic showing before/after metrics with emerald green #10b981 accents: 'X hrs → Y hrs', '3× improvement', circular progress indicators, clean modern style)
 
 ## Lessons Learned
 
-[2-3 key takeaways from building this project. Be genuine and technical.]
-
-1. **[Lesson 1 title]** — [Brief explanation]
-2. **[Lesson 2 title]** — [Brief explanation]
-3. **[Lesson 3 title]** — [Brief explanation]
+1. **[Lesson 1]** — [Explanation]
+2. **[Lesson 2]** — [Explanation]
+3. **[Lesson 3]** — [Explanation]
 
 ---
 
-*Built by [asra3.com](https://asra3.com) — Turning ideas into high-performance SaaS products and intelligent automation solutions.*
+*Built by [asra3.com](https://asra3.com) — Turning ideas into high-performance digital products.*
 ```
-
-### 3. CONTENT — ARABIC (Markdown)
-
-Write the **complete Arabic version** of the blog post. It must NOT be a word-for-word translation. Instead:
-
-- Rewrite naturally in Modern Standard Arabic (فصحى معاصرة)
-- Keep technical terms in English where natural (Next.js, API, SaaS)
-- Maintain the same structure and image placeholders
-- Use right-to-left compatible markdown
-- Match the same heading hierarchy as the English version
-
-### 4. COVER IMAGE PROMPT
-
-Provide a detailed, ready-to-use prompt for generating the cover image:
-
-```
-COVER IMAGE GENERATION PROMPT:
-"[Highly detailed prompt — 50-100 words describing the ideal cover image.
-Include: subject matter, visual style (modern, minimal, tech), color palette
-(emerald green #10b981 as accent on dark #0a0a0a background to match asra3 brand),
-composition, mood, and any text overlay requirements. The image should be 16:9 aspect ratio,
-suitable for both blog cards and hero headers.]"
-```
-
-### 5. TAGS STRATEGY
-
-Provide 5-8 tags following these rules:
-
-- Mix of **broad** (SaaS, Automation) and **specific** (Next.js, Supabase)
-- Include the **project category** (e-commerce, HR, fintech)
-- Include **1-2 Arabic tags** if the project serves Arabic audiences
-- Format as a JSON array: `["tag1", "tag2", "tag3"]`
-
-### 6. IMAGE PLACEHOLDERS SUMMARY TABLE
-
-Collect all image placeholders into a reference table:
-
-| # | Location in Post | Placeholder Description | Suggested Generation Prompt |
-|---|-----------------|------------------------|---------------------------|
-| 1 | Cover | [brief] | [full prompt] |
-| 2 | After "The Problem" | [brief] | [full prompt] |
-| 3 | After "The Solution" | [brief] | [full prompt] |
-| 4 | Features showcase | [brief] | [full prompt] |
-| 5 | Architecture | [brief] | [full prompt] |
-| 6 | Results | [brief] | [full prompt] |
 
 ---
 
-## Writing Style Guide
+### §3 · CONTENT — ARABIC (Markdown)
 
-### English
-- **Tone**: Professional but approachable. Like a senior developer explaining to a CTO.
-- **Voice**: First person plural ("We built...", "Our approach...")
-- **Length**: 1,200 — 2,000 words (aim for 7-10 min read)
-- **SEO**: Naturally weave the project name and key technologies into headings
+**Complete Arabic rewrite** — not a translation. Rules:
 
-### Arabic
-- **Tone**: Same professional warmth, adapted for Arabic-speaking tech audience
-- **Voice**: First person plural (بنينا... نهجنا...)
-- **Technical terms**: Keep in English when they're industry-standard (API, SaaS, CI/CD)
-- **Length**: Match the English version's depth
+- Write in Modern Standard Arabic (فصحى معاصرة)
+- Keep tech terms in English: API, SaaS, Next.js, CI/CD, UI/UX
+- Use the **exact same image references** (same `![alt](...)` lines)
+- Match the heading hierarchy
+- First-person plural: بنينا، طوّرنا، صممنا
+- Arabic paragraphs tend to be slightly shorter — that's fine
 
-### Image Placeholders
-Every image placeholder MUST follow this exact format in the markdown:
+---
+
+### §4 · COVER IMAGE PROMPT
+
+```
+FILENAME: project-name-cover.png
+PROMPT: "[50-100 word prompt. Include: subject, visual style (modern, minimal, tech),
+color palette (emerald green #10b981 accent on dark #0a0a0a background),
+composition, mood. 16:9 aspect ratio.]"
+```
+
+---
+
+### §5 · TAGS
+
+```json
+["Tag1", "Tag2", "Tag3", "Tag4", "Tag5", "تطوير ويب"]
+```
+
+Rules:
+- 5-8 tags total
+- Mix broad (SaaS, Automation) + specific (Next.js, Supabase)
+- Include project category (e-commerce, fintech)
+- 1-2 Arabic tags for Arabic audience reach
+
+---
+
+### §6 · SCREENSHOTS LIST
+
+These are **real screenshots from the project** that the user must take/provide. List every screenshot referenced in the content.
+
+| # | Alt Text (= Filename) | What to Capture | Used In |
+|:-:|:----------------------|:----------------|:--------|
+| 1 | `project-name-dashboard-overview` | Main dashboard, full viewport, dark mode | §2 "The Solution" |
+| 2 | `project-name-feature-1-detail` | Close-up of [feature], showing [interaction] | §2 Feature 1 |
+| 3 | `project-name-features-grid` | Side-by-side of 2-3 feature screens | §2 Features section |
+| 4 | `project-name-mobile-view` | Mobile responsive view of main screen | §2 (if applicable) |
+
+> **Upload workflow**: Take screenshot → save as `alt-text.png` → upload via admin panel "Upload Image to Content" button → markdown auto-inserted.
+
+---
+
+### §7 · GENERATED IMAGES LIST
+
+These are **AI-generated images** the user creates with an image generation tool.
+
+| # | Alt Text (= Filename) | Generation Prompt | Used In |
+|:-:|:----------------------|:------------------|:--------|
+| 1 | `project-name-cover` | [Full prompt from §4] | Cover Image |
+| 2 | `stressed-entrepreneur-manual-data` | [Full prompt] | §2 "The Problem" |
+| 3 | `project-name-architecture-diagram` | [Full prompt] | §2 Tech Stack |
+| 4 | `project-name-results-infographic` | [Full prompt] | §2 Results |
+
+> **Workflow**: Copy prompt → generate image → save as `alt-text.png` → upload → paste URL.
+
+---
+
+## 3 · Image Rules (Critical)
+
+### Two Image Types
+
+| Type | Prefix | Meaning | Example |
+|:-----|:-------|:--------|:--------|
+| **Screenshot** | `SCREENSHOT:` | Real project screenshot the user must capture | `![app-dashboard](SCREENSHOT: Full dashboard view in dark mode)` |
+| **Generated** | `GENERATE:` | AI-generated image with a prompt | `![data-flow-diagram](GENERATE: Clean architecture diagram, dark bg, green lines)` |
+
+### Alt Text = Filename Convention
+
+The `alt` text in every image **IS** the filename. This lets the user:
+1. See the alt text
+2. Save their image as `alt-text.png`
+3. Upload via the admin panel
+4. The markdown `![alt-text](/uploads/alt-text.png)` matches automatically
+
+**Rules for alt text:**
+- Use `kebab-case` only
+- Start with project name: `leadhunter-dashboard-overview`
+- Be descriptive: `leadhunter-ai-scoring-panel` not `screenshot-3`
+- Max 50 characters
+- No special characters except hyphens
+
+### Custom Image Sizes
+
+Our renderer supports custom dimensions:
 
 ```markdown
-![descriptive-alt-text](PLACEHOLDER: Detailed visual description for image generation, including style, colors, composition, and mood)
+![alt-text|800x450](/uploads/image.png)
 ```
 
-The `PLACEHOLDER:` prefix signals that this image needs to be generated. The description after it serves as both the generation prompt and the alt-text source.
+Use this for:
+- Architecture diagrams: `|1000x500`
+- Inline icons or small images: `|300x200`
+- Full-width heroes: omit the size suffix (uses auto-width)
+
+### Image Captions
+
+The alt text is **automatically displayed as a caption** below the image. Write it to be readable:
+
+```markdown
+![LeadHunter AI scoring panel showing real-time lead analysis](/uploads/leadhunter-scoring.png)
+```
+
+Renders as image + caption: *"LeadHunter AI scoring panel showing real-time lead analysis"*
 
 ---
 
-## Quality Checklist
+## 4 · Markdown Features Reference
 
-Before delivering, verify:
+Our blog renderer (ReactMarkdown + remark-gfm + rehype-raw) supports all of these. **Use them freely**:
 
-- [ ] All 6 output sections are present (Metadata, EN, AR, Cover, Tags, Images Table)
-- [ ] Slug is kebab-case, unique, and URL-friendly
-- [ ] Both titles are under 70 characters
-- [ ] Both excerpts are under 160 characters
-- [ ] English content has 5+ image placeholders with detailed descriptions
-- [ ] Arabic content mirrors the same structure and image placeholders
-- [ ] Tech stack table is complete with "Why" column
-- [ ] Tags array has 5-8 items in valid JSON format
-- [ ] Results section has at least 2 concrete metrics
-- [ ] No lorem ipsum or generic filler text anywhere
-- [ ] Cover image prompt references the asra3 brand colors (emerald green on dark)
+### Text Formatting
+
+```markdown
+**Bold text** for emphasis
+*Italic text* for subtle emphasis
+~~Strikethrough~~ for corrections
+`inline code` for technical terms
+[Link text](https://url.com) for references
+```
+
+### Headings (Use These Levels)
+
+```markdown
+## Section Title          ← Main sections
+### Subsection            ← Features, sub-points
+#### Minor heading        ← Rarely needed
+```
+
+> ⚠️ Never use `#` (h1) — the blog title is already h1.
+
+### Lists
+
+```markdown
+- Bullet point
+- Another point
+  - Nested point
+
+1. Ordered step
+2. Next step
+3. Final step
+```
+
+### Blockquotes (Styled with emerald border + muted bg)
+
+```markdown
+> Single line quote
+
+> **"Highlighted metric or client testimonial"**
+
+> 💡 **Pro tip**: Useful insight the reader can apply immediately
+```
+
+### Tables (Fully styled with hover, borders, header bg)
+
+```markdown
+| Column 1 | Column 2 | Column 3 |
+|:---------|:--------:|----------:|
+| Left     | Center   | Right     |
+| aligned  | aligned  | aligned   |
+```
+
+Alignment: `:---` left, `:---:` center, `---:` right.
+
+### Code Blocks (Styled with muted bg + border)
+
+````markdown
+```javascript
+const result = await fetch('/api/data');
+const json = await result.json();
+```
+````
+
+### Horizontal Rules (Section dividers)
+
+```markdown
+---
+```
+
+### Images
+
+```markdown
+![alt-text](/uploads/image.png)              ← auto-width
+![alt-text|800x450](/uploads/image.png)      ← custom size
+```
+
+### Videos (Raw HTML supported via rehype-raw)
+
+```markdown
+<video src="/uploads/demo.mp4" controls width="100%"></video>
+```
+
+### YouTube Embeds
+
+```markdown
+<iframe src="https://www.youtube.com/embed/VIDEO_ID" width="100%" height="400" frameborder="0" allowfullscreen></iframe>
+```
+
+### Raw HTML (for advanced layouts)
+
+```markdown
+<div style="display: flex; gap: 1rem;">
+  <img src="/uploads/img1.png" style="width: 50%;" />
+  <img src="/uploads/img2.png" style="width: 50%;" />
+</div>
+```
+
+---
+
+## 5 · Writing Style
+
+### English
+- **Tone**: Senior developer explaining to a CTO — professional, confident, specific
+- **Voice**: First-person plural: "We built…", "Our approach…"
+- **Length**: 1,200–2,000 words (7-10 min read)
+- **SEO**: Weave project name + key tech into headings naturally
+- **No fluff**: Every paragraph delivers information or insight
+- **Use emojis in headings**: ⚡ 🔄 📊 🎨 🔐 — they render great in our theme
+
+### Arabic
+- **Tone**: Same confidence, adapted for Arabic tech audience
+- **Voice**: First-person plural: بنينا، نهجنا، طوّرنا
+- **Tech terms**: Keep in English when industry-standard (API, SaaS, CI/CD)
+- **Length**: Match English depth — Arabic naturally reads ~10% shorter
+- **Not machine-translated**: Rethink the phrasing, don't translate word-by-word
+
+---
+
+## 6 · Quality Checklist
+
+Before delivering, verify ALL of these:
+
+**Structure:**
+- [ ] All 7 sections present (Metadata, EN, AR, Cover, Tags, Screenshots, Generated)
+- [ ] Slug is kebab-case, ≤60 chars
+- [ ] Both titles ≤ 70 characters
+- [ ] Both excerpts ≤ 160 characters
+
+**Content Quality:**
+- [ ] English ≥ 1,200 words
+- [ ] Results section has ≥ 2 concrete metrics with numbers
+- [ ] Tech stack table complete with "Why" column
+- [ ] No lorem ipsum, no generic filler, no placeholder text
 - [ ] Footer CTA links to asra3.com
-- [ ] Arabic reads naturally (not machine-translated)
-- [ ] Headings use proper hierarchy (## for sections, ### for subsections)
-- [ ] All markdown renders correctly (no broken syntax)
+
+**Images:**
+- [ ] Every image has `SCREENSHOT:` or `GENERATE:` prefix
+- [ ] Alt texts are `kebab-case`, start with project name, ≤ 50 chars
+- [ ] Screenshots list tells user EXACTLY what to capture
+- [ ] Generated images have full, detailed prompts
+- [ ] All generated image prompts reference asra3 brand colors (#10b981 on #0a0a0a)
+
+**Arabic:**
+- [ ] Arabic content matches English structure
+- [ ] Same image references used
+- [ ] Reads naturally (not translated)
+
+**Markdown:**
+- [ ] Uses `##` for sections, `###` for subsections
+- [ ] Tables have alignment markers
+- [ ] At least one blockquote used
+- [ ] At least one emphasized metric callout used
+- [ ] Horizontal rule before footer CTA
 
 ---
 
-## Admin Panel Field Mapping
+## 7 · Admin Panel Quick-Paste Map
 
-This maps each output to the exact admin panel field:
-
-| Output | Admin Field | Notes |
-|--------|------------|-------|
-| `SLUG` | Slug | Auto-generates from title if empty |
-| `TITLE (EN)` | Title (English tab) | |
-| `TITLE (AR)` | Title (Arabic tab) | |
-| `EXCERPT (EN)` | Excerpt (English tab) | Also used as meta description |
-| `EXCERPT (AR)` | Excerpt (Arabic tab) | |
-| `CONTENT (EN)` | Content (English tab) | Paste raw markdown. Supports visual + markdown editor modes |
-| `CONTENT (AR)` | Content (Arabic tab) | Paste raw markdown |
-| `COVER IMAGE` | Cover Image URL | Generate image first, upload, paste URL |
-| `TAGS` | Tags | Use the tag input component — add each tag individually |
-| `LINKED PROJECT` | Project dropdown | Select from existing projects |
-| `PUBLISHED` | Published toggle | Set to true when ready |
+| Output | Admin Panel Field | How |
+|:-------|:-----------------|:----|
+| `SLUG` | Slug input | Paste directly |
+| `TITLE_EN` | Title (English tab) | Paste directly |
+| `TITLE_AR` | Title (Arabic tab) | Paste directly |
+| `EXCERPT_EN` | Excerpt (English tab) | Paste directly |
+| `EXCERPT_AR` | Excerpt (Arabic tab) | Paste directly |
+| `§2 content` | Content (English tab) | Paste in Markdown mode |
+| `§3 content` | Content (Arabic tab) | Paste in Markdown mode |
+| Cover image | Cover Image field | Upload image → paste URL, or click ⬆️ button |
+| Tags | Tags input | Add each tag individually |
+| Linked Project | Project dropdown | Select from list |
+| Published | Toggle | Switch ON |
 
 ---
 
-## Example: Minimal Quick Post
+## 8 · Quick Post Mode
 
-If the user wants a shorter post (e.g., for a small automation), reduce to:
+For small automations / integrations (< 500 words):
 
-1. **The Problem** (1 paragraph)
-2. **The Solution** (1 paragraph)
+1. **Problem** (1 paragraph)
+2. **Solution** (1 paragraph)
 3. **How It Works** (3 bullet points)
-4. **Tech Used** (inline list, no table)
-5. **Result** (1 key metric)
+4. **Tech Used** (inline comma list, no table)
+5. **Result** (1 key metric in a blockquote)
 
-Still provide ALL metadata fields even for short posts.
+Still provide ALL §1 metadata + §5 tags + §6/§7 image lists.
