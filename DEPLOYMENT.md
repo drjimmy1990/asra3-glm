@@ -203,3 +203,83 @@ ln -sfn /www/wwwroot/asra3.com/public/uploads /www/wwwroot/asra3.com/.next/stand
 
 # 6. Restart
 pm2 restart asra3
+
+
+
+
+
+
+
+
+cd /www/wwwroot/asra3.com
+git pull origin master
+npm install --legacy-peer-deps
+npm run build
+ln -sfn /www/wwwroot/asra3.com/public/uploads /www/wwwroot/asra3.com/.next/standalone/public/uploads
+pm2 restart asra3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 0. BACKUP DB FIRST
+cp /www/wwwroot/asra3.com/db/custom.db /root/custom.db.backup
+
+# 1. Stop & remove old process
+pm2 delete asra3
+
+# 2. Delete old project
+rm -rf /www/wwwroot/asra3.com
+
+# 3. Clone fresh
+cd /www/wwwroot
+git clone https://github.com/drjimmy1990/asra3-glm asra3.com
+cd asra3.com
+
+# 4. Create .env
+cat > /www/wwwroot/asra3.com/.env << 'EOF'
+NODE_ENV=production
+DATABASE_URL="file:/www/wwwroot/asra3.com/db/custom.db"
+PORT=3008
+EOF
+
+# 5. Restore DB
+mkdir -p /www/wwwroot/asra3.com/db
+cp /root/custom.db.backup /www/wwwroot/asra3.com/db/custom.db
+
+# 6. Install
+npm install --legacy-peer-deps
+
+# 7. Generate Prisma + Build
+npx prisma generate
+npm run build
+
+# 8. Relink uploads
+ln -sfn /www/wwwroot/asra3.com/public/uploads /www/wwwroot/asra3.com/.next/standalone/public/uploads
+
+# 9. Start with ecosystem file (port + DB path hardcoded)
+pm2 start ecosystem.config.js
+pm2 save
+
+# 10. Verify
+pm2 flush asra3
+pm2 logs asra3 --lines 15
