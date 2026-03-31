@@ -48,12 +48,12 @@ export function HomeClient({ initialData, initialLocale }: HomeClientProps) {
       <Navbar />
       <main className="relative flex-1">
         <Hero data={data} />
-        <TrustedBy />
+        <TrustedBy data={data} />
         <Services data={data} />
         <Process />
         <Results data={data} />
         <Testimonials data={data} />
-        <Advantages />
+        <Advantages data={data} />
         <FAQ data={data} />
         <Contact data={data} />
         <CTABanner />

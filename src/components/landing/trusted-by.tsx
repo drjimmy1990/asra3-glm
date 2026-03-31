@@ -44,6 +44,15 @@ export function TrustedBy({ data }: TrustedByProps) {
     ? (settings.trusted_heading_ar || t('trusted_heading'))
     : (settings.trusted_heading_en || settings.trusted_heading || t('trusted_heading'));
 
+  let displayTools = tools;
+  if (settings.trusted_tools_json) {
+    try {
+      displayTools = JSON.parse(settings.trusted_tools_json);
+    } catch (error) {
+      console.error('Failed to parse trusted_tools_json', error);
+    }
+  }
+
   return (
     <section className="relative py-20 border-y border-border/40 overflow-hidden">
       {/* Subtle background glow */}
@@ -74,7 +83,7 @@ export function TrustedBy({ data }: TrustedByProps) {
           viewport={{ once: true, margin: '-50px' }}
           className="relative flex flex-wrap items-center justify-center gap-3 sm:gap-4"
         >
-          {tools.map((tool) => (
+          {displayTools.map((tool: { name: string, icon: string }) => (
             <motion.div
               key={tool.name}
               variants={item}

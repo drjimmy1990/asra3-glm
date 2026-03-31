@@ -10,7 +10,7 @@ export async function GET() {
     const rows = await db.$queryRawUnsafe(
       'SELECT * FROM ContactSubmission ORDER BY createdAt DESC'
     );
-    const items = rows.map((r: Record<string, unknown>) => ({
+    const items = (rows as Record<string, unknown>[]).map((r: Record<string, unknown>) => ({
       ...r,
       read: Boolean(r.read),
     }));

@@ -5,6 +5,7 @@ import { toast } from '@/hooks/use-toast';
 import { Settings, Loader2, Globe, BarChart3, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -48,6 +49,8 @@ export default function AdminSettingsPage() {
   const [saving, setSaving] = useState(false);
   const [heroTab, setHeroTab] = useState<'en' | 'ar'>('en');
   const [statsTab, setStatsTab] = useState<'en' | 'ar'>('en');
+  const [techTab, setTechTab] = useState<'en' | 'ar'>('en');
+  const [advTab, setAdvTab] = useState<'en' | 'ar'>('en');
 
   const fetchSettings = useCallback(async () => {
     try {
@@ -295,6 +298,136 @@ export default function AdminSettingsPage() {
               {i < 4 && <Separator className="mt-6" />}
             </div>
           ))}
+        </CardContent>
+      </Card>
+
+      {/* Tech Stack */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Globe className="size-4 text-primary" />
+              <CardTitle className="text-base">{techTab === 'en' ? 'Tech Stack (Trusted By)' : 'التقنيات (موثوق من)'}</CardTitle>
+            </div>
+            <LanguageTabs activeTab={techTab} onTabChange={setTechTab} />
+          </div>
+          <CardDescription>
+            {techTab === 'en' 
+              ? 'Configure the tech stack tools displayed on the landing page'
+              : 'قم بتكوين تفاصيل قسم التقنيات المعروض في الصفحة الرئيسية'
+            }
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          <div className="space-y-2">
+            <Label>Heading ({techTab === 'en' ? 'English' : 'العربية'})</Label>
+            <Input
+              value={settings[`trusted_heading_${techTab}`] || ''}
+              onChange={(e) => updateSetting(`trusted_heading_${techTab}`, e.target.value)}
+              dir={techTab === 'ar' ? 'rtl' : 'ltr'}
+              placeholder={techTab === 'en' ? 'Technologies I work with' : 'التقنيات التي أعمل بها'}
+            />
+          </div>
+          <div className="space-y-2 mt-4">
+            <Label>Tools (JSON Array)</Label>
+            <Textarea
+              className="font-mono text-sm h-64"
+              value={settings.trusted_tools_json || ''}
+              onChange={(e) => updateSetting('trusted_tools_json', e.target.value)}
+              placeholder={'[\n  { "name": "React", "icon": "⚛️" }\n]'}
+              dir="ltr"
+            />
+            <p className="text-xs text-muted-foreground">Modify the JSON carefully. Keep the structure as `{"{"}"name": "...", "icon": "..."{"}"}`.</p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Advantages (Why Me) */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Globe className="size-4 text-primary" />
+              <CardTitle className="text-base">{advTab === 'en' ? 'Advantages (Why Choose Me)' : 'المميزات'}</CardTitle>
+            </div>
+            <LanguageTabs activeTab={advTab} onTabChange={setAdvTab} />
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label>Subtitle ({advTab === 'en' ? 'English' : 'العربية'})</Label>
+              <Input
+                value={settings[`adv_sub_${advTab}`] || ''}
+                onChange={(e) => updateSetting(`adv_sub_${advTab}`, e.target.value)}
+                dir={advTab === 'ar' ? 'rtl' : 'ltr'}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Heading Highlight ({advTab === 'en' ? 'English' : 'العربية'})</Label>
+              <Input
+                value={settings[`adv_heading_highlight_${advTab}`] || ''}
+                onChange={(e) => updateSetting(`adv_heading_highlight_${advTab}`, e.target.value)}
+                dir={advTab === 'ar' ? 'rtl' : 'ltr'}
+              />
+            </div>
+          </div>
+          
+          <div className="space-y-2">
+            <Label>Heading ({advTab === 'en' ? 'English' : 'العربية'})</Label>
+            <Input
+              value={settings[`adv_heading_${advTab}`] || ''}
+              onChange={(e) => updateSetting(`adv_heading_${advTab}`, e.target.value)}
+              dir={advTab === 'ar' ? 'rtl' : 'ltr'}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Description ({advTab === 'en' ? 'English' : 'العربية'})</Label>
+            <Textarea
+              value={settings[`adv_desc_${advTab}`] || ''}
+              onChange={(e) => updateSetting(`adv_desc_${advTab}`, e.target.value)}
+              dir={advTab === 'ar' ? 'rtl' : 'ltr'}
+              className="h-20"
+            />
+          </div>
+
+          <Separator className="my-6" />
+          
+          {[1, 2, 3].map((tier) => (
+            <div key={tier} className="space-y-4">
+              <div className="font-medium text-primary">Tier {tier}</div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label>Name ({advTab === 'en' ? 'English' : 'العربية'})</Label>
+                  <Input
+                    value={settings[`adv_tier${tier}_name_${advTab}`] || ''}
+                    onChange={(e) => updateSetting(`adv_tier${tier}_name_${advTab}`, e.target.value)}
+                    dir={advTab === 'ar' ? 'rtl' : 'ltr'}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Description ({advTab === 'en' ? 'English' : 'العربية'})</Label>
+                  <Input
+                    value={settings[`adv_tier${tier}_desc_${advTab}`] || ''}
+                    onChange={(e) => updateSetting(`adv_tier${tier}_desc_${advTab}`, e.target.value)}
+                    dir={advTab === 'ar' ? 'rtl' : 'ltr'}
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Features (One per line) ({advTab === 'en' ? 'English' : 'العربية'})</Label>
+                <Textarea
+                  value={settings[`adv_tier${tier}_features_${advTab}`] || ''}
+                  onChange={(e) => updateSetting(`adv_tier${tier}_features_${advTab}`, e.target.value)}
+                  dir={advTab === 'ar' ? 'rtl' : 'ltr'}
+                  className="h-32 leading-relaxed"
+                />
+              </div>
+              {tier < 3 && <Separator className="mt-6 mb-6 opacity-30" />}
+            </div>
+          ))}
+
         </CardContent>
       </Card>
 

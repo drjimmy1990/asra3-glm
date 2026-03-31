@@ -20,7 +20,7 @@ export async function PUT(request: NextRequest) {
   if (!(await auth())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   try {
     const body: Record<string, string> = await request.json();
-    const results = [];
+    const results: any[] = [];
 
     for (const [key, value] of Object.entries(body)) {
       const result = await db.siteSetting.upsert({

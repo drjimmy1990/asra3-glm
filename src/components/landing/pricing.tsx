@@ -4,29 +4,55 @@ import { motion } from 'framer-motion';
 import { Check, Zap, Rocket, Shield } from 'lucide-react';
 import { useLocale } from '@/lib/i18n';
 import { translations } from '@/lib/translations';
+import type { SiteData } from '@/hooks/use-site-data';
 
-export function Advantages() {
+interface AdvantagesProps {
+  data?: SiteData;
+}
+
+export function Advantages({ data }: AdvantagesProps) {
   const { t, locale } = useLocale();
   const tr = translations[locale];
+  const settings = data?.settings || {};
+
+  // Helper to get localized setting
+  const getSetting = (key: string, fallbackKey: keyof typeof tr) => {
+    const value = locale === 'ar' 
+      ? (settings[`${key}_ar`] || settings[key] || t(fallbackKey as any))
+      : (settings[`${key}_en`] || settings[key] || t(fallbackKey as any));
+    return value;
+  };
+
+  // Helper to get features list (split by newline if from DB)
+  const getFeatures = (key: string, fallback: readonly string[]) => {
+    const value = locale === 'ar'
+      ? (settings[`${key}_ar`] || settings[key])
+      : (settings[`${key}_en`] || settings[key]);
+    
+    if (value) {
+      return value.split('\n').filter((f: string) => f.trim() !== '');
+    }
+    return fallback;
+  };
 
   const tiers = [
     {
       icon: Zap,
-      name: t('adv_tier_quick'),
-      description: t('adv_tier_quick_desc'),
-      features: tr.adv_quick_features as readonly string[],
+      name: getSetting('adv_tier1_name', 'adv_tier_quick'),
+      description: getSetting('adv_tier1_desc', 'adv_tier_quick_desc'),
+      features: getFeatures('adv_tier1_features', tr.adv_quick_features as readonly string[]),
     },
     {
       icon: Rocket,
-      name: t('adv_tier_full'),
-      description: t('adv_tier_full_desc'),
-      features: tr.adv_full_features as readonly string[],
+      name: getSetting('adv_tier2_name', 'adv_tier_full'),
+      description: getSetting('adv_tier2_desc', 'adv_tier_full_desc'),
+      features: getFeatures('adv_tier2_features', tr.adv_full_features as readonly string[]),
     },
     {
       icon: Shield,
-      name: t('adv_tier_enterprise'),
-      description: t('adv_tier_enterprise_desc'),
-      features: tr.adv_enterprise_features as readonly string[],
+      name: getSetting('adv_tier3_name', 'adv_tier_enterprise'),
+      description: getSetting('adv_tier3_desc', 'adv_tier_enterprise_desc'),
+      features: getFeatures('adv_tier3_features', tr.adv_enterprise_features as readonly string[]),
     },
   ];
 
@@ -37,11 +63,11 @@ export function Advantages() {
     <section id="advantages" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="relative text-center max-w-3xl mx-auto mb-16">
-          <p className="text-sm font-semibold text-primary tracking-wider uppercase mb-3">{t('adv_sub')}</p>
+          <p className="text-sm font-semibold text-primary tracking-wider uppercase mb-3">{getSetting('adv_sub', 'adv_sub')}</p>
           <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
-            {t('adv_heading')} <span className="text-primary">{t('adv_heading_highlight')}</span>
+            {getSetting('adv_heading', 'adv_heading')} <span className="text-primary">{getSetting('adv_heading_highlight', 'adv_heading_highlight')}</span>
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground leading-relaxed">{t('adv_desc')}</p>
+          <p className="mt-4 text-lg text-muted-foreground leading-relaxed">{getSetting('adv_desc', 'adv_desc')}</p>
         </motion.div>
 
         <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-50px' }} className="relative grid gap-8 lg:grid-cols-3 items-start">
