@@ -28,6 +28,7 @@ const notoArabic = Noto_Sans_Arabic({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://asra3.com"),
   title: "asra3.com | SaaS & Automation Solutions",
   description:
     "I build high-performance SaaS products and intelligent automation solutions that save your business time, reduce costs, and drive scalable growth.",
@@ -45,11 +46,19 @@ export const metadata: Metadata = {
     title: "asra3.com | SaaS & Automation Solutions",
     description: "Transform your business with custom SaaS products and intelligent automation.",
     type: "website",
+    url: "https://asra3.com",
   },
   twitter: {
     card: "summary_large_image",
     title: "asra3.com | SaaS & Automation Solutions",
     description: "Transform your business with custom SaaS products and intelligent automation.",
+  },
+  alternates: {
+    canonical: "https://asra3.com",
+    languages: {
+      "en": "https://asra3.com/en",
+      "ar": "https://asra3.com/ar",
+    },
   },
 };
 
@@ -59,6 +68,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    // lang/dir are set as defaults here. The LocaleProvider (initialized with the
+    // URL locale) updates document.documentElement.lang and .dir client-side.
     <html lang="en" dir="ltr" suppressHydrationWarning data-scroll-behavior="smooth">
       <body
         className={`${interSans.variable} ${spaceGrotesk.variable} ${geistMono.variable} ${notoArabic.variable} antialiased bg-background text-foreground relative`}

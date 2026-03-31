@@ -3,13 +3,13 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useParams } from 'next/navigation';
 import { useLocale } from '@/lib/i18n';
 import {
   ArrowRight,
   ArrowLeft,
   Calendar,
   Clock,
-  Tag,
   FileText,
   Loader2,
 } from 'lucide-react';
@@ -37,7 +37,9 @@ function estimateReadTime(content: string): number {
   return Math.max(1, Math.ceil(words / 200));
 }
 
-export default function BlogPage() {
+export default function BlogListClient() {
+  const params = useParams();
+  const localeParam = (params?.locale as string) || 'ar';
   const { locale, isRTL, t } = useLocale();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -60,12 +62,15 @@ export default function BlogPage() {
     fetchPosts();
   }, [locale]);
 
+  const blogHref = (slug: string) => `/${localeParam}/blog/${slug}`;
+  const homeHref = `/${localeParam}`;
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
       <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-xl">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href={homeHref} className="flex items-center gap-2 group">
             <div className="flex items-center justify-center size-9 rounded-xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-md shadow-primary/20 group-hover:shadow-lg group-hover:shadow-primary/30 transition-shadow">
               <FileText className="size-4" />
             </div>
@@ -75,7 +80,7 @@ export default function BlogPage() {
             </span>
           </Link>
           <Link
-            href="/"
+            href={homeHref}
             className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
           >
             {isRTL ? <ArrowRight className="size-4" /> : null}
@@ -134,11 +139,10 @@ export default function BlogPage() {
               return (
                 <Link
                   key={post.id}
-                  href={`/blog/${post.slug}`}
+                  href={blogHref(post.slug)}
                   className="group relative flex flex-col rounded-2xl border bg-background/60 backdrop-blur-sm overflow-hidden hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  {/* Cover */}
                   {post.coverImage ? (
                     <div className="relative aspect-[16/9] overflow-hidden bg-muted">
                       <Image
@@ -157,9 +161,7 @@ export default function BlogPage() {
                     </div>
                   )}
 
-                  {/* Content */}
                   <div className="flex flex-col flex-1 p-5 sm:p-6">
-                    {/* Tags */}
                     {parsedTags.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 mb-3">
                         {parsedTags.slice(0, 3).map((tag) => (
@@ -180,7 +182,6 @@ export default function BlogPage() {
                       </p>
                     )}
 
-                    {/* Meta */}
                     <div className="flex items-center gap-4 text-xs text-muted-foreground mt-auto pt-4 border-t border-border/50">
                       <span className="flex items-center gap-1">
                         <Calendar className="size-3.5" />
@@ -199,7 +200,6 @@ export default function BlogPage() {
         )}
       </main>
 
-      {/* Footer */}
       <footer className="border-t py-8 mt-12">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
           © {new Date().getFullYear()} asra3.com — {isRTL ? 'جميع الحقوق محفوظة' : 'All rights reserved'}

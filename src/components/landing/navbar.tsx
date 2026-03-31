@@ -8,6 +8,7 @@ import { useTheme } from 'next-themes';
 import { useLocale } from '@/lib/i18n';
 import { Logo } from '@/components/ui/logo';
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -15,6 +16,8 @@ export function Navbar() {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
   const { locale, setLocale, t, isRTL } = useLocale();
+  const pathname = usePathname();
+  const router = useRouter();
   const ticking = useRef(false);
 
   useEffect(() => {
@@ -44,7 +47,15 @@ export function Navbar() {
     { label: t('nav_faq'), href: '#faq' },
   ];
 
-  const toggleLocale = () => setLocale(locale === 'en' ? 'ar' : 'en');
+  const toggleLocale = () => {
+    const nextLocale = locale === 'en' ? 'ar' : 'en';
+    // Swap the locale prefix in the current URL
+    const newPath = pathname.replace(/^\/(en|ar)/, `/${nextLocale}`);
+    router.push(newPath || `/${nextLocale}`);
+  };
+
+  // Blog link is locale-aware
+  const blogHref = `/${locale}/blog`;
 
   return (
     <header
@@ -69,7 +80,7 @@ export function Navbar() {
             </a>
           ))}
           <Link
-            href="/blog"
+            href={blogHref}
             className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-accent flex items-center gap-1.5"
           >
             <BookOpen className="size-3.5" />
@@ -129,7 +140,7 @@ export function Navbar() {
                 </a>
               ))}
               <Link
-                href="/blog"
+                href={blogHref}
                 onClick={() => setMobileOpen(false)}
                 className="rounded-md px-3 py-2.5 text-base font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-accent flex items-center gap-2"
               >

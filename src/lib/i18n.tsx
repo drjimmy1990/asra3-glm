@@ -3,6 +3,8 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { translations, type Locale, type TranslationKey } from './translations';
 
+export type { Locale };
+
 interface LocaleContextType {
   locale: Locale;
   setLocale: (l: Locale) => void;
@@ -23,24 +25,38 @@ export function useLocale() {
   return useContext(LocaleContext);
 }
 
-export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>('en');
+export function LocaleProvider({
+  children,
+  defaultLocale,
+}: {
+  children: React.ReactNode;
+  defaultLocale?: Locale;
+}) {
+  // Initialize with URL-provided locale (from [locale] segment) if available,
+  // otherwise fall back to 'en'
+  const [locale, setLocaleState] = useState<Locale>(defaultLocale || 'en');
 
   useEffect(() => {
+    // If a defaultLocale was provided by the URL, trust it and persist it
+    if (defaultLocale) {
+      setLocaleState(defaultLocale);
+      localStorage.setItem('asra3-locale', defaultLocale);
+      document.cookie = `asra3-locale=${defaultLocale};path=/;max-age=${60 * 60 * 24 * 365};SameSite=Lax`;
+      return;
+    }
+    // Fallback: read from localStorage for pages without locale segment
     const saved = localStorage.getItem('asra3-locale') as Locale | null;
     if (saved === 'ar' || saved === 'en') {
-      // Defer state update to avoid synchronous setState in effect
       const timer = requestAnimationFrame(() => setLocaleState(saved));
       return () => cancelAnimationFrame(timer);
     }
-  }, []);
+  }, [defaultLocale]);
 
   useEffect(() => {
     const dir = locale === 'ar' ? 'rtl' : 'ltr';
     document.documentElement.dir = dir;
     document.documentElement.lang = locale;
     localStorage.setItem('asra3-locale', locale);
-    // Also set a cookie so Server Components can read the locale
     document.cookie = `asra3-locale=${locale};path=/;max-age=${60 * 60 * 24 * 365};SameSite=Lax`;
   }, [locale]);
 

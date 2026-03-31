@@ -51,15 +51,19 @@ function estimateReadTime(content: string): number {
   return Math.max(1, Math.ceil(words / 200));
 }
 
-export default function BlogPostPage() {
+export default function BlogPostClient() {
   const params = useParams();
   const slug = params?.slug as string;
+  const localeParam = (params?.locale as string) || 'ar';
   const { locale, isRTL } = useLocale();
   const [post, setPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const Arrow = isRTL ? ArrowLeft : ArrowRight;
   const BackArrow = isRTL ? ArrowRight : ArrowLeft;
+
+  const blogHref = `/${localeParam}/blog`;
+  const homeHref = `/${localeParam}`;
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -107,7 +111,7 @@ export default function BlogPostPage() {
         <p className="text-muted-foreground mb-6">
           {isRTL ? 'هذا المقال غير متاح أو تم حذفه' : "This post doesn't exist or has been removed"}
         </p>
-        <Link href="/blog">
+        <Link href={blogHref}>
           <Button>
             <BackArrow className="size-4 me-2" />
             {isRTL ? 'العودة للمدونة' : 'Back to Blog'}
@@ -130,10 +134,9 @@ export default function BlogPostPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30" dir={isRTL ? 'rtl' : 'ltr'}>
-      {/* Header */}
       <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-xl">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/blog" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+          <Link href={blogHref} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
             <BackArrow className="size-4" />
             {isRTL ? 'العودة للمدونة' : 'Back to Blog'}
           </Link>
@@ -141,7 +144,7 @@ export default function BlogPostPage() {
             <Button variant="ghost" size="icon" className="size-9" onClick={handleShare}>
               <Share2 className="size-4" />
             </Button>
-            <Link href="/">
+            <Link href={homeHref}>
               <Button variant="outline" size="sm">
                 {isRTL ? 'الرئيسية' : 'Home'}
               </Button>
@@ -151,9 +154,7 @@ export default function BlogPostPage() {
       </header>
 
       <article className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        {/* Hero Section */}
         <div className="max-w-3xl mx-auto mb-8 sm:mb-12">
-          {/* Tags */}
           {parsedTags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-4">
               {parsedTags.map((tag) => (
@@ -175,7 +176,6 @@ export default function BlogPostPage() {
             </p>
           )}
 
-          {/* Meta */}
           <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground pb-6 border-b">
             <span className="flex items-center gap-1.5">
               <Calendar className="size-4" />
@@ -196,7 +196,6 @@ export default function BlogPostPage() {
           </div>
         </div>
 
-        {/* Cover Image */}
         {post.coverImage && (
           <div className="max-w-4xl mx-auto mb-8 sm:mb-12 rounded-2xl overflow-hidden shadow-lg relative aspect-video">
             <Image
@@ -210,7 +209,6 @@ export default function BlogPostPage() {
           </div>
         )}
 
-        {/* Content */}
         <div className="max-w-3xl mx-auto">
           <div className="prose prose-lg dark:prose-invert max-w-none
             prose-headings:font-bold prose-headings:tracking-tight
@@ -228,36 +226,24 @@ export default function BlogPostPage() {
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeRaw]}
               components={{
-                // Wrap tables in scrollable container for mobile
                 table: ({ children }) => (
                   <div className="overflow-x-auto -mx-4 px-4 my-6">
                     <table>{children}</table>
                   </div>
                 ),
-                // Support alignment from GFM tables
-                th: ({ children, style }) => (
-                  <th style={style}>{children}</th>
-                ),
-                td: ({ children, style }) => (
-                  <td style={style}>{children}</td>
-                ),
-                // Paragraphs with proper spacing
-                p: ({ children }) => (
-                  <p className="my-4 leading-relaxed">{children}</p>
-                ),
-                // Custom image handler with size syntax
+                th: ({ children, style }) => <th style={style}>{children}</th>,
+                td: ({ children, style }) => <td style={style}>{children}</td>,
+                p: ({ children }) => <p className="my-4 leading-relaxed">{children}</p>,
                 img: ({ node, alt, src, ...props }) => {
                   let width: string | undefined;
                   let height: string | undefined;
                   let cleanAlt = alt || '';
-
                   const sizeMatch = cleanAlt.match(/^(.*?)\|(\d+)x(\d+)$/);
                   if (sizeMatch) {
                     cleanAlt = sizeMatch[1];
                     width = sizeMatch[2];
                     height = sizeMatch[3];
                   }
-
                   return (
                     <span className="block my-6">
                       {width && height ? (
@@ -267,11 +253,7 @@ export default function BlogPostPage() {
                           width={parseInt(width, 10)}
                           height={parseInt(height, 10)}
                           className="rounded-xl shadow-md mx-auto"
-                          style={{
-                            maxWidth: '100%',
-                            height: 'auto',
-                            width: `${width}px`,
-                          }}
+                          style={{ maxWidth: '100%', height: 'auto', width: `${width}px` }}
                           {...(props as any)}
                         />
                       ) : (
@@ -299,7 +281,6 @@ export default function BlogPostPage() {
           </div>
         </div>
 
-        {/* Project Link */}
         {post.project && (
           <div className="max-w-3xl mx-auto mt-12 p-6 rounded-2xl border bg-muted/30">
             <div className="flex items-center gap-3 mb-2">
@@ -320,9 +301,8 @@ export default function BlogPostPage() {
           </div>
         )}
 
-        {/* Back to Blog CTA */}
         <div className="max-w-3xl mx-auto mt-12 text-center">
-          <Link href="/blog">
+          <Link href={blogHref}>
             <Button variant="outline" size="lg">
               <BackArrow className="size-4 me-2" />
               {isRTL ? 'جميع المقالات' : 'All Posts'}
@@ -331,7 +311,6 @@ export default function BlogPostPage() {
         </div>
       </article>
 
-      {/* Footer */}
       <footer className="border-t py-8 mt-12">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
           © {new Date().getFullYear()} asra3.com — {isRTL ? 'جميع الحقوق محفوظة' : 'All rights reserved'}
