@@ -1,53 +1,16 @@
-# asra3.com — aaPanel Deployment Guide
+# asra3.com — CLI Deployment Guide (Recommended)
 
-> Complete guide to deploy asra3.com on a VPS using aaPanel (BT Panel).
-
----
-
-## Prerequisites
-
-| Requirement | Minimum |
-|------------|---------|
-| VPS | Ubuntu 20.04+ / Debian 11+ |
-| RAM | 1 GB (2 GB recommended) |
-| Disk | 10 GB |
-| aaPanel | v7.x+ installed |
-| Node.js | v20+ (LTS) |
-| Domain | Pointed to VPS IP via A record |
+> This guide focuses on deploying using the **Command Line (Terminal)** for maximum control and reliability.
 
 ---
 
-## Step 1: Install aaPanel
+## Step 1: Server Preparation
 
-If aaPanel is not yet installed:
-
-```bash
-# Ubuntu/Debian
-wget -O install.sh https://www.aapanel.com/script/install_7.0_en.sh && bash install.sh aapanel
-```
-
-After installation, log in to the panel at `http://YOUR_IP:8888` and install:
-- **Nginx** (recommended over Apache)
-- **Node.js Manager** (from App Store → Runtime)
+Ensure your aaPanel has **Nginx** and **Node.js Manager** installed. Install **Node v20 LTS** and set it as the "Command line version".
 
 ---
 
-## Step 2: Install Node.js 20+ via aaPanel
-
-1. Go to **App Store → Runtime → Node.js Manager**
-2. Install **Node.js v20.x** (or later LTS)
-3. Verify from SSH:
-
-```bash
-node -v   # Should show v20.x+
-npm -v    # Should show 10.x+
-```
-
----
-
-## Step 3: Upload Project Files
-
-### Option A: Git Clone (Recommended)
+## Step 2: Upload Project
 
 ```bash
 cd /www/wwwroot/
@@ -55,351 +18,148 @@ git clone https://github.com/drjimmy1990/asra3-glm asra3.com
 cd asra3.com
 ```
 
-### Option B: Upload via aaPanel File Manager
-
-1. Go to **Files** in aaPanel
-2. Navigate to `/www/wwwroot/`
-3. Upload your project zip
-4. Extract to `/www/wwwroot/asra3.com/`
-
 ---
 
-## Step 4: Install Dependencies & Build
+## Step 3: Environment Config
 
-```bash
-cd /www/wwwroot/asra3.com
-
-# Install dependencies
-npm install
-
-# Generate Prisma client
-npx prisma generate
-
-# Initialize SQLite database (creates prisma/dev.db)
-npx prisma db push
-
-# Seed initial data (admin password, default settings)
-npx tsx scripts/seed-settings.ts
-
-# Build the production bundle
-npm run build
-```
-
-**Important**: The `output: "standalone"` config in `next.config.ts` means the build creates a self-contained `.next/standalone/` directory.
-
----
-
-## Step 5: Create Environment File
-
-```bash
-nano /www/wwwroot/asra3.com/.env
-```
-
-Add:
+Ensure your `/www/wwwroot/asra3.com/.env` contains:
 
 ```env
 NODE_ENV=production
-DATABASE_URL="file:./prisma/dev.db"
-```
-
-> **Note**: The SQLite database file lives at `prisma/dev.db`. No external DB server needed.
-
----
-
-## Step 6: Set Up the Standalone Server
-
-Next.js standalone mode requires a specific file structure:
-
-```bash
-cd /www/wwwroot/asra3.com
-
-# Copy static assets into standalone
-cp -r public .next/standalone/public
-cp -r .next/static .next/standalone/.next/static
-
-# Copy the database into standalone
-cp -r prisma .next/standalone/prisma
-
-# Copy uploads directory (if exists)
-mkdir -p .next/standalone/public/uploads
-cp -r public/uploads/* .next/standalone/public/uploads/ 2>/dev/null || true
+DATABASE_URL="file:./db/custom.db"
+PORT=3005
 ```
 
 ---
 
-## Step 7: Test the Server
+## Step 4: Install & Build (Production)
+
+Run these commands to prepare the high-performance standalone server:
 
 ```bash
-cd /www/wwwroot/asra3.com/.next/standalone
-PORT=3000 node server.js
-```
+# 1. Install dependencies (ignoring peer conflicts)
+npm install --legacy-peer-deps
 
-Visit `http://YOUR_IP:3000` to verify. Press `Ctrl+C` to stop.
+# 2. Generate database connector
+npx prisma generate
+
+# 3. Build & Prepare
+# (NOTE: Our updated build script automatically copies 'public', 'static', and 'db' for you!)
+npm run build
+
+# 4. Final step: Copy your server .env inside the standalone folder
+mkdir -p .next/standalone/db
+cp .env .next/standalone/.env
+```
 
 ---
 
-## Step 8: Create PM2 Process (Background Service)
-
-Install PM2 globally:
+## Step 5: Start Background Process (PM2)
 
 ```bash
+# Install PM2 globally
 npm install -g pm2
-```
 
-Create an ecosystem config:
+# Start the app on Port 3005
+PORT=3005 pm2 start .next/standalone/server.js --name "asra3"
 
-```bash
-nano /www/wwwroot/asra3.com/ecosystem.config.js
-```
-
-```javascript
-module.exports = {
-  apps: [{
-    name: 'asra3',
-    cwd: '/www/wwwroot/asra3.com/.next/standalone',
-    script: 'server.js',
-    env: {
-      NODE_ENV: 'production',
-      PORT: 3000,
-      DATABASE_URL: 'file:./prisma/dev.db',
-    },
-    instances: 1,
-    autorestart: true,
-    max_memory_restart: '512M',
-    watch: false,
-  }],
-};
-```
-
-Start the process:
-
-```bash
-cd /www/wwwroot/asra3.com
-pm2 start ecosystem.config.js
+# Ensure it starts on server reboot
 pm2 save
-pm2 startup  # Follow the instructions to enable auto-start on reboot
-```
-
-Useful PM2 commands:
-
-```bash
-pm2 status         # Check running processes
-pm2 logs asra3     # View logs
-pm2 restart asra3  # Restart after updates
-pm2 stop asra3     # Stop the server
+pm2 startup
 ```
 
 ---
 
-## Step 8: Standard UI Deployment (aaPanel Node Project)
+## Step 6: Configure Nginx (CLI)
 
-The easiest way to deploy is using the **"Add Node project"** UI in aaPanel.
-
-### 8a. Add Project (PM2 Project Tab)
-In **Website** -> **Node Project** -> **Add Project** -> **PM2 Project** tab:
-
-1. **Project Name**: `asra3`
-2. **Node Version**: Select **v20.14.0** or higher.
-3. **Startup File**: Click the folder icon and select:
-   `/www/wwwroot/asra3.com/.next/standalone/server.js`
-4. **Run Directory**: Click the folder icon and select:
-   `/www/wwwroot/asra3.com/.next/standalone`
-5. **Memory Limit**: Set to `512` or `1024` MB.
-6. **Package Manager**: Select **npm** (not used for running, but required by UI).
-
-### 8b. Set Domain (Default Project Tab)
-In the **Default Project** tab:
-
-1. **Domain Name**: Enter your domain (e.g., `asra3.com`).
-2. **Port**: `3000` (ensure this matches `PORT` in `.env`).
-3. **Allow External Access**: **Toggle ON**.
-
-Click **Confirm**. aaPanel will automatically:
-- Start the server using PM2.
-- Create an Nginx site and reverse proxy to port 3000.
-
----
-
-## Step 9: Configure SSL (HTTPS)
-
-1. Go to **Website** -> **Node Project**.
-2. Click **Add SSL** (or select your site and go to the SSL tab).
-3. Select **Let's Encrypt**.
-4. Check your domain and click **Apply**.
-5. Enable **Force HTTPS**.
-
----
-
-## Step 10: Verify Deployment
+Add the site configuration to aaPanel's Nginx vhost directory:
 
 ```bash
-# Check PM2 status
-pm2 status
+nano /www/server/panel/vhost/nginx/asra3.com.conf
+```
 
-# Check Nginx config
+**Paste this block:**
+
+```nginx
+server {
+    listen 80;
+    server_name asra3.com www.asra3.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:3005;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    access_log /www/wwwlogs/asra3.com.log;
+    error_log /www/wwwlogs/asra3.com.error.log;
+}
+```
+
+**Restart Nginx:**
+```bash
 nginx -t
-
-# Restart Nginx
 service nginx restart
 ```
 
-Visit:
-- `https://asra3.com` — Landing page
-- `https://asra3.com/admin` — Admin panel
-- `https://asra3.com/blog` — Blog listing
+---
+
+## Step 7: (Optional) aaPanel UI Method
+
+If you prefer using the "Add Node project" UI:
+
+1.  **PM2 Project Tab**:
+    - **Startup File**: `/www/wwwroot/asra3.com/.next/standalone/server.js`
+    - **Run Directory**: `/www/wwwroot/asra3.com/.next/standalone`
+2.  **Default Project Tab**:
+    - **Domain**: `asra3.com`
+    - **Port**: `3005`
+    - **External Access**: Enabled.
 
 ---
 
-## Updating the Site
+## Step 8: Updating the Site
 
-When you push new code:
+When you make changes to your code and want to push them to the live server, follow these exact steps in your terminal:
 
 ```bash
 cd /www/wwwroot/asra3.com
 
-# Pull latest code
-git pull origin main
+# 1. Pull the latest code from GitHub
+git pull origin master
 
-# Install any new dependencies
-npm install
+# 2. Install any new dependencies
+npm install --legacy-peer-deps
 
-# Regenerate Prisma (if schema changed)
-npx prisma generate
-npx prisma db push
-
-# Rebuild
+# 3. Rebuild the optimized standalone app (This copies assets automatically)
 npm run build
 
-# Copy static assets to standalone
-cp -r public .next/standalone/public
-cp -r .next/static .next/standalone/.next/static
-cp -r prisma .next/standalone/prisma
-mkdir -p .next/standalone/public/uploads
-cp -r public/uploads/* .next/standalone/public/uploads/ 2>/dev/null || true
+# 4. Copy the environment file to the new build folder
+cp .env .next/standalone/.env
 
-# Restart the server
+# 5. Restart the PM2 process to apply the changes
 pm2 restart asra3
 ```
 
-### Quick Update Script
+---
 
-Create `/www/wwwroot/asra3.com/deploy.sh`:
+## Maintenance Commands
 
-```bash
-#!/bin/bash
-set -e
-
-echo "📦 Pulling latest code..."
-git pull origin main
-
-echo "📥 Installing dependencies..."
-npm install
-
-echo "🔧 Generating Prisma client..."
-npx prisma generate
-npx prisma db push
-
-echo "🏗️  Building..."
-npm run build
-
-echo "📁 Copying assets to standalone..."
-cp -r public .next/standalone/public
-cp -r .next/static .next/standalone/.next/static
-cp -r prisma .next/standalone/prisma
-mkdir -p .next/standalone/public/uploads
-cp -r public/uploads/* .next/standalone/public/uploads/ 2>/dev/null || true
-
-echo "🔄 Restarting PM2..."
-pm2 restart asra3
-
-echo "✅ Deployed successfully!"
-```
-
-Make executable:
-
-```bash
-chmod +x deploy.sh
-```
-
-Run deploys with:
-
-```bash
-./deploy.sh
-```
+| Action | Command |
+| :--- | :--- |
+| **View Logs** | `pm2 logs asra3` |
+| **Check Status** | `pm2 status` |
+| **Restart App** | `pm2 restart asra3` |
 
 ---
 
-## Image Uploads in Production
+## Directory Structure (How it works)
 
-Uploaded images are stored in `/www/wwwroot/asra3.com/public/uploads/`. Important notes:
-
-1. **Uploads persist outside standalone** — they live in the main `public/uploads/` directory
-2. **The deploy script copies them** into standalone on each deploy
-3. **Nginx serves them directly** via the `/uploads/` location block (bypasses Node.js for performance)
-4. **Backup uploads** — include this directory in your backup strategy
-
----
-
-## Database Backups
-
-The SQLite database is a single file. Back it up regularly:
-
-```bash
-# Manual backup
-cp /www/wwwroot/asra3.com/prisma/dev.db /www/backup/asra3-$(date +%Y%m%d).db
-
-# Cron job (daily at 2am via aaPanel → Cron)
-0 2 * * * cp /www/wwwroot/asra3.com/prisma/dev.db /www/backup/asra3-$(date +\%Y\%m\%d).db
-```
-
----
-
-## Troubleshooting
-
-### Site shows 502 Bad Gateway
-- Check if PM2 process is running: `pm2 status`
-- Check logs: `pm2 logs asra3`
-- Restart: `pm2 restart asra3`
-
-### Images not loading after deploy
-- Ensure uploads are copied: `ls -la .next/standalone/public/uploads/`
-- Check Nginx config has the `/uploads/` location block
-
-### Admin login not working
-- Verify the database exists: `ls -la prisma/dev.db`
-- Re-seed if needed: `npx tsx scripts/seed-settings.ts`
-
-### Database locked errors
-- SQLite can have issues with concurrent writes
-- Ensure only 1 PM2 instance is running (not cluster mode)
-- Check: `pm2 status` should show `instances: 1`
-
-### Build fails with memory error
-- Increase Node.js memory: `NODE_OPTIONS="--max-old-space-size=2048" npm run build`
-- Or add to ecosystem config: `node_args: '--max-old-space-size=2048'`
-
----
-
-## File Structure on Server
-
-```
-/www/wwwroot/asra3.com/
-├── .env                    # Environment variables
-├── .next/
-│   ├── standalone/         # ← PM2 runs from here
-│   │   ├── server.js       # Entry point
-│   │   ├── public/         # Copied static assets
-│   │   ├── prisma/         # Copied database
-│   │   └── .next/static/   # Copied build assets
-│   └── static/             # Build output
-├── public/
-│   ├── uploads/            # 📷 Uploaded images persist here
-│   ├── logo.png
-│   └── favicon.png
-├── prisma/
-│   ├── schema.prisma
-│   └── dev.db              # 🗄️ SQLite database
-├── ecosystem.config.js     # PM2 config
-├── deploy.sh               # Quick deploy script
-└── package.json
-```
+- `/www/wwwroot/asra3.com/` — Your main code.
+- `/www/wwwroot/asra3.com/.next/standalone/` — The **actual** folder running the site.
+- `/db/custom.db` — Your database file.
