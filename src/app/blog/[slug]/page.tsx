@@ -228,8 +228,25 @@ export default function BlogPostPage() {
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeRaw]}
               components={{
+                // Wrap tables in scrollable container for mobile
+                table: ({ children }) => (
+                  <div className="overflow-x-auto -mx-4 px-4 my-6">
+                    <table>{children}</table>
+                  </div>
+                ),
+                // Support alignment from GFM tables
+                th: ({ children, style }) => (
+                  <th style={style}>{children}</th>
+                ),
+                td: ({ children, style }) => (
+                  <td style={style}>{children}</td>
+                ),
+                // Paragraphs with proper spacing
+                p: ({ children }) => (
+                  <p className="my-4 leading-relaxed">{children}</p>
+                ),
+                // Custom image handler with size syntax
                 img: ({ node, alt, src, ...props }) => {
-                  // Support custom size syntax: ![alt|WxH](url)
                   let width: string | undefined;
                   let height: string | undefined;
                   let cleanAlt = alt || '';

@@ -37,6 +37,10 @@ export const metadata: Metadata = {
     "full-stack development", "startup developer",
   ],
   authors: [{ name: "asra3.com" }],
+  icons: {
+    icon: "/favicon.png",
+    apple: "/favicon.png",
+  },
   openGraph: {
     title: "asra3.com | SaaS & Automation Solutions",
     description: "Transform your business with custom SaaS products and intelligent automation.",

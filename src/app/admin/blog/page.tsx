@@ -14,6 +14,7 @@ import {
   Code2,
   Type,
   Image as ImageIcon,
+  Upload,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -119,6 +120,57 @@ export default function AdminBlogPage() {
   const [form, setForm] = useState(emptyForm);
   const [formTab, setFormTab] = useState<'en' | 'ar'>('en');
   const [editorMode, setEditorMode] = useState<'visual' | 'markdown'>('visual');
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const coverFileInputRef = React.useRef<HTMLInputElement>(null);
+
+  // Upload image to server
+  const uploadImage = async (file: File): Promise<string | null> => {
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: formData });
+      if (!res.ok) {
+        const err = await res.json();
+        toast({ title: 'Upload Failed', description: err.error || 'Unknown error', variant: 'destructive' });
+        return null;
+      }
+      const data = await res.json();
+      toast({ title: 'Image Uploaded', description: data.filename });
+      return data.url;
+    } catch {
+      toast({ title: 'Upload Error', description: 'Network error during upload', variant: 'destructive' });
+      return null;
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // Handle content image upload — inserts markdown at cursor
+  const handleContentImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const url = await uploadImage(file);
+    if (url) {
+      const altText = file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
+      const markdownImg = `\n![${altText}](${url})\n`;
+      const contentKey = formTab === 'ar' ? 'content_ar' : 'content_en';
+      setForm(prev => ({ ...prev, [contentKey]: prev[contentKey] + markdownImg }));
+    }
+    e.target.value = '';
+  };
+
+  // Handle cover image upload
+  const handleCoverImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const url = await uploadImage(file);
+    if (url) {
+      setForm(prev => ({ ...prev, coverImage: url }));
+    }
+    e.target.value = '';
+  };
 
   const fetchPosts = useCallback(async () => {
     try {
@@ -251,11 +303,14 @@ export default function AdminBlogPage() {
     spellChecker: false,
     autofocus: false,
     placeholder: 'Write your blog post content here...\n\nSupports markdown, images, and videos.\n\n## Image Syntax\n![Alt text](url)\n![Alt text|600x400](url) — with custom size\n\n## Video Embed\n<video src="url" controls width="100%"></video>\n<iframe src="youtube-url" width="100%" height="400"></iframe>',
+    minHeight: '400px',
     toolbar: [
-      'bold', 'italic', 'heading', '|',
+      'bold', 'italic', 'strikethrough', 'heading', 'heading-smaller', 'heading-bigger', '|',
       'quote', 'unordered-list', 'ordered-list', '|',
-      'link', 'image', 'table', '|',
+      'link', 'image', 'table', 'horizontal-rule', 'code', '|',
+      'clean-block', '|',
       'preview', 'side-by-side', 'fullscreen', '|',
+      'undo', 'redo', '|',
       'guide',
     ] as const,
     status: false as const,
@@ -354,7 +409,7 @@ export default function AdminBlogPage() {
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-5xl max-h-[95vh] overflow-y-auto">
+        <DialogContent className="max-w-[90vw] 2xl:max-w-[1400px] max-h-[95vh] overflow-y-auto">
           <DialogHeader>
             <div className="flex items-center justify-between flex-wrap gap-2">
               <DialogTitle>
@@ -453,7 +508,7 @@ export default function AdminBlogPage() {
               </div>
 
               {editorMode === 'visual' ? (
-                <div className="border rounded-lg overflow-hidden [&_.EasyMDEContainer]:border-0 [&_.EasyMDEContainer_.CodeMirror]:min-h-[300px] [&_.EasyMDEContainer_.CodeMirror]:border-0 [&_.EasyMDEContainer_.CodeMirror]:rounded-none [&_.editor-toolbar]:border-b [&_.editor-toolbar]:border-t-0 [&_.editor-toolbar]:rounded-none [&_.editor-toolbar]:border-x-0">
+                <div className="border rounded-lg overflow-hidden [&_.EasyMDEContainer]:border-0 [&_.EasyMDEContainer_.CodeMirror]:min-h-[400px] [&_.EasyMDEContainer_.CodeMirror]:border-0 [&_.EasyMDEContainer_.CodeMirror]:rounded-none [&_.editor-toolbar]:border-b [&_.editor-toolbar]:border-t-0 [&_.editor-toolbar]:rounded-none [&_.editor-toolbar]:border-x-0 [&_.editor-toolbar_button]:!text-foreground [&_.editor-toolbar_button:hover]:!bg-muted">
                   <SimpleMDE
                     value={formTab === 'ar' ? form.content_ar : form.content_en}
                     onChange={(val: string) => {
@@ -484,21 +539,63 @@ export default function AdminBlogPage() {
                   className="font-mono text-sm"
                 />
               )}
-              <p className="text-xs text-muted-foreground flex items-center gap-1">
-                <ImageIcon className="size-3" />
-                Images: <code className="px-1 bg-muted rounded">![alt](url)</code> — resize: <code className="px-1 bg-muted rounded">![alt|600x400](url)</code> — Videos: <code className="px-1 bg-muted rounded">&lt;video src=&quot;url&quot; controls width=&quot;100%&quot;&gt;&lt;/video&gt;</code>
-              </p>
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                  <ImageIcon className="size-3" />
+                  Images: <code className="px-1 bg-muted rounded">![alt](url)</code> — resize: <code className="px-1 bg-muted rounded">![alt|600x400](url)</code>
+                </p>
+                <div className="flex items-center gap-2">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleContentImageUpload}
+                    className="hidden"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={uploading}
+                    onClick={() => fileInputRef.current?.click()}
+                    className="h-7 text-xs"
+                  >
+                    {uploading ? <Loader2 className="size-3 animate-spin me-1" /> : <Upload className="size-3 me-1" />}
+                    Upload Image to Content
+                  </Button>
+                </div>
+              </div>
             </div>
 
             {/* Cover Image & Project */}
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label>Cover Image URL</Label>
-                <Input
-                  value={form.coverImage}
-                  onChange={(e) => setForm({ ...form, coverImage: e.target.value })}
-                  placeholder="https://example.com/cover.jpg"
-                />
+                <Label>Cover Image</Label>
+                <div className="flex gap-2">
+                  <Input
+                    value={form.coverImage}
+                    onChange={(e) => setForm({ ...form, coverImage: e.target.value })}
+                    placeholder="https://example.com/cover.jpg or upload →"
+                    className="flex-1"
+                  />
+                  <input
+                    ref={coverFileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleCoverImageUpload}
+                    className="hidden"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    disabled={uploading}
+                    onClick={() => coverFileInputRef.current?.click()}
+                    title="Upload cover image"
+                  >
+                    {uploading ? <Loader2 className="size-4 animate-spin" /> : <Upload className="size-4" />}
+                  </Button>
+                </div>
                 {form.coverImage && (
                   <div className="relative h-24 rounded-lg overflow-hidden bg-muted">
                     <Image 

@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/s
 import { Menu, Zap, Sun, Moon, Globe, BookOpen } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useLocale } from '@/lib/i18n';
+import { Logo } from '@/components/ui/logo';
 import Link from 'next/link';
 
 export function Navbar() {
@@ -52,13 +53,8 @@ export function Navbar() {
       }`}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <a href="/" className="flex items-center gap-2 group">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-transform group-hover:scale-110">
-            <Zap className="h-5 w-5" />
-          </div>
-          <span className="text-xl font-bold">
-            asra3<span className="text-primary">.com</span>
-          </span>
+        <a href="/" className="flex items-center group">
+          <Logo />
         </a>
 
         {/* Desktop Nav */}

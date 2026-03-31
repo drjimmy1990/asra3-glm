@@ -2,8 +2,9 @@
 
 import { usePathname } from 'next/navigation';
 import { Separator } from '@/components/ui/separator';
-import { Zap } from 'lucide-react';
+import { Zap, Github, Twitter, Linkedin, Mail } from 'lucide-react';
 import { useLocale } from '@/lib/i18n';
+import { Logo } from '@/components/ui/logo';
 
 export function Footer() {
   const { t, isRTL } = useLocale();
@@ -38,13 +39,8 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-8 py-12 sm:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-4">
-            <a href="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                <Zap className="h-4 w-4" />
-              </div>
-              <span className="text-lg font-bold">
-                asra3<span className="text-primary">.com</span>
-              </span>
+            <a href="/" className="flex items-center">
+              <Logo />
             </a>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
               {t('footer_brand_desc')}

@@ -18,6 +18,7 @@ import {
   Mail,
   FileText,
 } from 'lucide-react';
+import { Logo, LogoIcon } from '@/components/ui/logo';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -62,13 +63,8 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
   return (
     <div className="flex h-full flex-col">
       {/* Logo */}
-      <div className="flex h-16 items-center gap-2 px-6">
-        <div className="flex items-center justify-center size-8 rounded-lg bg-primary text-primary-foreground">
-          <Zap className="size-4" />
-        </div>
-        <span className="text-lg font-bold tracking-tight">
-          asra<span className="text-primary">3</span>
-        </span>
+      <div className="flex h-16 items-center px-6 mt-4">
+        <Logo />
       </div>
 
       <Separator />
@@ -215,11 +211,9 @@ export default function AdminLayout({
           </SheetContent>
         </Sheet>
         <div className="flex items-center gap-2">
-          <div className="flex items-center justify-center size-7 rounded-lg bg-primary text-primary-foreground">
-            <Zap className="size-3.5" />
-          </div>
+          <LogoIcon size={28} />
           <span className="text-sm font-bold tracking-tight">
-            asra<span className="text-primary">3</span>
+            asra3<span className="text-primary">.com</span>
           </span>
         </div>
       </div>

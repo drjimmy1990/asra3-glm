@@ -94,7 +94,7 @@
 }
 
 [dir="rtl"] {
-  --text-hero-heading: clamp(1.75rem, 1.5rem + 2.5vw, 10rem);
+  --text-hero-heading: clamp(1.75rem, 1.5rem + 2.5vw, 3rem);
 }
 
 .dark {
@@ -181,6 +181,110 @@
   html {
     scroll-behavior: smooth;
   }
+}
+
+/* ═══════════════════════════════════════════════════ */
+/*  Blog Prose — Tables, Spacing, Alignment           */
+/* ═══════════════════════════════════════════════════ */
+
+/* Let paragraphs inside prose breathe */
+.prose p {
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+}
+
+/* Respect manual <br> line breaks in markdown */
+.prose br {
+  display: block;
+  content: "";
+  margin-top: 0.75em;
+}
+
+/* ── Tables ── */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  font-size: 0.9em;
+}
+
+.prose thead {
+  background: var(--muted);
+}
+
+.prose th {
+  padding: 0.75rem 1rem;
+  text-align: start;
+  font-weight: 600;
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--foreground);
+  border-bottom: 2px solid var(--border);
+}
+
+.prose td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  max-width: none;
+}
+
+.prose td p,
+.prose th p {
+  max-width: none;
+  margin: 0;
+}
+
+.prose tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.prose tbody tr:hover {
+  background: var(--muted);
+  transition: background 0.15s ease;
+}
+
+/* ── Blockquotes ── */
+.prose blockquote {
+  border-inline-start: 4px solid var(--primary);
+  background: var(--muted);
+  border-radius: 0 0.75rem 0.75rem 0;
+  padding: 1rem 1.5rem;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  font-style: normal;
+}
+
+[dir="rtl"] .prose blockquote {
+  border-radius: 0.75rem 0 0 0.75rem;
+}
+
+.prose blockquote p {
+  max-width: none;
+}
+
+/* ── Horizontal rules as section dividers ── */
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin-top: 2.5em;
+  margin-bottom: 2.5em;
+}
+
+/* ── Lists ── */
+.prose ul,
+.prose ol {
+  padding-inline-start: 1.5em;
+}
+
+.prose li {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 /* RTL support */
