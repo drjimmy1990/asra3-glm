@@ -22,12 +22,14 @@ cd asra3.com
 
 ## Step 3: Environment Config
 
-Ensure your `/www/wwwroot/asra3.com/.env` contains:
+Create the production `.env` file at the root of your project `/www/wwwroot/asra3.com/.env`.
+
+Ensure it contains the **absolute path** to your database so it never resets:
 
 ```env
 NODE_ENV=production
-DATABASE_URL="file:./db/custom.db"
-PORT=3005
+DATABASE_URL="file:/www/wwwroot/asra3.com/db/custom.db"
+PORT=3008
 ```
 
 ---
@@ -44,12 +46,16 @@ npm install --legacy-peer-deps
 npx prisma generate
 
 # 3. Build & Prepare
-# (NOTE: Our updated build script automatically copies 'public', 'static', and 'db' for you!)
 npm run build
 
-# 4. Final step: Copy your server .env inside the standalone folder
-mkdir -p .next/standalone/db
-cp .env .next/standalone/.env
+# 4. Final step: Replicate your .env into the standalone folder
+echo 'NODE_ENV=production' > .next/standalone/.env
+echo 'DATABASE_URL="file:/www/wwwroot/asra3.com/db/custom.db"' >> .next/standalone/.env
+echo 'PORT=3008' >> .next/standalone/.env
+
+# 5. Ensure database permissions are correct
+chmod 777 /www/wwwroot/asra3.com/db
+chmod 666 /www/wwwroot/asra3.com/db/custom.db
 ```
 
 ---
@@ -140,9 +146,19 @@ npm install --legacy-peer-deps
 npm run build
 
 # 4. Copy the environment file to the new build folder
-cp .env .next/standalone/.env
+echo 'NODE_ENV=production' > .next/standalone/.env
+echo 'DATABASE_URL="file:/www/wwwroot/asra3.com/db/custom.db"' >> .next/standalone/.env
+echo 'PORT=3008' >> .next/standalone/.env
 
-# 5. Restart the PM2 process to apply the changes
+# 5. Connect your permanent uploads folder so images survive the update!
+mkdir -p /www/wwwroot/asra3.com/public/uploads
+ln -sfn /www/wwwroot/asra3.com/public/uploads /www/wwwroot/asra3.com/.next/standalone/public/uploads
+
+# 6. Ensure database permissions are correct
+chmod 777 /www/wwwroot/asra3.com/db
+chmod 666 /www/wwwroot/asra3.com/db/custom.db
+
+# 7. Restart the PM2 process to apply the changes
 pm2 restart asra3
 ```
 
