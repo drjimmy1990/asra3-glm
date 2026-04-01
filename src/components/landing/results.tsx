@@ -51,13 +51,12 @@ export function Results({ data }: ResultsProps) {
                       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                       className="absolute inset-0 w-full h-full"
                     >
-                      <Image
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
                         src={project.imageUrl}
                         alt={project.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 1024px) 100vw, 40vw"
-                        priority={idx === 0}
+                        className="w-full h-full object-cover"
+                        loading={idx === 0 ? 'eager' : 'lazy'}
                       />
                     </motion.div>
                   ) : (

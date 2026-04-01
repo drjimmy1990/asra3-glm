@@ -145,13 +145,12 @@ export default function BlogListClient() {
                 >
                   {post.coverImage ? (
                     <div className="relative aspect-[16/9] overflow-hidden bg-muted">
-                      <Image
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
                         src={post.coverImage}
                         alt={post.title}
-                        fill
-                        priority={index === 0}
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading={index === 0 ? 'eager' : 'lazy'}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                     </div>
