@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { toast } from '@/hooks/use-toast';
 import {
   Plus,
@@ -9,6 +9,7 @@ import {
   Loader2,
   FolderKanban,
   Star,
+  Upload,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -102,8 +103,10 @@ export default function AdminProjectsPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [formTab, setFormTab] = useState<'en' | 'ar'>('en');
+  const imageFileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchProjects = useCallback(async () => {
     try {
@@ -208,6 +211,30 @@ export default function AdminProjectsPage() {
       toast({ title: t('admin_error_generic'), description: t('admin_error_generic'), variant: 'destructive' });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd });
+      if (res.ok) {
+        const data = await res.json();
+        setForm((prev) => ({ ...prev, imageUrl: data.url }));
+        toast({ title: 'Image Uploaded', description: data.filename });
+      } else {
+        const data = await res.json();
+        toast({ title: 'Upload Failed', description: data.error, variant: 'destructive' });
+      }
+    } catch {
+      toast({ title: 'Upload Failed', variant: 'destructive' });
+    } finally {
+      setUploading(false);
+      if (imageFileInputRef.current) imageFileInputRef.current.value = '';
     }
   };
 
@@ -434,12 +461,42 @@ export default function AdminProjectsPage() {
             <div className="grid gap-4 sm:grid-cols-3">
               <div className="space-y-1.5 sm:col-span-2">
                 <Label htmlFor="imageUrl">{t('admin_image_url')}</Label>
-                <Input
-                  id="imageUrl"
-                  value={form.imageUrl}
-                  onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-                  placeholder="https://example.com/image.png"
-                />
+                <div className="flex gap-2">
+                  <Input
+                    id="imageUrl"
+                    value={form.imageUrl}
+                    onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+                    placeholder="https://example.com/image.png or upload →"
+                    className="flex-1"
+                  />
+                  <input
+                    ref={imageFileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    disabled={uploading}
+                    onClick={() => imageFileInputRef.current?.click()}
+                    title="Upload project image"
+                  >
+                    {uploading ? <Loader2 className="size-4 animate-spin" /> : <Upload className="size-4" />}
+                  </Button>
+                </div>
+                {form.imageUrl && (
+                  <div className="relative h-20 rounded-lg overflow-hidden bg-muted mt-2">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={form.imageUrl}
+                      alt="Project"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="order">{t('admin_order')}</Label>
