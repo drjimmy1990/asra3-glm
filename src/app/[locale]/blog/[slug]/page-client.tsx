@@ -198,13 +198,12 @@ export default function BlogPostClient() {
 
         {post.coverImage && (
           <div className="max-w-4xl mx-auto mb-8 sm:mb-12 rounded-2xl overflow-hidden shadow-lg relative aspect-video">
-            <Image
+            {/* Use native img for uploaded files to bypass Image Optimization */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={post.coverImage}
               alt={post.title}
-              fill
-              priority
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 1024px"
+              className="w-full h-full object-cover"
             />
           </div>
         )}
@@ -247,14 +246,15 @@ export default function BlogPostClient() {
                   return (
                     <span className="block my-6">
                       {width && height ? (
-                        <Image
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
                           src={src || ''}
                           alt={cleanAlt}
                           width={parseInt(width, 10)}
                           height={parseInt(height, 10)}
                           className="rounded-xl shadow-md mx-auto"
                           style={{ maxWidth: '100%', height: 'auto', width: `${width}px` }}
-                          {...(props as any)}
+                          loading="lazy"
                         />
                       ) : (
                         <img

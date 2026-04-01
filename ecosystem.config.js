@@ -8,6 +8,7 @@ module.exports = {
         NODE_ENV: 'production',
         PORT: 3008,
         DATABASE_URL: 'file:/www/wwwroot/asra3.com/db/custom.db',
+        UPLOADS_DIR: '/www/wwwroot/asra3.com/public/uploads',
       },
       // Auto-restart if crashes
       autorestart: true,

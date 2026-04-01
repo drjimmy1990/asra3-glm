@@ -598,12 +598,11 @@ export default function AdminBlogPage() {
                 </div>
                 {form.coverImage && (
                   <div className="relative h-24 rounded-lg overflow-hidden bg-muted">
-                    <Image 
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img 
                       src={form.coverImage} 
                       alt="Cover" 
-                      fill 
-                      className="object-cover" 
-                      sizes="96px"
+                      className="w-full h-full object-cover"
                     />
                   </div>
                 )}

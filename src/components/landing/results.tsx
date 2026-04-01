@@ -3,13 +3,15 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUpRight, Users, Clock, DollarSign, BarChart3 } from 'lucide-react';
+import { ArrowUpRight, Users, Clock, DollarSign, BarChart3, TrendingUp, Zap, Target, Award, MessageCircle, Globe, Server, Heart, Settings, ShieldCheck, Layers, Rocket, Star, Percent, Activity, Package, Mail, ThumbsUp } from 'lucide-react';
 import Link from 'next/link';
 import { parseJSON, type Project, type MetricItem, type SiteData } from '@/hooks/use-site-data';
 import { useLocale } from '@/lib/i18n';
 
 const metricIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Users, Clock, DollarSign, BarChart3,
+  Users, Clock, DollarSign, BarChart3, TrendingUp, Zap, Target, Award,
+  MessageCircle, Globe, Server, Heart, Settings, ShieldCheck, Layers,
+  Rocket, Star, Percent, Activity, Package, Mail, ThumbsUp,
 };
 
 interface ResultsProps {

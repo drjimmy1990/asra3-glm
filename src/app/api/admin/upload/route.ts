@@ -17,6 +17,26 @@ const ALLOWED_TYPES = [
   'image/avif',
 ];
 
+/**
+ * Resolve the uploads directory.
+ * In standalone mode, process.cwd() = .next/standalone/
+ * We need to write to a persistent location that survives redeploys.
+ * 
+ * Priority:
+ * 1. UPLOADS_DIR env var (absolute path)
+ * 2. PROJECT_ROOT env var + /public/uploads
+ * 3. process.cwd() + /public/uploads (works in dev & standalone with symlink)
+ */
+function getUploadsDir(): string {
+  if (process.env.UPLOADS_DIR) {
+    return process.env.UPLOADS_DIR;
+  }
+  if (process.env.PROJECT_ROOT) {
+    return path.join(process.env.PROJECT_ROOT, 'public', 'uploads');
+  }
+  return path.join(process.cwd(), 'public', 'uploads');
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Auth check
@@ -49,7 +69,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create uploads directory if it doesn't exist
-    const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+    const uploadsDir = getUploadsDir();
     if (!existsSync(uploadsDir)) {
       await mkdir(uploadsDir, { recursive: true });
     }
@@ -66,8 +86,8 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(bytes);
     await writeFile(filepath, buffer);
 
-    // Return the public URL
-    const url = `/uploads/${filename}`;
+    // Return the URL using the API serve route (works in both dev and standalone)
+    const url = `/api/uploads/${filename}`;
 
     return NextResponse.json({
       url,
