@@ -55,7 +55,7 @@ export function Results({ data }: ResultsProps) {
                       <img
                         src={project.imageUrl}
                         alt={project.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain"
                         loading={idx === 0 ? 'eager' : 'lazy'}
                       />
                     </motion.div>

@@ -197,13 +197,12 @@ export default function BlogPostClient() {
         </div>
 
         {post.coverImage && (
-          <div className="max-w-4xl mx-auto mb-8 sm:mb-12 rounded-2xl overflow-hidden shadow-lg relative aspect-video">
-            {/* Use native img for uploaded files to bypass Image Optimization */}
+          <div className="max-w-4xl mx-auto mb-8 sm:mb-12 rounded-2xl overflow-hidden shadow-lg relative aspect-video bg-muted">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={post.coverImage}
               alt={post.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
           </div>
         )}
